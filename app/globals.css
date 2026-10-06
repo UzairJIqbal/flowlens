@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
+/*
+ * Colour tokens key off data-theme on <html>. No attribute means "follow the
+ * system"; data-theme="light" or "dark" overrides it in both directions.
+ */
 :root {
+  color-scheme: light;
   --background: #ffffff;
-  --foreground: #171717;
+  --surface: #f6f6f7;
+  --foreground: #18181b;
+  --muted: #71717a;
+  --border: #e4e4e7;
+  --accent: #2563eb;
+  --danger: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --background: #0b0b0c;
+    --surface: #151517;
+    --foreground: #e4e4e7;
+    --muted: #8b8b93;
+    --border: #27272a;
+    --accent: #60a5fa;
+    --danger: #f87171;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #0b0b0c;
+  --surface: #151517;
+  --foreground: #e4e4e7;
+  --muted: #8b8b93;
+  --border: #27272a;
+  --accent: #60a5fa;
+  --danger: #f87171;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
