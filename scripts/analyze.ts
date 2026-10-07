@@ -6,6 +6,7 @@
 // Writes real rows for that organization, exactly as the app will. A
 // repository already analysed there is left alone unless --rerun is given.
 
+import { flushTraces, tracing } from "../lib/ai/client.ts";
 import { createAdminClient } from "../lib/supabase/admin.ts";
 import { runAnalysis, submitRepository } from "../lib/pipeline/run.ts";
 
@@ -73,6 +74,9 @@ commit   ${a.commit_sha ?? "-"}
 adapter  ${a.adapter ?? "-"}
 stored   ${files.count ?? "?"} files, ${edges.count ?? "?"} edges
 warnings ${a.warnings?.length ? a.warnings.join("; ") : "none"}
-coverage ${a.coverage === null ? "-" : JSON.stringify(a.coverage)}`);
+coverage ${a.coverage === null ? "-" : JSON.stringify(a.coverage)}
+tracing  ${tracing.enabled ? `to ${tracing.project}` : `off (${tracing.reason})`}`);
 
+// Exiting drops whatever traces are still queued for sending.
+await flushTraces();
 process.exit(a.status === "complete" ? 0 : 1);

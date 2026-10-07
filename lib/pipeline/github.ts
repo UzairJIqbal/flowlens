@@ -76,6 +76,21 @@ export async function resolveHead({ owner, name }: RepositoryRef): Promise<strin
   throw new Error(`GitHub answered ${response.status} when asked for the latest commit`);
 }
 
+/**
+ * One file's bytes at exactly `sha`, or null when the file isn't there.
+ * raw.githubusercontent.com isn't counted against the API's unauthenticated
+ * limit, which resolveHead already spends from.
+ */
+export async function fetchFile({ owner, name }: RepositoryRef, sha: string, file: string): Promise<Buffer | null> {
+  const encoded = file.split("/").map(encodeURIComponent).join("/");
+  const response = await fetch(`https://raw.githubusercontent.com/${owner}/${name}/${sha}/${encoded}`, {
+    headers: { "User-Agent": API_HEADERS["User-Agent"] },
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`GitHub answered ${response.status} when asked for ${file}`);
+  return Buffer.from(await response.arrayBuffer());
+}
+
 // Parsing happens inside one request. An archive past this size would not
 // finish there anyway, so it is refused up front and said so.
 const MAX_ARCHIVE_BYTES = 100 * 1024 * 1024;

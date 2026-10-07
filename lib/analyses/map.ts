@@ -90,9 +90,10 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
     path: f.path,
     folder: f.folder,
     lines: f.lines,
-    // Labels a model adds later sit beside these; the map shows what the
-    // adapter recognised by convention.
+    // The map shows what the adapter recognised by convention; a model's
+    // label sits beside it and is shown only in the detail pane.
     role: f.file_roles.find((r) => r.source === "convention")?.role ?? null,
+    label: f.file_roles.find((r) => r.source === "model")?.role ?? null,
     fanIn: fan.get(f.path)?.fanIn ?? 0,
     fanOut: fan.get(f.path)?.fanOut ?? 0,
   }));
@@ -117,7 +118,7 @@ type Page<T> = { data: T[] | null; error: { message: string } | null; count: num
  * Reads until the count is reached. Coming up short throws: a map missing
  * files must never render as though it were the whole repository.
  */
-async function readEvery<T>(what: string, page: (from: number, to: number) => PromiseLike<Page<T>>): Promise<T[]> {
+export async function readEvery<T>(what: string, page: (from: number, to: number) => PromiseLike<Page<T>>): Promise<T[]> {
   const rows: T[] = [];
   let total: number | null = null;
   for (;;) {

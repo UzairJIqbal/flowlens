@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import type { Tracing } from "@/lib/ai/client";
 import type { StoredRoute, StoredWithheldRoute } from "@/lib/analyses/map";
 import { insights as findInsights } from "@/lib/graph/insights";
 import { categoryCounts, inCategory, kindsOf } from "@/lib/map/categories";
@@ -20,6 +21,8 @@ import { RouteTable } from "./route-table";
  * or hovering is a lookup and never a request.
  */
 export function MapWorkspace({
+  analysisId,
+  tracing,
   title,
   repo,
   files,
@@ -27,6 +30,8 @@ export function MapWorkspace({
   routes,
   withheldRoutes,
 }: {
+  analysisId: string;
+  tracing: Tracing;
   title: ReactNode;
   repo: RepoInfo;
   files: RepoFile[];
@@ -86,6 +91,8 @@ export function MapWorkspace({
       }
       detail={
         <DetailPane
+          analysisId={analysisId}
+          tracing={tracing}
           repo={repo}
           kinds={kinds}
           files={files}

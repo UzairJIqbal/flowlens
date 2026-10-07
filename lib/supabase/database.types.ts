@@ -145,48 +145,6 @@ export type Database = {
           },
         ]
       }
-      explanations: {
-        Row: {
-          body: string
-          created_at: string
-          file_id: string
-          id: string
-          model: string
-          organization_id: string
-        }
-        Insert: {
-          body: string
-          created_at?: string
-          file_id: string
-          id?: string
-          model: string
-          organization_id: string
-        }
-        Update: {
-          body?: string
-          created_at?: string
-          file_id?: string
-          id?: string
-          model?: string
-          organization_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "explanations_file_id_organization_id_fkey"
-            columns: ["file_id", "organization_id"]
-            isOneToOne: false
-            referencedRelation: "files"
-            referencedColumns: ["id", "organization_id"]
-          },
-          {
-            foreignKeyName: "explanations_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       file_roles: {
         Row: {
           file_id: string
@@ -303,6 +261,41 @@ export type Database = {
           },
           {
             foreignKeyName: "insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      model_cache: {
+        Row: {
+          created_at: string
+          key: string
+          model: string
+          organization_id: string
+          output: string
+          task: string
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          model: string
+          organization_id: string
+          output: string
+          task: string
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          model?: string
+          organization_id?: string
+          output?: string
+          task?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "model_cache_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -430,7 +423,7 @@ export type Database = {
       }
     }
     Enums: {
-      analysis_stage: "fetch" | "select" | "parse" | "store"
+      analysis_stage: "fetch" | "select" | "parse" | "label" | "store"
       analysis_status: "queued" | "parsing" | "complete" | "failed"
       edge_kind: "import" | "reexport" | "dynamic" | "require"
       file_role_source: "convention" | "model"
@@ -561,7 +554,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      analysis_stage: ["fetch", "select", "parse", "store"],
+      analysis_stage: ["fetch", "select", "parse", "label", "store"],
       analysis_status: ["queued", "parsing", "complete", "failed"],
       edge_kind: ["import", "reexport", "dynamic", "require"],
       file_role_source: ["convention", "model"],

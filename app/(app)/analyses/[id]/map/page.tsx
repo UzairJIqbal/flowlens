@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { MapWorkspace } from "@/app/_components/map-workspace";
+import { tracing } from "@/lib/ai/client";
 import { getAnalysis } from "@/lib/analyses/read";
 import { getStoredMap } from "@/lib/analyses/map";
 
@@ -45,6 +46,8 @@ export default async function AnalysisMapPage({ params }: { params: Promise<{ id
         </Link>
       </div>
       <MapWorkspace
+        analysisId={analysis.id}
+        tracing={tracing}
         title="Categories"
         repo={repo}
         files={map.files}
