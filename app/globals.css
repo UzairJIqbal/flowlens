@@ -13,6 +13,9 @@
   --border: #e4e4e7;
   --accent: #2563eb;
   --danger: #dc2626;
+  --edge: #a1a1aa;
+  --edge-uses: #2563eb;
+  --edge-used-by: #d97706;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,6 +28,9 @@
     --border: #27272a;
     --accent: #60a5fa;
     --danger: #f87171;
+    --edge: #52525b;
+    --edge-uses: #60a5fa;
+    --edge-used-by: #fbbf24;
   }
 }
 
@@ -37,6 +43,9 @@
   --border: #27272a;
   --accent: #60a5fa;
   --danger: #f87171;
+  --edge: #52525b;
+  --edge-uses: #60a5fa;
+  --edge-used-by: #fbbf24;
 }
 
 @theme inline {
@@ -54,4 +63,29 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* React Flow ships unstyled (base.css); these are the only overrides. */
+.dependency-map .react-flow__edge-path {
+  stroke: var(--edge);
+  stroke-width: 0.6;
+}
+
+.dependency-map .react-flow__edge.dim {
+  opacity: 0.1;
+}
+
+/* The selection's own edges, coloured by direction; the only coloured lines. */
+.dependency-map .react-flow__edge.uses .react-flow__edge-path {
+  stroke: var(--edge-uses);
+}
+
+.dependency-map .react-flow__edge.used-by .react-flow__edge-path {
+  stroke: var(--edge-used-by);
+}
+
+/* Handles are attachment points for edges, never something to grab. */
+.dependency-map .react-flow__handle {
+  opacity: 0;
+  pointer-events: none;
 }
