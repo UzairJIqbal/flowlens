@@ -1,7 +1,7 @@
 // The shape the parser writes. Everything after phase 3 reads this, so a
 // change here is a change to a contract: bump RESULT_VERSION when it breaks.
 
-export const RESULT_VERSION = 1;
+export const RESULT_VERSION = 2;
 
 export const EDGE_KINDS = ["import", "reexport", "dynamic"] as const;
 export type EdgeKind = (typeof EDGE_KINDS)[number];
@@ -96,6 +96,29 @@ export interface Coverage {
   excludedByReason: Partial<Record<ExcludedReason, number>>;
 }
 
+/**
+ * A route whose method and full pattern were both read from the code. The
+ * pattern is written the way the framework writes it (`[slug]`, `:id`), never
+ * translated.
+ */
+export interface Route {
+  file: string;
+  line: number;
+  method: string;
+  path: string;
+}
+
+/**
+ * A place that declares a route the adapter could not pin down exactly, and
+ * why. Counted and reported, so an empty route table is never mistaken for a
+ * repository without routes.
+ */
+export interface WithheldRoute {
+  file: string;
+  line: number;
+  reason: string;
+}
+
 export interface ParseResult {
   version: typeof RESULT_VERSION;
   /** Absolute path that was parsed. */
@@ -103,6 +126,8 @@ export interface ParseResult {
   adapter: string;
   files: FileNode[];
   edges: Edge[];
+  routes: Route[];
+  withheldRoutes: WithheldRoute[];
   imports: ImportRecord[];
   skipped: SkippedFile[];
   excludedDirectories: ExcludedDirectory[];

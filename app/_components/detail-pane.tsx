@@ -3,9 +3,9 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { INSIGHT_ORDER, INSIGHT_SENTENCES, type Cycle, type InsightKind, type Insights } from "@/lib/graph/insights";
 import { DEFAULT_DEPTH, reach, type Direction, type Link as EdgeLink } from "@/lib/graph/reach";
+import { categoryCounts, type Kinds } from "@/lib/map/categories";
 import {
   importedByNothing,
-  kindCounts,
   mostDependedOn,
   type Neighbours,
   type RepoFile,
@@ -19,6 +19,8 @@ export interface RepoInfo {
   /** The framework adapter the parser ran with; "none" is the fallback that identifies nothing. */
   adapter: string;
   coverage: { parsed: number; skipped: number };
+  /** Routes read exactly, and route declarations that couldn't be. */
+  routes: { found: number; withheld: number };
 }
 
 type Tab = "structure" | "explanation";
@@ -32,6 +34,7 @@ const IMPORTED_BY_COLOR = "var(--edge-used-by)";
 
 export function DetailPane({
   repo,
+  kinds,
   files,
   facts,
   fold,
@@ -43,6 +46,7 @@ export function DetailPane({
   actions,
 }: {
   repo: RepoInfo;
+  kinds: Kinds;
   files: RepoFile[];
   facts: Map<string, RepoFile>;
   fold: Fold;
@@ -67,6 +71,7 @@ export function DetailPane({
     return (
       <RepoSummary
         repo={repo}
+        kinds={kinds}
         files={files}
         insights={insights}
         insightsOpen={insightsOpen}
@@ -83,6 +88,7 @@ export function DetailPane({
       ) : selection.kind === "file" ? (
         <FileStructure
           file={facts.get(selection.path)!}
+          kinds={kinds}
           neighbours={neighbours.get(selection.path)!}
           edges={edges}
           walk={walk}
@@ -92,6 +98,8 @@ export function DetailPane({
       ) : (
         <FolderStructure
           id={selection.id}
+          adapter={repo.adapter}
+          kinds={kinds}
           files={fold.nodes.find((n) => n.id === selection.id)!.files.map((p) => facts.get(p)!)}
           fan={fan.get(selection.id)!}
         />
@@ -105,6 +113,7 @@ type Link = { actions: MapActions; hovered: ReadonlySet<string> };
 
 function RepoSummary({
   repo,
+  kinds,
   files,
   insights,
   insightsOpen,
@@ -112,6 +121,7 @@ function RepoSummary({
   link,
 }: {
   repo: RepoInfo;
+  kinds: Kinds;
   files: RepoFile[];
   insights: Insights;
   insightsOpen: boolean;
@@ -130,12 +140,10 @@ function RepoSummary({
       </h2>
       <Facts>
         <Fact label="framework">
-          {repo.adapter === "none" ? (
-            <span className="text-muted" title="The parser ran without a framework adapter">
+          {kinds.framework ?? (
+            <span className="text-muted" title="No framework adapter matched this repository">
               none detected
             </span>
-          ) : (
-            repo.adapter
           )}
         </Fact>
         <Fact label="files">
@@ -144,10 +152,19 @@ function RepoSummary({
         </Fact>
         <Fact label="imports">{imports}</Fact>
         <Fact label="routes">
-          {/* The parser's output carries no routes yet. Absent, not zero: zero would be a claim. */}
-          <span className="text-muted" title="Routes come from a framework adapter; none recovered any">
-            —
-          </span>
+          {kinds.framework === null ? (
+            // Absent, not zero: with no framework, nothing knows what a route looks like.
+            <span className="text-muted" title="Routes come from a framework adapter; none matched">
+              —
+            </span>
+          ) : (
+            <>
+              {repo.routes.found}
+              {repo.routes.withheld > 0 && (
+                <span className="text-muted"> · {repo.routes.withheld} not read exactly</span>
+              )}
+            </>
+          )}
         </Fact>
         <Fact label="unidentified">
           {unidentified}
@@ -242,6 +259,7 @@ function Tabs({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
 
 function FileStructure({
   file,
+  kinds,
   neighbours,
   edges,
   walk,
@@ -249,6 +267,7 @@ function FileStructure({
   link,
 }: {
   file: RepoFile;
+  kinds: Kinds;
   neighbours: Neighbours;
   edges: EdgeLink[];
   walk: Direction | null;
@@ -266,10 +285,12 @@ function FileStructure({
       </ul>
       <Facts>
         <Fact label="kind">
-          {file.role ?? (
+          {file.role === null ? (
             <span className="text-muted" title="No convention identified this file">
               unidentified
             </span>
+          ) : (
+            kinds.one(file.role)
           )}
         </Fact>
         <Fact label="lines">{file.lines}</Fact>
@@ -522,10 +543,14 @@ function CycleRows({ cycle, link }: { cycle: Cycle; link: Link }) {
 
 function FolderStructure({
   id,
+  adapter,
+  kinds,
   files,
   fan,
 }: {
   id: string;
+  adapter: string;
+  kinds: Kinds;
   files: RepoFile[];
   fan: { fanIn: number; fanOut: number };
 }) {
@@ -546,12 +571,14 @@ function FolderStructure({
       <section className="mt-3">
         <h3 className="flex h-6 items-center border-y border-border bg-surface px-3 font-semibold">Kinds of file</h3>
         <ul className="py-1">
-          {kindCounts(files).map(({ kind, count }) => (
-            <li key={kind ?? ""} className="flex h-5 items-center px-3">
-              {kind ?? (
+          {categoryCounts(files, adapter).map(({ role, count }) => (
+            <li key={role ?? ""} className="flex h-5 items-center px-3">
+              {role === null ? (
                 <span className="text-muted" title="No convention identified these files">
-                  unidentified
+                  Unidentified
                 </span>
+              ) : (
+                kinds.label(role)
               )}
               <span className="ml-auto tabular-nums">{count}</span>
             </li>

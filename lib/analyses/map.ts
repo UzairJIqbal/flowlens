@@ -4,6 +4,9 @@ import type { RepoFile } from "@/lib/map/detail";
 import type { FileEdge } from "@/lib/map/view";
 import { fanInOut } from "@/lib/parser/graph";
 
+export type StoredRoute = { method: string; path: string; file: string; line: number };
+export type StoredWithheldRoute = { file: string; line: number; reason: string };
+
 export type StoredMap = {
   repoOwner: string;
   repoName: string;
@@ -13,6 +16,8 @@ export type StoredMap = {
   coverage: { parsed: number; skipped: number };
   files: RepoFile[];
   edges: FileEdge[];
+  routes: StoredRoute[];
+  withheldRoutes: StoredWithheldRoute[];
 };
 
 // Supabase caps rows per request, so a large repository is read in pages.
@@ -29,7 +34,7 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
 
   const analysis = await supabase
     .from("analyses")
-    .select("status, commit_sha, adapter, coverage, project:projects!inner(repo_owner, repo_name)")
+    .select("status, commit_sha, adapter, coverage, withheld_routes, project:projects!inner(repo_owner, repo_name)")
     .eq("id", analysisId)
     .maybeSingle();
   if (analysis.error) throw new Error(`Could not load the analysis: ${analysis.error.message}`);
@@ -53,6 +58,15 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
       .range(from, to),
   );
 
+  const routeRows = await readEvery("routes", (from, to) =>
+    supabase
+      .from("routes")
+      .select("file_id, line, method, path", { count: "exact" })
+      .eq("analysis_id", analysisId)
+      .order("id")
+      .range(from, to),
+  );
+
   const pathOf = new Map(fileRows.map((f) => [f.id, f.path]));
   const edges = edgeRows.map((e) => {
     const from = pathOf.get(e.source_file_id);
@@ -60,6 +74,12 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
     // The store guarantees this can't happen; if it does, the map is wrong.
     if (from === undefined || to === undefined) throw new Error("A stored edge points at a file that wasn't read");
     return { from, to };
+  });
+
+  const routes = routeRows.map((r) => {
+    const file = pathOf.get(r.file_id);
+    if (file === undefined) throw new Error("A stored route points at a file that wasn't read");
+    return { method: r.method, path: r.path, file, line: r.line };
   });
 
   const fan = fanInOut(
@@ -86,6 +106,8 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
     coverage: fileCoverage(data.coverage),
     files,
     edges,
+    routes,
+    withheldRoutes: withheld(data.withheld_routes),
   };
 }
 
@@ -119,6 +141,22 @@ function fileCoverage(coverage: Json | null): { parsed: number; skipped: number 
     throw new Error("The stored coverage has no file counts");
   }
   return { parsed, skipped };
+}
+
+// Stored as the parser's JSON; each entry is checked rather than assumed. An
+// analysis stored before routes existed has none, which reads as none withheld.
+function withheld(value: Json | null): StoredWithheldRoute[] {
+  if (value === null) return [];
+  if (!Array.isArray(value)) throw new Error("The stored withheld routes aren't a list");
+  return value.map((entry) => {
+    const file = field(entry, "file");
+    const line = field(entry, "line");
+    const reason = field(entry, "reason");
+    if (typeof file !== "string" || typeof line !== "number" || typeof reason !== "string") {
+      throw new Error("A stored withheld route is missing its file, line or reason");
+    }
+    return { file, line, reason };
+  });
 }
 
 function field(value: Json | undefined | null, key: string): Json | undefined {

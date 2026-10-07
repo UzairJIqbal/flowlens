@@ -43,8 +43,8 @@ import type { MapActions, MapState } from "./map-state";
  */
 type Lit = { selection: Selection; selected: ReadonlySet<string>; lit: ReadonlySet<string> } | null;
 
-/** The files in the rail's picked category; null when none is picked, so nothing is dimmed by it. */
-type Matched = { role: string | null; files: ReadonlySet<string> } | null;
+/** The rail's picked category and its files; null when none is picked, so nothing is dimmed by it. */
+export type Matched = { label: string; color: string | null; files: ReadonlySet<string> } | null;
 
 type FolderNode = Node<{ box: FolderView; lit: Lit; matched: Matched }, "folder">;
 type PanelNode = Node<{ box: PanelView; lit: Lit; matched: Matched }, "panel">;
@@ -65,8 +65,7 @@ interface MapProps {
   fan: ReturnType<typeof folderFan>;
   facts: Map<string, FileFacts>;
   edges: FileEdge[];
-  /** The files in the rail's picked category, or null when none is picked. */
-  matched: ReadonlySet<string> | null;
+  matched: Matched;
   state: MapState;
   actions: MapActions;
 }
@@ -79,8 +78,8 @@ export function DependencyMap(props: MapProps) {
   );
 }
 
-function Canvas({ fold, fan, facts, edges, matched: matchedFiles, state, actions }: MapProps) {
-  const { selection, open, scroll, hover, hovered, category } = state;
+function Canvas({ fold, fan, facts, edges, matched, state, actions }: MapProps) {
+  const { selection, open, scroll, hover, hovered } = state;
 
   const view = useMemo(
     () => buildView(fold, fan, facts, edges, open, scroll),
@@ -93,11 +92,6 @@ function Canvas({ fold, fan, facts, edges, matched: matchedFiles, state, actions
     const selected = new Set(filesOf(selection, fold));
     return { selection, selected, lit: litFiles(selected, edges) };
   }, [selection, fold, edges]);
-
-  const matched = useMemo<Matched>(
-    () => (category === null || matchedFiles === null ? null : { role: category.role, files: matchedFiles }),
-    [category, matchedFiles],
-  );
 
   const nodes = useMemo(
     () =>
@@ -382,9 +376,9 @@ function MatchCount({ matched, files }: { matched: Exclude<Matched, null>; files
   return (
     <span
       className="flex shrink-0 items-center gap-1 tabular-nums"
-      title={`${n} of ${files.length} files are ${matched.role ?? "unidentified"}`}
+      title={`${matched.label}: ${n} of ${files.length} files`}
     >
-      <Swatch role={matched.role} />
+      <Swatch color={matched.color} />
       <span className={n === 0 ? "text-muted" : "text-foreground"}>{n}</span>
     </span>
   );

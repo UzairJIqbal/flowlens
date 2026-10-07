@@ -46,15 +46,3 @@ export function mostDependedOn(files: readonly RepoFile[]): RepoFile[] {
 export function importedByNothing(files: readonly RepoFile[]): RepoFile[] {
   return files.filter((f) => f.fanIn === 0).sort((a, b) => b.fanOut - a.fanOut || byPath(a.path, b.path));
 }
-
-/**
- * How many files of each kind, most common first. null is a file no
- * convention identified; it is counted, never given a guessed kind.
- */
-export function kindCounts(files: readonly Pick<RepoFile, "role">[]): { kind: string | null; count: number }[] {
-  const counts = new Map<string | null, number>();
-  for (const f of files) counts.set(f.role, (counts.get(f.role) ?? 0) + 1);
-  return [...counts]
-    .map(([kind, count]) => ({ kind, count }))
-    .sort((a, b) => b.count - a.count || byPath(a.kind ?? "", b.kind ?? ""));
-}
