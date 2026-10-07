@@ -33,7 +33,7 @@ export function buildEdges(imports: readonly ImportRecord[]): Edge[] {
 /** Fan-in: distinct files importing this one. Fan-out: distinct files it imports. */
 export function fanInOut(
   paths: readonly string[],
-  edges: readonly Edge[],
+  edges: readonly Pick<Edge, "from" | "to">[],
 ): Map<string, { fanIn: number; fanOut: number }> {
   const result = new Map(paths.map((p) => [p, { fanIn: 0, fanOut: 0 }]));
   for (const edge of edges) {

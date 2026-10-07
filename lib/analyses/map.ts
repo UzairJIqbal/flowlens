@@ -1,0 +1,127 @@
+import { createSupabaseClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/database.types";
+import type { RepoFile } from "@/lib/map/detail";
+import type { FileEdge } from "@/lib/map/view";
+import { fanInOut } from "@/lib/parser/graph";
+
+export type StoredMap = {
+  repoOwner: string;
+  repoName: string;
+  commitSha: string;
+  adapter: string;
+  status: string;
+  coverage: { parsed: number; skipped: number };
+  files: RepoFile[];
+  edges: FileEdge[];
+};
+
+// Supabase caps rows per request, so a large repository is read in pages.
+const PAGE = 1000;
+
+/**
+ * The stored graph of one analysis, read as the signed-in user. Null when the
+ * policy doesn't return the analysis or nothing has been stored for it yet.
+ * The last stored graph stays readable while a re-run is going, because the
+ * store replaces it in one transaction at the very end.
+ */
+export async function getStoredMap(analysisId: string): Promise<StoredMap | null> {
+  const supabase = await createSupabaseClient();
+
+  const analysis = await supabase
+    .from("analyses")
+    .select("status, commit_sha, adapter, coverage, project:projects!inner(repo_owner, repo_name)")
+    .eq("id", analysisId)
+    .maybeSingle();
+  if (analysis.error) throw new Error(`Could not load the analysis: ${analysis.error.message}`);
+  const { data } = analysis;
+  if (!data || data.commit_sha === null) return null;
+
+  const fileRows = await readEvery("files", (from, to) =>
+    supabase
+      .from("files")
+      .select("id, path, folder, lines, file_roles(role, source)", { count: "exact" })
+      .eq("analysis_id", analysisId)
+      .order("path")
+      .range(from, to),
+  );
+  const edgeRows = await readEvery("edges", (from, to) =>
+    supabase
+      .from("edges")
+      .select("source_file_id, target_file_id", { count: "exact" })
+      .eq("analysis_id", analysisId)
+      .order("id")
+      .range(from, to),
+  );
+
+  const pathOf = new Map(fileRows.map((f) => [f.id, f.path]));
+  const edges = edgeRows.map((e) => {
+    const from = pathOf.get(e.source_file_id);
+    const to = pathOf.get(e.target_file_id);
+    // The store guarantees this can't happen; if it does, the map is wrong.
+    if (from === undefined || to === undefined) throw new Error("A stored edge points at a file that wasn't read");
+    return { from, to };
+  });
+
+  const fan = fanInOut(
+    fileRows.map((f) => f.path),
+    edges,
+  );
+  const files = fileRows.map((f) => ({
+    path: f.path,
+    folder: f.folder,
+    lines: f.lines,
+    // Labels a model adds later sit beside these; the map shows what the
+    // adapter recognised by convention.
+    role: f.file_roles.find((r) => r.source === "convention")?.role ?? null,
+    fanIn: fan.get(f.path)?.fanIn ?? 0,
+    fanOut: fan.get(f.path)?.fanOut ?? 0,
+  }));
+
+  return {
+    repoOwner: data.project.repo_owner,
+    repoName: data.project.repo_name,
+    commitSha: data.commit_sha,
+    adapter: data.adapter ?? "none",
+    status: data.status,
+    coverage: fileCoverage(data.coverage),
+    files,
+    edges,
+  };
+}
+
+type Page<T> = { data: T[] | null; error: { message: string } | null; count: number | null };
+
+// Reads until the count is reached. Coming up short throws: a map missing
+// files must never render as though it were the whole repository.
+async function readEvery<T>(what: string, page: (from: number, to: number) => PromiseLike<Page<T>>): Promise<T[]> {
+  const rows: T[] = [];
+  let total: number | null = null;
+  for (;;) {
+    const { data, error, count } = await page(rows.length, rows.length + PAGE - 1);
+    if (error) throw new Error(`Could not read the stored ${what}: ${error.message}`);
+    total ??= count;
+    if (total === null) throw new Error(`No count came back for the stored ${what}`);
+    if (!data || data.length === 0 || rows.length + data.length > total) break;
+    rows.push(...data);
+    if (rows.length === total) break;
+  }
+  if (rows.length !== total) throw new Error(`Read ${rows.length} of ${total} stored ${what}`);
+  return rows;
+}
+
+// Coverage is stored as the parser's JSON. Only the file counts are read here,
+// and they're checked rather than assumed.
+function fileCoverage(coverage: Json | null): { parsed: number; skipped: number } {
+  const files = field(coverage, "files");
+  const parsed = field(files, "parsed");
+  const skipped = field(files, "skipped");
+  if (typeof parsed !== "number" || typeof skipped !== "number") {
+    throw new Error("The stored coverage has no file counts");
+  }
+  return { parsed, skipped };
+}
+
+function field(value: Json | undefined | null, key: string): Json | undefined {
+  if (value === null || value === undefined || typeof value !== "object" || Array.isArray(value)) return undefined;
+  return value[key];
+}

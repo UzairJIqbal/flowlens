@@ -1,14 +1,15 @@
 import { createSupabaseClient } from "@/lib/supabase/server";
-import type { Enums } from "@/lib/supabase/database.types";
+import { isStale } from "@/lib/pipeline/stale";
+import { rowProgress, type Progress } from "./progress";
 
-export type AnalysisStatus = Enums<"analysis_status">;
+export type { AnalysisStatus } from "./progress";
 
 export type AnalysisSummary = {
   id: string;
   repoOwner: string;
   repoName: string;
-  status: AnalysisStatus;
-  error: string | null;
+  progress: Progress;
+  stale: boolean;
   createdAt: string;
 };
 
@@ -20,19 +21,20 @@ export async function listAnalyses(): Promise<AnalysisSummary[]> {
   const { data, error } = await supabase
     .from("analyses")
     .select(
-      "id, status, error, created_at, project:projects!inner(repo_owner, repo_name)",
+      "id, status, stage, stage_message, error, started_at, created_at, project:projects!inner(repo_owner, repo_name)",
     )
     .order("created_at", { ascending: false })
     .limit(100);
 
   if (error) throw new Error(`Could not load analyses: ${error.message}`);
 
+  const now = Date.now();
   return data.map((row) => ({
     id: row.id,
     repoOwner: row.project.repo_owner,
     repoName: row.project.repo_name,
-    status: row.status,
-    error: row.error,
+    progress: rowProgress(row),
+    stale: isStale(row.status, row.started_at, row.created_at, now),
     createdAt: row.created_at,
   }));
 }
