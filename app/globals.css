@@ -16,6 +16,14 @@
   --edge: #a1a1aa;
   --edge-uses: #2563eb;
   --edge-used-by: #d97706;
+  /* File kinds. Kept clear of blue (selection), amber (direction) and red (failure). */
+  --role-page: #7c3aed;
+  --role-layout: #0d9488;
+  --role-boundary: #db2777;
+  --role-route: #65a30d;
+  --role-middleware: #0891b2;
+  --role-instrumentation: #6366f1;
+  --role-config: #ea580c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -31,6 +39,13 @@
     --edge: #52525b;
     --edge-uses: #60a5fa;
     --edge-used-by: #fbbf24;
+    --role-page: #a78bfa;
+    --role-layout: #2dd4bf;
+    --role-boundary: #f472b6;
+    --role-route: #a3e635;
+    --role-middleware: #22d3ee;
+    --role-instrumentation: #a5b4fc;
+    --role-config: #fb923c;
   }
 }
 
@@ -46,6 +61,13 @@
   --edge: #52525b;
   --edge-uses: #60a5fa;
   --edge-used-by: #fbbf24;
+  --role-page: #a78bfa;
+  --role-layout: #2dd4bf;
+  --role-boundary: #f472b6;
+  --role-route: #a3e635;
+  --role-middleware: #22d3ee;
+  --role-instrumentation: #a5b4fc;
+  --role-config: #fb923c;
 }
 
 @theme inline {

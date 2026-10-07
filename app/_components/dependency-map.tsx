@@ -34,6 +34,7 @@ import {
   type FolderView,
   type PanelView,
 } from "@/lib/map/view";
+import { Swatch } from "./category-rail";
 import type { MapActions, MapState } from "./map-state";
 
 /**
@@ -42,8 +43,11 @@ import type { MapActions, MapState } from "./map-state";
  */
 type Lit = { selection: Selection; selected: ReadonlySet<string>; lit: ReadonlySet<string> } | null;
 
-type FolderNode = Node<{ box: FolderView; lit: Lit }, "folder">;
-type PanelNode = Node<{ box: PanelView; lit: Lit }, "panel">;
+/** The files in the rail's picked category; null when none is picked, so nothing is dimmed by it. */
+type Matched = { role: string | null; files: ReadonlySet<string> } | null;
+
+type FolderNode = Node<{ box: FolderView; lit: Lit; matched: Matched }, "folder">;
+type PanelNode = Node<{ box: PanelView; lit: Lit; matched: Matched }, "panel">;
 
 const Actions = createContext<MapActions | null>(null);
 
@@ -61,6 +65,8 @@ interface MapProps {
   fan: ReturnType<typeof folderFan>;
   facts: Map<string, FileFacts>;
   edges: FileEdge[];
+  /** The files in the rail's picked category, or null when none is picked. */
+  matched: ReadonlySet<string> | null;
   state: MapState;
   actions: MapActions;
 }
@@ -73,8 +79,8 @@ export function DependencyMap(props: MapProps) {
   );
 }
 
-function Canvas({ fold, fan, facts, edges, state, actions }: MapProps) {
-  const { selection, open, scroll, hover, hovered } = state;
+function Canvas({ fold, fan, facts, edges, matched: matchedFiles, state, actions }: MapProps) {
+  const { selection, open, scroll, hover, hovered, category } = state;
 
   const view = useMemo(
     () => buildView(fold, fan, facts, edges, open, scroll),
@@ -88,21 +94,26 @@ function Canvas({ fold, fan, facts, edges, state, actions }: MapProps) {
     return { selection, selected, lit: litFiles(selected, edges) };
   }, [selection, fold, edges]);
 
+  const matched = useMemo<Matched>(
+    () => (category === null || matchedFiles === null ? null : { role: category.role, files: matchedFiles }),
+    [category, matchedFiles],
+  );
+
   const nodes = useMemo(
     () =>
       view.boxes.map((box): FolderNode | PanelNode => {
         // Boxes sit above every edge, so a line never runs across a box's rows.
         const common = { id: box.id, position: placed.get(box.id)!, width: box.width, height: box.height, zIndex: 1 };
         return box.kind === "folder"
-          ? { ...common, type: "folder", data: { box, lit } }
-          : { ...common, type: "panel", data: { box, lit } };
+          ? { ...common, type: "folder", data: { box, lit, matched } }
+          : { ...common, type: "panel", data: { box, lit, matched } };
       }),
-    [view, placed, lit],
+    [view, placed, lit, matched],
   );
 
   const rfEdges = useMemo(() => {
     const drawn = view.edges.map((e): Edge => {
-      const state = edgeState(lit, e.files);
+      const state = edgeState(lit, matched, e.files);
       return {
         id: e.id,
         source: e.source,
@@ -117,7 +128,7 @@ function Canvas({ fold, fan, facts, edges, state, actions }: MapProps) {
     // never crossed out by a dimmed one. Stable sort keeps the layout order.
     const onTop = (e: Edge) => Number(e.className === "uses" || e.className === "used-by");
     return drawn.sort((a, b) => onTop(a) - onTop(b));
-  }, [view, lit]);
+  }, [view, lit, matched]);
 
   // Refit after an open, from the map or the pane, against the layout that
   // open produced. The effect depends on `placed`, so it can only ever see
@@ -189,11 +200,13 @@ function Canvas({ fold, fan, facts, edges, state, actions }: MapProps) {
  * a selected file imports across it, "used-by" when it imports a selected
  * file. Edges not touching the selection dim; with no selection, all are grey.
  * A drawn edge only ever runs one way between two boxes and the selection sits
- * in at most one of them, so it can't be both.
+ * in at most one of them, so it can't be both. With a rail category picked,
+ * an edge with no end in it dims too, whatever the selection says.
  */
 type EdgeState = "uses" | "used-by" | "dim" | null;
 
-function edgeState(lit: Lit, files: readonly FileEdge[]): EdgeState {
+function edgeState(lit: Lit, matched: Matched, files: readonly FileEdge[]): EdgeState {
+  if (matched !== null && !files.some((f) => matched.files.has(f.from) || matched.files.has(f.to))) return "dim";
   if (lit === null) return null;
   if (files.some((f) => lit.selected.has(f.from))) return "uses";
   if (files.some((f) => lit.selected.has(f.to))) return "used-by";
@@ -215,10 +228,13 @@ const DIM = "opacity-25";
 const POINTED_BOX = "ring-2 ring-accent";
 const POINTED_ROW = "ring-1 ring-inset ring-accent";
 
-const dimmed = (lit: Lit, files: readonly string[]) => lit !== null && !files.some((f) => lit.lit.has(f));
+// Dimmed when outside the selection's reach or outside the picked category.
+// Either one is enough: both are ways of saying "not this".
+const dimmed = (lit: Lit, matched: Matched, files: readonly string[]) =>
+  (lit !== null && !files.some((f) => lit.lit.has(f))) || (matched !== null && !files.some((f) => matched.files.has(f)));
 const isSelectedFolder = (lit: Lit, id: string) => lit?.selection.kind === "folder" && lit.selection.id === id;
 
-function FolderBox({ data: { box, lit } }: NodeProps<FolderNode>) {
+function FolderBox({ data: { box, lit, matched } }: NodeProps<FolderNode>) {
   const actions = use(Actions)!;
   const { hovered } = use(Pointed);
   const selected = isSelectedFolder(lit, box.id);
@@ -230,18 +246,22 @@ function FolderBox({ data: { box, lit } }: NodeProps<FolderNode>) {
         title={`${box.id} — ${box.files.length} files, ${box.fanIn} depend on it`}
         className={`flex h-full w-full cursor-pointer items-center justify-between gap-1.5 rounded-sm border bg-surface px-2.5 font-mono text-[11px] ${
           selected ? "border-foreground" : "border-border hover:border-muted"
-        } ${dimmed(lit, box.files) ? DIM : ""}`}
+        } ${dimmed(lit, matched, box.files) ? DIM : ""}`}
       >
         <Handle type="target" position={Position.Left} isConnectable={false} />
         <span className="truncate">{box.label}</span>
-        <span className="tabular-nums text-muted">{box.files.length}</span>
+        {matched === null ? (
+          <span className="tabular-nums text-muted">{box.files.length}</span>
+        ) : (
+          <MatchCount matched={matched} files={box.files} />
+        )}
         <Handle type="source" position={Position.Right} isConnectable={false} />
       </div>
     </Backing>
   );
 }
 
-function PanelBox({ id, data: { box, lit } }: NodeProps<PanelNode>) {
+function PanelBox({ id, data: { box, lit, matched } }: NodeProps<PanelNode>) {
   const actions = use(Actions)!;
   const { hover } = use(Pointed);
   const pointedFile = hover?.kind === "file" ? hover.path : null;
@@ -251,8 +271,8 @@ function PanelBox({ id, data: { box, lit } }: NodeProps<PanelNode>) {
   useEffect(() => updateNodeInternals(id), [id, box.rows, updateNodeInternals]);
 
   // A dimmed panel already dims its rows; dimming them again would hide them.
-  const panelDim = dimmed(lit, box.files);
-  const rowDim = (files: readonly string[]) => !panelDim && dimmed(lit, files);
+  const panelDim = dimmed(lit, matched, box.files);
+  const rowDim = (files: readonly string[]) => !panelDim && dimmed(lit, matched, files);
 
   // Wheel moves the window a whole row at a time. Trackpads send many small
   // deltas, so they're summed until they add up to a row.
@@ -283,6 +303,7 @@ function PanelBox({ id, data: { box, lit } }: NodeProps<PanelNode>) {
         >
           <span className="truncate font-semibold">{box.label}</span>
           <span className="tabular-nums text-muted">{box.files.length} files</span>
+          {matched !== null && <MatchCount matched={matched} files={box.files} />}
           <span className="ml-auto whitespace-nowrap tabular-nums text-muted">
             in <span className="text-foreground">{box.fanIn}</span> out{" "}
             <span className="text-foreground">{box.fanOut}</span>
@@ -348,6 +369,24 @@ function OutOfView({
       {files.length > 0 && `${slot === "above" ? "↑" : "↓"} ${files.length} ${slot}`}
       <Handle id={handleOut(slot)} type="source" position={Position.Right} isConnectable={false} />
     </div>
+  );
+}
+
+/**
+ * How many of a box's files are in the picked category, beside that
+ * category's swatch. Shown on every box, folded or open, so the counts across
+ * the map add up to the rail's.
+ */
+function MatchCount({ matched, files }: { matched: Exclude<Matched, null>; files: readonly string[] }) {
+  const n = files.filter((f) => matched.files.has(f)).length;
+  return (
+    <span
+      className="flex shrink-0 items-center gap-1 tabular-nums"
+      title={`${n} of ${files.length} files are ${matched.role ?? "unidentified"}`}
+    >
+      <Swatch role={matched.role} />
+      <span className={n === 0 ? "text-muted" : "text-foreground"}>{n}</span>
+    </span>
   );
 }
 

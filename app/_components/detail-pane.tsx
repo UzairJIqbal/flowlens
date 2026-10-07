@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import { INSIGHT_ORDER, INSIGHT_SENTENCES, type Cycle, type InsightKind, type Insights } from "@/lib/graph/insights";
+import { DEFAULT_DEPTH, reach, type Direction, type Link as EdgeLink } from "@/lib/graph/reach";
 import {
   importedByNothing,
   kindCounts,
@@ -35,6 +37,8 @@ export function DetailPane({
   fold,
   fan,
   neighbours,
+  edges,
+  insights,
   state,
   actions,
 }: {
@@ -44,16 +48,32 @@ export function DetailPane({
   fold: Fold;
   fan: ReturnType<typeof folderFan>;
   neighbours: Map<string, Neighbours>;
+  edges: EdgeLink[];
+  insights: Insights;
   state: MapState;
   actions: MapActions;
 }) {
-  // Lives here rather than with the selection, so it survives changing what's selected.
+  // These live here rather than with the selection, so they survive changing
+  // what's selected: comparing three files' blast radius shouldn't take three
+  // clicks on the button.
   const [tab, setTab] = useState<Tab>("structure");
+  const [walk, setWalk] = useState<Direction | null>(null);
+  const [insightsOpen, setInsightsOpen] = useState(false);
   const { selection, hovered } = state;
   const link = { actions, hovered };
 
   // The resting state, not a placeholder: deselecting always lands here.
-  if (selection === null) return <RepoSummary repo={repo} files={files} link={link} />;
+  if (selection === null)
+    return (
+      <RepoSummary
+        repo={repo}
+        files={files}
+        insights={insights}
+        insightsOpen={insightsOpen}
+        onToggleInsights={() => setInsightsOpen((o) => !o)}
+        link={link}
+      />
+    );
 
   return (
     <div className="text-xs">
@@ -61,7 +81,14 @@ export function DetailPane({
       {tab === "explanation" ? (
         <p className="px-3 py-3 text-muted">No explanation yet. Nothing generates one in this version.</p>
       ) : selection.kind === "file" ? (
-        <FileStructure file={facts.get(selection.path)!} neighbours={neighbours.get(selection.path)!} link={link} />
+        <FileStructure
+          file={facts.get(selection.path)!}
+          neighbours={neighbours.get(selection.path)!}
+          edges={edges}
+          walk={walk}
+          onWalk={(d) => setWalk((w) => (w === d ? null : d))}
+          link={link}
+        />
       ) : (
         <FolderStructure
           id={selection.id}
@@ -76,7 +103,21 @@ export function DetailPane({
 /** What every clickable path needs: how to select and point, and what's pointed at. */
 type Link = { actions: MapActions; hovered: ReadonlySet<string> };
 
-function RepoSummary({ repo, files, link }: { repo: RepoInfo; files: RepoFile[]; link: Link }) {
+function RepoSummary({
+  repo,
+  files,
+  insights,
+  insightsOpen,
+  onToggleInsights,
+  link,
+}: {
+  repo: RepoInfo;
+  files: RepoFile[];
+  insights: Insights;
+  insightsOpen: boolean;
+  onToggleInsights: () => void;
+  link: Link;
+}) {
   const unidentified = files.filter((f) => f.role === null).length;
   const leanedOn = mostDependedOn(files);
   const starts = importedByNothing(files);
@@ -129,6 +170,7 @@ function RepoSummary({ repo, files, link }: { repo: RepoInfo; files: RepoFile[];
         count={(f) => f.fanOut}
         link={link}
       />
+      <InsightsPanel insights={insights} open={insightsOpen} onToggle={onToggleInsights} link={link} />
     </div>
   );
 }
@@ -198,9 +240,25 @@ function Tabs({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
   );
 }
 
-function FileStructure({ file, neighbours, link }: { file: RepoFile; neighbours: Neighbours; link: Link }) {
+function FileStructure({
+  file,
+  neighbours,
+  edges,
+  walk,
+  onWalk,
+  link,
+}: {
+  file: RepoFile;
+  neighbours: Neighbours;
+  edges: EdgeLink[];
+  walk: Direction | null;
+  onWalk: (d: Direction) => void;
+  link: Link;
+}) {
   // Counts are the lengths of the lists below them, so they can't disagree.
   const { imports, importedBy } = neighbours;
+  // Arithmetic over edges already here: no spinner, no request.
+  const reached = useMemo(() => (walk === null ? null : reach(edges, file.path, walk)), [edges, file.path, walk]);
   return (
     <div>
       <ul className="pt-1.5">
@@ -218,6 +276,26 @@ function FileStructure({ file, neighbours, link }: { file: RepoFile; neighbours:
         <Fact label="imports">{imports.length}</Fact>
         <Fact label="imported by">{importedBy.length}</Fact>
       </Facts>
+      <div className="flex gap-1.5 px-3 pt-2.5">
+        {WALKS.map((w) => (
+          <button
+            key={w.direction}
+            type="button"
+            aria-pressed={walk === w.direction}
+            onClick={() => onWalk(w.direction)}
+            title={w.explain}
+            className={`flex h-6 items-center gap-1.5 rounded-sm border px-2 ${
+              walk === w.direction ? "border-accent bg-surface font-semibold" : "border-border hover:border-muted"
+            }`}
+          >
+            <span className="inline-block h-0.5 w-3" style={{ background: w.color }} aria-hidden />
+            {w.title}
+          </button>
+        ))}
+      </div>
+      {walk !== null && reached !== null && (
+        <WalkList walk={WALKS.find((w) => w.direction === walk)!} reached={reached} link={link} />
+      )}
       <NeighbourList title="Imports" color={IMPORTS_COLOR} paths={imports} empty="Imports no file in this repository." link={link} />
       <NeighbourList
         title="Imported by"
@@ -227,6 +305,54 @@ function FileStructure({ file, neighbours, link }: { file: RepoFile; neighbours:
         link={link}
       />
     </div>
+  );
+}
+
+interface Walk {
+  direction: Direction;
+  title: string;
+  explain: string;
+  /** The edge colour for the direction this walks: dependents arrive, dependencies leave. */
+  color: string;
+  empty: string;
+}
+
+const WALKS: Walk[] = [
+  {
+    direction: "dependents",
+    title: "Blast radius",
+    explain: `Everything that breaks if this file changes, up to ${DEFAULT_DEPTH} imports away`,
+    color: IMPORTED_BY_COLOR,
+    empty: "No file in this repository imports it, so nothing here depends on it.",
+  },
+  {
+    direction: "dependencies",
+    title: "Dependency chain",
+    explain: `Everything this file needs, up to ${DEFAULT_DEPTH} imports away`,
+    color: IMPORTS_COLOR,
+    empty: "Imports no file in this repository.",
+  },
+];
+
+function WalkList({ walk, reached, link }: { walk: Walk; reached: { path: string; depth: number }[]; link: Link }) {
+  return (
+    <section className="mt-3">
+      <h3 className="flex h-6 items-center gap-1.5 border-y border-border bg-surface px-3 font-semibold">
+        <span className="inline-block h-0.5 w-3" style={{ background: walk.color }} aria-hidden />
+        {walk.title}
+        <span className="font-normal tabular-nums text-muted">{reached.length}</span>
+        <span className="ml-auto font-normal text-muted">imports away</span>
+      </h3>
+      {reached.length === 0 ? (
+        <p className="px-3 py-1 text-muted">{walk.empty}</p>
+      ) : (
+        <ul className="py-1">
+          {reached.map((r) => (
+            <PathRow key={r.path} path={r.path} count={r.depth} link={link} />
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -260,6 +386,137 @@ function NeighbourList({
         </ul>
       )}
     </section>
+  );
+}
+
+/**
+ * Facts about the edge list, behind a header that starts closed. It sits at
+ * the bottom of the summary and is never the first thing on screen: this
+ * explains a codebase, it doesn't grade one. No total on the closed header for
+ * the same reason; a count there reads as a score.
+ */
+function InsightsPanel({
+  insights,
+  open,
+  onToggle,
+  link,
+}: {
+  insights: Insights;
+  open: boolean;
+  onToggle: () => void;
+  link: Link;
+}) {
+  return (
+    <section className="mt-3">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={onToggle}
+        className="flex h-6 w-full items-center gap-1.5 border-y border-border bg-surface px-3 text-left font-semibold"
+      >
+        <span className="w-2.5 text-muted" aria-hidden>
+          {open ? "▾" : "▸"}
+        </span>
+        Insights
+      </button>
+      {open &&
+        INSIGHT_ORDER.map((kind) => <InsightGroup key={kind} kind={kind} insights={insights} link={link} />)}
+    </section>
+  );
+}
+
+/** The per-file kinds, and what the number on each row counts. */
+const FILE_INSIGHTS = {
+  unimported: { rows: (i: Insights) => i.unimported, note: "" },
+  "heavily-imported": { rows: (i: Insights) => i.heavilyImported, note: "imported by" },
+  oversized: { rows: (i: Insights) => i.oversized, note: "lines" },
+} satisfies Record<Exclude<InsightKind, "cycle">, unknown>;
+
+function InsightGroup({ kind, insights, link }: { kind: InsightKind; insights: Insights; link: Link }) {
+  const [all, setAll] = useState(false);
+  const count = kind === "cycle" ? insights.cycles.length : FILE_INSIGHTS[kind].rows(insights).length;
+
+  return (
+    <div className="border-b border-border pb-1 last:border-b-0">
+      <p className="flex gap-1.5 px-3 pt-2">
+        <span className="min-w-0">{INSIGHT_SENTENCES[kind]}</span>
+        <span className="ml-auto shrink-0 tabular-nums text-muted">{count}</span>
+      </p>
+      {count === 0 ? (
+        <p className="px-3 pt-0.5 text-muted">None.</p>
+      ) : kind === "cycle" ? (
+        insights.cycles.map((c) => <CycleRows key={c.tangle[0]} cycle={c} link={link} />)
+      ) : (
+        <FileRows rows={FILE_INSIGHTS[kind].rows(insights)} note={FILE_INSIGHTS[kind].note} all={all} onAll={() => setAll(true)} link={link} />
+      )}
+    </div>
+  );
+}
+
+function FileRows({
+  rows,
+  note,
+  all,
+  onAll,
+  link,
+}: {
+  rows: { path: string; count?: number }[];
+  /** What the number on each row counts, if there is one. */
+  note: string;
+  all: boolean;
+  onAll: () => void;
+  link: Link;
+}) {
+  const shown = all ? rows : rows.slice(0, LIST_LIMIT);
+  return (
+    <>
+      {note && <p className="px-3 text-right text-muted">{note}</p>}
+      <ul className="pt-0.5">
+        {shown.map((r) => (
+          <PathRow key={r.path} path={r.path} count={r.count} link={link} />
+        ))}
+      </ul>
+      {rows.length > shown.length && (
+        <button type="button" onClick={onAll} className="px-3 text-accent hover:underline">
+          Show all {rows.length}
+        </button>
+      )}
+    </>
+  );
+}
+
+/**
+ * One loop, in import order, so it can be walked by hand: each row imports
+ * the next, and the last imports the first again.
+ */
+function CycleRows({ cycle, link }: { cycle: Cycle; link: Link }) {
+  const [tangle, setTangle] = useState(false);
+  const first = cycle.loop[0];
+  return (
+    <div className="pt-1">
+      <ol>
+        {cycle.loop.map((p) => (
+          <PathRow key={p} path={p} link={link} />
+        ))}
+      </ol>
+      <p className="px-3 font-mono text-[11px] text-muted">
+        ↩ {first.slice(first.lastIndexOf("/") + 1)}
+      </p>
+      {cycle.tangle.length > cycle.loop.length && (
+        <>
+          <button type="button" onClick={() => setTangle((t) => !t)} className="px-3 text-left text-accent hover:underline">
+            {tangle ? "Hide" : "Show"} all {cycle.tangle.length} files in loops with these
+          </button>
+          {tangle && (
+            <ul className="pt-0.5">
+              {cycle.tangle.map((p) => (
+                <PathRow key={p} path={p} link={link} />
+              ))}
+            </ul>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 

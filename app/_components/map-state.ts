@@ -16,7 +16,12 @@ export interface MapState {
   hover: Hover | null;
   /** The files `hover` stands for. */
   hovered: ReadonlySet<string>;
+  /** The rail category everything else is dimmed against; null when none is picked. */
+  category: Category | null;
 }
+
+/** A rail category is a role; `role: null` is the files no convention identified. */
+export type Category = { role: string | null };
 
 export interface MapActions {
   /** Opens a folded node into a panel and selects it. */
@@ -29,6 +34,8 @@ export interface MapActions {
   clear: () => void;
   scrollTo: (id: string, start: number) => void;
   hover: (target: Hover | null) => void;
+  /** Picks a category, or clears it when it's the one already picked. */
+  toggleCategory: (role: string | null) => void;
 }
 
 export function useMapState(fold: Fold, facts: Map<string, FileFacts>): [MapState, MapActions] {
@@ -36,6 +43,7 @@ export function useMapState(fold: Fold, facts: Map<string, FileFacts>): [MapStat
   const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set());
   const [scroll, setScroll] = useState<ReadonlyMap<string, number>>(() => new Map());
   const [hover, setHover] = useState<Hover | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
 
   const hovered = useMemo<ReadonlySet<string>>(() => new Set(hover ? filesOf(hover, fold) : []), [hover, fold]);
 
@@ -79,8 +87,9 @@ export function useMapState(fold: Fold, facts: Map<string, FileFacts>): [MapStat
       clear: () => setSelection(null),
       scrollTo: (id, start) => setScroll((prev) => new Map(prev).set(id, start)),
       hover: setHover,
+      toggleCategory: (role) => setCategory((prev) => (prev !== null && prev.role === role ? null : { role })),
     };
   }, [fold, facts]);
 
-  return [{ selection, open, scroll, hover, hovered }, actions];
+  return [{ selection, open, scroll, hover, hovered, category }, actions];
 }
