@@ -76,6 +76,7 @@ export async function readProgress(analysisId: string): Promise<Progress | null>
   return (await getAnalysis(analysisId))?.progress ?? null;
 }
 
+/** Converts a caught value into the error message returned by a server action. */
 function reason(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }

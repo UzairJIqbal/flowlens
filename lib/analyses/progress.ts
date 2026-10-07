@@ -17,11 +17,12 @@ export type Progress = {
   message: string | null;
 };
 
+/** Returns the private realtime channel name for an analysis. */
 export function analysisTopic(analysisId: string): string {
   return `analysis:${analysisId}`;
 }
 
-// Mirrors the trigger's coalesce(error, stage_message).
+/** Builds progress from a stored row, preferring the error over the stage message. */
 export function rowProgress(row: {
   status: AnalysisStatus;
   stage: AnalysisStage | null;
@@ -31,7 +32,7 @@ export function rowProgress(row: {
   return { status: row.status, stage: row.stage, message: row.error ?? row.stage_message };
 }
 
-// A broadcast that doesn't fit the shape is dropped rather than half-shown.
+/** Rejects unknown statuses and normalizes invalid stage or message fields to null. */
 export function broadcastProgress(event: string, payload: Record<string, unknown>): Progress | null {
   const status = Constants.public.Enums.analysis_status.find((s) => s === event);
   if (!status) return null;

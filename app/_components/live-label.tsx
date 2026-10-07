@@ -1,7 +1,9 @@
 import type { Live } from "@/lib/analyses/use-progress";
 
-// Says whether the page will actually move. A channel the policy refused looks
-// exactly like a run that has stopped, so the difference is spelled out.
+/**
+ * Says whether the page will actually move. A channel the policy refused looks
+ * exactly like a run that has stopped, so the difference is spelled out.
+ */
 export function LiveLabel({ live }: { live: Live }) {
   switch (live.state) {
     case "idle":

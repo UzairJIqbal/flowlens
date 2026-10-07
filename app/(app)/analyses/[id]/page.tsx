@@ -3,6 +3,7 @@ import { rerunAnalysis } from "@/lib/analyses/actions";
 import { getAnalysis } from "@/lib/analyses/read";
 import { ProgressView } from "./progress-view";
 
+/** Loads an accessible analysis for the progress page, or returns not found. */
 export default async function AnalysisPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   // Read as the user: another organization's analysis is absent, not forbidden.
