@@ -7,7 +7,12 @@ export function summarize(
   imports: readonly ImportRecord[],
 ): Coverage {
   const total = empty();
-  const byKind: Record<EdgeKind, OutcomeCounts> = { import: empty(), reexport: empty(), dynamic: empty() };
+  const byKind: Record<EdgeKind, OutcomeCounts> = {
+    import: empty(),
+    reexport: empty(),
+    dynamic: empty(),
+    require: empty(),
+  };
   const unresolvedByReason: Coverage["unresolvedByReason"] = {};
   const excludedByReason: Coverage["excludedByReason"] = {};
 

@@ -2,7 +2,7 @@ import { statSync } from "node:fs";
 import path from "node:path";
 import { noFrameworkAdapter, type FrameworkAdapter } from "./adapter.ts";
 import { summarize } from "./coverage.ts";
-import { extractImports } from "./extract.ts";
+import { extractModule, type RawImport } from "./extract.ts";
 import { buildEdges, fanInOut } from "./graph.ts";
 import { createResolver } from "./resolve.ts";
 import { RESULT_VERSION, type ImportOutcome, type ImportRecord, type ParseResult } from "./types.ts";
@@ -22,12 +22,15 @@ export function parseRepository(directory: string, adapter: FrameworkAdapter = n
   const resolver = createResolver(root, nodePaths, walked.skipped, walked.excludedDirectories);
 
   const imports: ImportRecord[] = [];
+  const exportsByPath = new Map<string, string[] | null>();
   for (const file of walked.files) {
-    for (const raw of extractImports(`/${file.path}`, file.text)) {
+    const parsed = extractModule(`/${file.path}`, file.text);
+    exportsByPath.set(file.path, parsed.exports);
+    for (const raw of parsed.imports) {
       const outcome: ImportOutcome =
         raw.specifier === null
-          ? { status: "unresolved", reason: "non-literal-dynamic-import", detail: `import(${raw.text})` }
-          : resolver.resolve(file.absolute, raw.specifier);
+          ? nonLiteral(raw)
+          : resolver.resolve(file.absolute, raw.specifier, raw.kind === "require" ? "require" : undefined);
       imports.push({
         from: file.path,
         specifier: raw.specifier ?? raw.text,
@@ -49,6 +52,7 @@ export function parseRepository(directory: string, adapter: FrameworkAdapter = n
     role: adapter.roleOf({ path: f.path, text: f.text }),
     fanIn: fan.get(f.path)?.fanIn ?? 0,
     fanOut: fan.get(f.path)?.fanOut ?? 0,
+    exports: exportsByPath.get(f.path) ?? null,
   }));
 
   // An adapter is trusted with what a file is, not with which files exist.
@@ -79,4 +83,10 @@ export function parseRepository(directory: string, adapter: FrameworkAdapter = n
     warnings: resolver.warnings,
     coverage: summarize(counts, imports),
   };
+}
+
+function nonLiteral(raw: RawImport): ImportOutcome {
+  return raw.kind === "require"
+    ? { status: "unresolved", reason: "non-literal-require", detail: `require(${raw.text})` }
+    : { status: "unresolved", reason: "non-literal-dynamic-import", detail: `import(${raw.text})` };
 }

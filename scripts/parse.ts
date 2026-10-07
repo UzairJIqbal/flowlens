@@ -80,6 +80,8 @@ function print(r: ParseResult, everySkip: boolean): void {
   const folders = new Set(r.files.map((f) => f.folder));
   console.log(`folders  ${folders.size} distinct`);
   console.log(`edges    ${r.edges.length} (duplicate imports between a pair merged)`);
+  const named = r.files.filter((f) => f.exports !== null);
+  console.log(`exports  ${named.length} CommonJS files with export names read`);
 
   console.log(`\nimports      seen  internal  external  excluded  unresolved`);
   const row = (label: string, k: typeof c.imports) =>
@@ -89,6 +91,7 @@ function print(r: ParseResult, everySkip: boolean): void {
   row("import", c.byKind.import);
   row("reexport", c.byKind.reexport);
   row("dynamic", c.byKind.dynamic);
+  row("require", c.byKind.require);
   row("total", c.imports);
 
   const excluded = Object.entries(c.excludedByReason);

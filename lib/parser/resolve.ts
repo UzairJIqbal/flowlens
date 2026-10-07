@@ -25,7 +25,11 @@ interface ParsedConfig {
 }
 
 export interface Resolver {
-  resolve(fromAbsolute: string, specifier: string): ImportOutcome;
+  /**
+   * `require` resolves a `require()` call: the same lookup, but a package's
+   * `exports` map is read with Node's "require" condition, as it is at runtime.
+   */
+  resolve(fromAbsolute: string, specifier: string, via?: "require"): ImportOutcome;
   warnings: string[];
 }
 
@@ -166,9 +170,10 @@ export function createResolver(
 
   const existingFile = (abs: string): boolean => existsSync(abs) && statSync(abs).isFile();
 
-  const resolve = (fromAbsolute: string, specifier: string): ImportOutcome => {
+  const resolve = (fromAbsolute: string, specifier: string, via?: "require"): ImportOutcome => {
     const config = configFor(fromAbsolute);
-    const resolved = ts.resolveModuleName(specifier, fromAbsolute, config.options, host, config.cache)
+    const mode = via === "require" ? ts.ModuleKind.CommonJS : undefined;
+    const resolved = ts.resolveModuleName(specifier, fromAbsolute, config.options, host, config.cache, undefined, mode)
       .resolvedModule;
 
     if (resolved) {

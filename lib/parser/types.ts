@@ -1,9 +1,9 @@
 // The shape the parser writes. Everything after phase 3 reads this, so a
 // change here is a change to a contract: bump RESULT_VERSION when it breaks.
 
-export const RESULT_VERSION = 2;
+export const RESULT_VERSION = 3;
 
-export const EDGE_KINDS = ["import", "reexport", "dynamic"] as const;
+export const EDGE_KINDS = ["import", "reexport", "dynamic", "require"] as const;
 export type EdgeKind = (typeof EDGE_KINDS)[number];
 
 export interface FileNode {
@@ -18,6 +18,12 @@ export interface FileNode {
   role: string | null;
   fanIn: number;
   fanOut: number;
+  /**
+   * The names a CommonJS module exports, in source order. "default" is the
+   * whole `module.exports` value, the name ESM imports it under. Null for a
+   * file that isn't CommonJS, and for one whose exports can't be read exactly.
+   */
+  exports: string[] | null;
 }
 
 /** One file-to-file connection after duplicate imports between the pair are merged. */
@@ -41,6 +47,7 @@ export const UNRESOLVED_REASONS = [
   "subpath-import-not-found",
   "workspace-package-not-resolved",
   "non-literal-dynamic-import",
+  "non-literal-require",
 ] as const;
 export type UnresolvedReason = (typeof UNRESOLVED_REASONS)[number];
 
@@ -53,7 +60,7 @@ export type ImportOutcome =
 /** Every import statement the parser saw, whatever became of it. */
 export interface ImportRecord {
   from: string;
-  /** The module specifier as written, or the expression text for a non-literal dynamic import. */
+  /** The module specifier as written, or the argument's text for a non-literal `import()` or `require()`. */
   specifier: string;
   line: number;
   kind: EdgeKind;
