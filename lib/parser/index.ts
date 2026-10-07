@@ -8,7 +8,7 @@ import { createResolver } from "./resolve.ts";
 import { RESULT_VERSION, type ImportOutcome, type ImportRecord, type ParseResult } from "./types.ts";
 import { walk } from "./walk.ts";
 
-export type { FrameworkAdapter } from "./adapter.ts";
+export type { FrameworkAdapter, SourceText } from "./adapter.ts";
 export { noFrameworkAdapter } from "./adapter.ts";
 export * from "./types.ts";
 
@@ -51,6 +51,14 @@ export function parseRepository(directory: string, adapter: FrameworkAdapter = n
     fanOut: fan.get(f.path)?.fanOut ?? 0,
   }));
 
+  // An adapter is trusted with what a file is, not with which files exist.
+  const found = adapter.routes(walked.files.map((f) => ({ path: f.path, text: f.text })));
+  for (const r of [...found.routes, ...found.withheld]) {
+    if (!nodePaths.has(r.file)) throw new Error(`Adapter ${adapter.name} put a route on ${r.file}, which was not parsed`);
+  }
+  const byPlace = (a: { file: string; line: number }, b: { file: string; line: number }) =>
+    a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line;
+
   const counts = {
     found: walked.files.length + walked.skipped.length,
     parsed: walked.files.length,
@@ -63,6 +71,8 @@ export function parseRepository(directory: string, adapter: FrameworkAdapter = n
     adapter: adapter.name,
     files,
     edges,
+    routes: [...found.routes].sort(byPlace),
+    withheldRoutes: [...found.withheld].sort(byPlace),
     imports,
     skipped: walked.skipped,
     excludedDirectories: walked.excludedDirectories,

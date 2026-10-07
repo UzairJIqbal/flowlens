@@ -33,6 +33,7 @@ export type Database = {
           started_at: string | null
           status: Database["public"]["Enums"]["analysis_status"]
           warnings: string[] | null
+          withheld_routes: Json | null
         }
         Insert: {
           adapter?: string | null
@@ -49,6 +50,7 @@ export type Database = {
           started_at?: string | null
           status?: Database["public"]["Enums"]["analysis_status"]
           warnings?: string[] | null
+          withheld_routes?: Json | null
         }
         Update: {
           adapter?: string | null
@@ -65,6 +67,7 @@ export type Database = {
           started_at?: string | null
           status?: Database["public"]["Enums"]["analysis_status"]
           warnings?: string[] | null
+          withheld_routes?: Json | null
         }
         Relationships: [
           {
@@ -359,6 +362,7 @@ export type Database = {
           analysis_id: string
           file_id: string
           id: string
+          line: number
           method: string
           organization_id: string
           path: string
@@ -367,6 +371,7 @@ export type Database = {
           analysis_id: string
           file_id: string
           id?: string
+          line: number
           method: string
           organization_id: string
           path: string
@@ -375,6 +380,7 @@ export type Database = {
           analysis_id?: string
           file_id?: string
           id?: string
+          line?: number
           method?: string
           organization_id?: string
           path?: string
@@ -416,7 +422,9 @@ export type Database = {
           p_coverage: Json
           p_edges: Json
           p_files: Json
+          p_routes: Json
           p_warnings: string[]
+          p_withheld_routes: Json
         }
         Returns: undefined
       }

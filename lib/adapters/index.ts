@@ -1,7 +1,17 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { noFrameworkAdapter, type FrameworkAdapter } from "../parser/adapter.ts";
-import { nextAdapter } from "./next.ts";
+import { nestjsAdapter } from "./nestjs.ts";
+import { nextjsAdapter } from "./nextjs.ts";
+import { reactAdapter } from "./react.ts";
+
+// Checked in this order and the first match wins. Next.js comes before React
+// because every Next app depends on React too.
+const DETECTION: readonly { dependency: string; adapter: FrameworkAdapter }[] = [
+  { dependency: "next", adapter: nextjsAdapter },
+  { dependency: "@nestjs/core", adapter: nestjsAdapter },
+  { dependency: "react", adapter: reactAdapter },
+];
 
 /**
  * Picks the adapter for a repository from what its root package.json depends
@@ -12,7 +22,7 @@ export function detectAdapter(directory: string): FrameworkAdapter {
   const manifest = path.join(directory, "package.json");
   if (!existsSync(manifest)) return noFrameworkAdapter;
   const pkg: unknown = JSON.parse(readFileSync(manifest, "utf8"));
-  return dependsOn(pkg, "next") ? nextAdapter : noFrameworkAdapter;
+  return DETECTION.find((d) => dependsOn(pkg, d.dependency))?.adapter ?? noFrameworkAdapter;
 }
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>

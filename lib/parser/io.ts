@@ -95,6 +95,8 @@ const parseResult = object({
     object({ path: str, folder: str, lines: int, hash: str, role: nullableStr, fanIn: int, fanOut: int }),
   ),
   edges: array(object({ from: str, to: str, kinds: array(edgeKind), typeOnly: bool })),
+  routes: array(object({ file: str, line: int, method: str, path: str })),
+  withheldRoutes: array(object({ file: str, line: int, reason: str })),
   imports: array(object({ from: str, specifier: str, line: int, kind: edgeKind, typeOnly: bool, outcome })),
   skipped: array(
     object({

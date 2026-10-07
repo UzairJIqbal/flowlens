@@ -5,8 +5,6 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/__clerk(.*)",
-  // Phase 4 scaffolding: renders checked-in parser output, touches no user data.
-  "/preview",
 ]);
 const isSetupRoute = createRouteMatcher(["/setup"]);
 

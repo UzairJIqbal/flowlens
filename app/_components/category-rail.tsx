@@ -1,6 +1,6 @@
 "use client";
 
-import { roleColor, type CategoryCount } from "@/lib/map/categories";
+import type { CategoryCount, Kinds } from "@/lib/map/categories";
 import type { Category } from "./map-state";
 
 /**
@@ -9,10 +9,12 @@ import type { Category } from "./map-state";
  */
 export function CategoryRail({
   categories,
+  kinds,
   category,
   onToggle,
 }: {
   categories: CategoryCount[];
+  kinds: Kinds;
   category: Category | null;
   onToggle: (role: string | null) => void;
 }) {
@@ -31,8 +33,8 @@ export function CategoryRail({
                 active ? "border-accent bg-surface font-semibold" : "border-transparent hover:bg-surface"
               }`}
             >
-              <Swatch role={role} />
-              <span className={`truncate ${role === null ? "text-muted" : ""}`}>{role ?? "unidentified"}</span>
+              <Swatch color={kinds.color(role)} />
+              <span className={`truncate ${role === null ? "text-muted" : ""}`}>{kinds.label(role)}</span>
               <span className="ml-auto tabular-nums text-muted">{count}</span>
             </button>
           </li>
@@ -43,8 +45,7 @@ export function CategoryRail({
 }
 
 /** A role's colour; an empty outline for a role with none, so absence reads as absence. */
-export function Swatch({ role }: { role: string | null }) {
-  const color = roleColor(role);
+export function Swatch({ color }: { color: string | null }) {
   return (
     <span
       aria-hidden

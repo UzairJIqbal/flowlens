@@ -58,16 +58,24 @@ export interface Insights {
 
 const byPath = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
 
-export function insights(files: readonly InsightFile[], edges: readonly Link[]): Insights {
+/**
+ * `importedToBeReached` says, for a role, whether an import is the only way the
+ * framework reaches such a file. True for files no convention identified.
+ */
+export function insights(
+  files: readonly InsightFile[],
+  edges: readonly Link[],
+  importedToBeReached: (role: string | null) => boolean,
+): Insights {
   const fanIn = new Map(files.map((f) => [f.path, 0]));
   for (const e of edges) fanIn.set(e.to, (fanIn.get(e.to) ?? 0) + 1);
 
-  // A role means a framework convention recognised the file, and every such
-  // convention is a way the framework reaches it without an import. Reporting
-  // those would be the parser describing the limits of its own view as a
-  // finding about the code.
+  // A page or an entry point is reached by the framework without an import.
+  // Reporting those would be the parser describing the limits of its own view
+  // as a finding about the code. A component or a service is reached only by
+  // being imported, so one nothing imports is reported like any other file.
   const unimported = files
-    .filter((f) => fanIn.get(f.path) === 0 && f.role === null)
+    .filter((f) => fanIn.get(f.path) === 0 && importedToBeReached(f.role))
     .map((f) => ({ path: f.path }))
     .sort((a, b) => byPath(a.path, b.path));
 

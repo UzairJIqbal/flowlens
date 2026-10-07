@@ -104,6 +104,13 @@ function print(r: ParseResult, everySkip: boolean): void {
     console.log(`  ${i.from}:${i.line}  ${i.kind} "${i.specifier}"  ${i.outcome.reason}: ${i.outcome.detail}`);
   }
 
+  console.log(`\nroutes (${r.routes.length})`);
+  for (const route of r.routes) console.log(`  ${route.method.padEnd(7)} ${route.path}  ${route.file}:${route.line}`);
+  if (r.withheldRoutes.length > 0) {
+    console.log(`\nroutes withheld (${r.withheldRoutes.length})`);
+    for (const w of r.withheldRoutes) console.log(`  ${w.file}:${w.line}  ${w.reason}`);
+  }
+
   if (r.warnings.length > 0) {
     console.log(`\nconfig warnings`);
     for (const w of r.warnings) console.log(`  ${w}`);

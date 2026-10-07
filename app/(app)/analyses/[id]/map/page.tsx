@@ -15,7 +15,12 @@ export default async function AnalysisMapPage({ params }: { params: Promise<{ id
   // Nothing stored yet: the pipeline page is the only thing to show.
   if (!map) redirect(`/analyses/${analysis.id}`);
 
-  const repo = { name: `${map.repoOwner}/${map.repoName}`, adapter: map.adapter, coverage: map.coverage };
+  const repo = {
+    name: `${map.repoOwner}/${map.repoName}`,
+    adapter: map.adapter,
+    coverage: map.coverage,
+    routes: { found: map.routes.length, withheld: map.withheldRoutes.length },
+  };
 
   return (
     <section className="flex min-h-0 flex-1 flex-col">
@@ -39,7 +44,14 @@ export default async function AnalysisMapPage({ params }: { params: Promise<{ id
           {map.status !== "complete" && <span className="ml-1">({map.status})</span>}
         </Link>
       </div>
-      <MapWorkspace title="Categories" repo={repo} files={map.files} edges={map.edges} />
+      <MapWorkspace
+        title="Categories"
+        repo={repo}
+        files={map.files}
+        edges={map.edges}
+        routes={map.routes}
+        withheldRoutes={map.withheldRoutes}
+      />
     </section>
   );
 }

@@ -5,6 +5,7 @@ import { detectAdapter } from "../adapters/index.ts";
 import { EDGE_KINDS, parseRepository, type Coverage } from "../parser/index.ts";
 import { createAdminClient } from "../supabase/admin.ts";
 import type { Enums, Json } from "../supabase/database.types.ts";
+import { frameworkOf } from "../taxonomy.ts";
 import { downloadArchive, extractArchive, parseRepositoryUrl, resolveHead, type RepositoryRef } from "./github.ts";
 import { STALE_AFTER_MINUTES } from "./stale.ts";
 
@@ -124,7 +125,8 @@ export async function executeRun({ analysisId, repo }: ClaimedRun): Promise<void
 
     await enter(db, analysisId, "select", "Looking for a framework");
     const adapter = detectAdapter(checkout);
-    const framework = adapter.name === "none" ? "No framework detected" : `Framework: ${adapter.name}`;
+    const named = frameworkOf(adapter.name).label;
+    const framework = named === null ? "No framework detected" : `Framework: ${named}`;
 
     await enter(db, analysisId, "parse", `${framework}. Parsing imports`);
     const result = parseRepository(checkout, adapter);
@@ -133,7 +135,7 @@ export async function executeRun({ analysisId, repo }: ClaimedRun): Promise<void
       db,
       analysisId,
       "store",
-      `Storing ${result.files.length} files and ${result.edges.length} edges`,
+      `Storing ${result.files.length} files, ${result.edges.length} edges and ${result.routes.length} routes`,
     );
     const stored = await db.rpc("store_analysis", {
       p_analysis: analysisId,
@@ -141,6 +143,8 @@ export async function executeRun({ analysisId, repo }: ClaimedRun): Promise<void
       p_adapter: result.adapter,
       p_files: result.files.map(({ path, folder, lines, hash, role }) => ({ path, folder, lines, hash, role })),
       p_edges: result.edges.map(({ from, to, kinds, typeOnly }) => ({ from, to, kinds, typeOnly })),
+      p_routes: result.routes.map(({ file, line, method, path }) => ({ file, line, method, path })),
+      p_withheld_routes: result.withheldRoutes.map(({ file, line, reason }) => ({ file, line, reason })),
       p_coverage: toJson(result.coverage),
       p_warnings: result.warnings,
     });
