@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "parse": "node scripts/parse.ts"
+    "parse": "node scripts/parse.ts",
+    "analyze": "node --env-file=.env.local scripts/analyze.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.11",

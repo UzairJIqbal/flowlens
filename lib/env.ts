@@ -13,6 +13,8 @@ const required = [
   "NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL",
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  // The pipeline's writer. Server only: it bypasses row-level security.
+  "SUPABASE_SECRET_KEY",
 ] as const;
 
 type EnvKey = (typeof required)[number];
