@@ -134,7 +134,7 @@ export function buildView(
         files: node.files,
         fanIn,
         fanOut,
-        width: Math.ceil(label.length * CHAR + 2 * PAD_X + countWidth(node.files.length)),
+        width: Math.ceil(label.length * CHAR + 2 * PAD_X + countWidth(node.files.length) + MATCH_W),
         height: Math.round(folderHeight(fanIn)),
       };
     }
@@ -159,7 +159,8 @@ export function buildView(
     // Size comes from every file, not the rows in view, so scrolling never
     // resizes the panel and never moves anything else on the map.
     const headerText = `${label} ${node.files.length} files in ${fanIn} out ${fanOut}`;
-    const widest = Math.max(headerText.length, ...node.files.map((f) => rowLabels.get(f)!.length + 10));
+    const matchChars = Math.ceil((MATCH_W + countWidth(node.files.length)) / CHAR);
+    const widest = Math.max(headerText.length + matchChars, ...node.files.map((f) => rowLabels.get(f)!.length + 10));
     return {
       kind: "panel",
       id: node.id,
@@ -208,6 +209,12 @@ export function startShowing(ordered: readonly string[], path: string, start: nu
 }
 
 const countWidth = (n: number) => (String(n).length + 1) * CHAR;
+
+/**
+ * Room for a rail category's swatch beside a box's count. Reserved whether or
+ * not a category is picked, so picking one never resizes a box or moves the map.
+ */
+const MATCH_W = 14;
 
 /**
  * What stays at full strength: the selected files, every edge touching them,

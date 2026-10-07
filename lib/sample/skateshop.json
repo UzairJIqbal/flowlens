@@ -1,14 +1,14 @@
 {
   "version": 1,
   "root": "/private/tmp/claude-502/-Users-UzairIqbal-Projects-flowlens/6b43ccd1-19fd-4cc4-b139-b33a9a49d816/scratchpad/repos/skateshop",
-  "adapter": "none",
+  "adapter": "next",
   "files": [
     {
       "path": ".eslintrc.cjs",
       "folder": ".",
       "lines": 51,
       "hash": "e5af7829114073dfab02c9f0909e64c11066f0541c5f8bc20b453a230d9d8a3a",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -17,7 +17,7 @@
       "folder": ".",
       "lines": 136,
       "hash": "8180b6a4779de14edf779e81236d0f1468185d4af330e6f54dbbf8cf9fb2c61f",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -26,7 +26,7 @@
       "folder": ".",
       "lines": 11,
       "hash": "53a2a1a03274983379ce5e0816da063289c338569ab4456a9572f95c396f4d85",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -35,7 +35,7 @@
       "folder": ".",
       "lines": 25,
       "hash": "6ec9f22553ce59578a3903e8e7a323ef665b1b96abf601b52a609e10bca0020a",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -44,7 +44,7 @@
       "folder": ".",
       "lines": 8,
       "hash": "397fd4d623cdba4816f8db2dc39d28ac5812c25ce1ca5af741b32e351c065368",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -53,7 +53,7 @@
       "folder": ".",
       "lines": 39,
       "hash": "c2517af1671b6cd9568713bcc6801b3c9e29d7e56c50613047c138de75b73722",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -134,7 +134,7 @@
       "folder": "src/app/(auth)",
       "lines": 49,
       "hash": "4f6759e96916029191bba814e23c427faa5d23677268fe5bad32f3456445d6f9",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -143,7 +143,7 @@
       "folder": "src/app/(auth)/signin/[[...signin]]",
       "lines": 71,
       "hash": "e212d5906cbaac07ae4897a27d4dcc37d09de3e90f03c8892c669f5409f3217d",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 5
     },
@@ -152,7 +152,7 @@
       "folder": "src/app/(auth)/signin/reset-password/[[...reset-password]]",
       "lines": 36,
       "hash": "ea0e371656a74b6f6ce5ba4f6a0e56cceb39e5beddf90e8902801b7e8593e12a",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -161,7 +161,7 @@
       "folder": "src/app/(auth)/signin/reset-password/confirm/[[...confirm]]",
       "lines": 36,
       "hash": "ce06bfe2a08ce11438af174f44feb81594f8f1dc16505758ce42d0f568dfbede",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -170,7 +170,7 @@
       "folder": "src/app/(auth)/signout/[[...signout]]",
       "lines": 30,
       "hash": "5d67618c97fcd7bb65e377c52c80c36246d79f059e0a16f99a3bad63be10d7ee",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -179,7 +179,7 @@
       "folder": "src/app/(auth)/signup/[[...signup]]",
       "lines": 62,
       "hash": "556092b3226a47be748aadec065d5b894455899ae1cf8f106296ae5046898737",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 5
     },
@@ -188,7 +188,7 @@
       "folder": "src/app/(auth)/signup/verify-email/[[...verify-email]]",
       "lines": 36,
       "hash": "9513eab65bcd05e45580ad52cf5a33e4b8d9f303adf3c6527cf47a4415165ce6",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -197,7 +197,7 @@
       "folder": "src/app/(auth)/sso-callback/[[...sso-callback]]",
       "lines": 13,
       "hash": "c1e1c5d77b26848c411898b7a7c6ddba7026ed89cd4596018ce4b1254529ce1e",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -206,7 +206,7 @@
       "folder": "src/app/(checkout)/cart",
       "lines": 22,
       "hash": "dacb93875874d51196c8c97d32b350206bed4d1fb2ee1171f0e255a498541440",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -215,7 +215,7 @@
       "folder": "src/app/(checkout)/cart",
       "lines": 72,
       "hash": "aead9c761d675e80795b79dae790cc2f9fcc83b4ba646458084afce2463fca08",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 7
     },
@@ -224,7 +224,7 @@
       "folder": "src/app/(checkout)/cart",
       "lines": 72,
       "hash": "d7522f212153ed502577c442210b1cd95a120bd852610f0dbd00901de72f26ee",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -233,7 +233,7 @@
       "folder": "src/app/(checkout)/checkout/[storeId]",
       "lines": 26,
       "hash": "3982d52f31ed6dab85fc446c2d262866335a891186951841f8e9be8817a8890c",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -242,7 +242,7 @@
       "folder": "src/app/(checkout)/checkout/[storeId]",
       "lines": 78,
       "hash": "4c2c39cf2ec8ceebbfaac776341cba8d21364c350c8c39054960784ba70e310e",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -251,7 +251,7 @@
       "folder": "src/app/(checkout)/checkout/[storeId]",
       "lines": 173,
       "hash": "cc9f8aa4e1107337aa4affd2544de5fc96a7f4be8876111fcd530492edbb3b9e",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 14
     },
@@ -260,7 +260,7 @@
       "folder": "src/app/(checkout)/checkout/[storeId]/success",
       "lines": 65,
       "hash": "8608a4f7796e4e403990f5a2238466eae064c16e9708f3e93b13f2de2a4726a9",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 5
     },
@@ -269,7 +269,7 @@
       "folder": "src/app/(checkout)/checkout/[storeId]/success",
       "lines": 166,
       "hash": "8cb0be9ee189c188833ef4d68780500f04e3ee3cfbb631d7f21bd961221e20e6",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 10
     },
@@ -278,7 +278,7 @@
       "folder": "src/app/(checkout)/checkout",
       "lines": 15,
       "hash": "0796f27dd8f17171961467e1f8cbb920f32834c5a4882f574bc4885be84c0b23",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -296,7 +296,7 @@
       "folder": "src/app/(dashboard)/dashboard/account/[[...rest]]",
       "lines": 41,
       "hash": "42aef3fa46dee5ebd68d0f1fbffc670ffad36c8f8b3a7c828f13900702a72d93",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 3
     },
@@ -305,7 +305,7 @@
       "folder": "src/app/(dashboard)/dashboard/account/[[...rest]]",
       "lines": 35,
       "hash": "2edc06f773a70a17445367a65104626f1b531e54d92667064ae4a75a3b1f07df",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 5
     },
@@ -332,7 +332,7 @@
       "folder": "src/app/(dashboard)/dashboard/billing",
       "lines": 71,
       "hash": "8f2fc17dd7ce245b92ebbb25eed546334deb4a226b83cd6bbec62893c8e53845",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -341,7 +341,7 @@
       "folder": "src/app/(dashboard)/dashboard",
       "lines": 54,
       "hash": "0c7f15030085ea38e1a225738d6bb355edcabbb9d33caac1c29d9aff8a3de1ff",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 7
     },
@@ -350,7 +350,7 @@
       "folder": "src/app/(dashboard)/dashboard/purchases/[purchaseId]",
       "lines": 42,
       "hash": "f0890be6fab3016ba23bfc49756c201234c1b92e98d1378bd6fac7326001d06a",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -359,7 +359,7 @@
       "folder": "src/app/(dashboard)/dashboard/purchases/[purchaseId]",
       "lines": 112,
       "hash": "f6b381e05b3494fbc222c403bdb6f1acc6ebc4be83e35f20db6558d5c64a89ce",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -368,7 +368,7 @@
       "folder": "src/app/(dashboard)/dashboard/purchases",
       "lines": 146,
       "hash": "e5ec85d253e59a1723bcb0ff0ec765a6e4747fc6bb624f7d0c70fda36df56853",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 11
     },
@@ -395,7 +395,7 @@
       "folder": "src/app/(dashboard)/dashboard/settings",
       "lines": 74,
       "hash": "e380cbde329ace9b5f6d4a70ee82731dbe96e2f520a2e0d315b73bc59bb04077",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 10
     },
@@ -449,7 +449,7 @@
       "folder": "src/app/(dashboard)/onboarding",
       "lines": 39,
       "hash": "be05c98e670ccf98351f9ec8292eca52f1196da6184e2d3811f6cb7ffa0df394",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -530,7 +530,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/analytics",
       "lines": 234,
       "hash": "a81218e53f9aa3c033164d2ed4728a43beb2f7951b4768c4aeefff0b594689ca",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 13
     },
@@ -539,7 +539,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/customers/[customerId]",
       "lines": 168,
       "hash": "8f3b50dbd99d9748da3083a866e2f686d00ca00f60530f57bae75693fc0ab641",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -548,7 +548,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/customers",
       "lines": 158,
       "hash": "133e4a5a3c110e9615766ad39d057efc2698990159b844fe27b055a6c524a262",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -557,7 +557,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]",
       "lines": 28,
       "hash": "d04597024d48e57aaf0b066177a13a227b168a15c427939a27be38dd89ebe1ef",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -566,7 +566,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]",
       "lines": 70,
       "hash": "ea5ad7d0f56b7f730235eff3aee946a0a52647dd705bda56d342e5583a5bd780",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -575,7 +575,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]",
       "lines": 40,
       "hash": "7172f80aa0f7b3ab48570dec77fc7db13d3b85806eb7e214521e7e4457a09a41",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -584,7 +584,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]",
       "lines": 15,
       "hash": "ebcd0e69dd2c405bd3852bed3049c312f0861c349d2206e578a8103a8c57f1db",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -593,7 +593,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/orders/[orderId]",
       "lines": 34,
       "hash": "440d9f4e2a67dc448c3b2e8a26c06ee57406f6beb0a6058efaf886f5106e0ee4",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -602,7 +602,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/orders/[orderId]",
       "lines": 90,
       "hash": "b3899c20642ae3a17b6f6bc7eab41744fdbabc7dcbdbd6c7d3b4a2152d757e0b",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 6
     },
@@ -611,7 +611,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/orders",
       "lines": 164,
       "hash": "bba8ff6c44b68bcb8d378b1f29c840fe7bf115613941f4df60da6197869a6168",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -620,7 +620,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]",
       "lines": 222,
       "hash": "caca798fb1c48b48808cb41b3e12525377e95f49355b571d5f716ab0b0458951",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 13
     },
@@ -638,7 +638,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/products/[productId]",
       "lines": 29,
       "hash": "00b307a1fe9f0ad9c7446848f470ace7f7cd45b14c609cc5b1225f57af104e50",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -647,7 +647,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/products/[productId]",
       "lines": 23,
       "hash": "43cdbab917ddedcf3a1482d470673d5825ee9ffb2be60be83defcb1fb9bb41f5",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -656,7 +656,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/products/[productId]",
       "lines": 65,
       "hash": "4ee0626843fe62cf0824a0cb58bae530b6bb34ddb7735e85471514fb6113ffd9",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 6
     },
@@ -674,7 +674,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/products/new",
       "lines": 28,
       "hash": "df0473ac33ef9d12e9b4c3de2a0481d993b5b19c3cd7e5b1e4240ed09007664f",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -683,7 +683,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/products/new",
       "lines": 53,
       "hash": "b395631324496abc8311fb4c277763b705fb75b7ac83ac0dc68b70db7a9943ec",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 5
     },
@@ -692,7 +692,7 @@
       "folder": "src/app/(dashboard)/store/[storeId]/products",
       "lines": 163,
       "hash": "09cbfe09eeebeb0d4c865679c0fa69e316982990e723f6ee3fb7e9a41587840f",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -737,7 +737,7 @@
       "folder": "src/app/(lobby)/(content)/[...slug]",
       "lines": 15,
       "hash": "d7dd0a2006d45c7f00b37b0a9e69acd12ed61d6aa5fd9f27c26bd6a9075d7a44",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -746,7 +746,7 @@
       "folder": "src/app/(lobby)/(content)/[...slug]",
       "lines": 118,
       "hash": "8df60b3c90621cb41a17a7f96a3d40301ff65b28339ac78330c84e61d542a1e0",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 7
     },
@@ -773,7 +773,7 @@
       "folder": "src/app/(lobby)/(content)/blog/[...slug]",
       "lines": 43,
       "hash": "3c0b4ae073910cedd7faeeae3030e3b16bf284ce50d7babafae3f434e4457841",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -782,7 +782,7 @@
       "folder": "src/app/(lobby)/(content)/blog/[...slug]",
       "lines": 15,
       "hash": "659f5eb32a61a7121283ac5a19e717641b737fee947fad5ce299456eb801bc22",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -791,7 +791,7 @@
       "folder": "src/app/(lobby)/(content)/blog/[...slug]",
       "lines": 182,
       "hash": "d5f43ecb4e2ef557298890f45baa93a67ad67602a472e30de5eb17c874f640f1",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -800,7 +800,7 @@
       "folder": "src/app/(lobby)/(content)/blog",
       "lines": 50,
       "hash": "0a9e2161adfb9e5347f34733cfb5e0da48c845eb5a09698f55daaca29a8068b7",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 6
     },
@@ -809,7 +809,7 @@
       "folder": "src/app/(lobby)/@modal/(.)preview",
       "lines": 11,
       "hash": "6e262eb7560b8b629324f41576eb2b6a4bf284841798c1798f135282a2442e39",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -818,7 +818,7 @@
       "folder": "src/app/(lobby)/@modal/(.)preview/product/[productId]",
       "lines": 29,
       "hash": "a43b3b7c8a716800ae6fa922c36b0b1ea0d21f39c9472fc9a8c0cdbd32a39611",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 4
     },
@@ -827,7 +827,7 @@
       "folder": "src/app/(lobby)/@modal/(.)preview/product/[productId]",
       "lines": 15,
       "hash": "d2d5050572bbb52f32ee3631351c62133ff12cd0b5ef03419218ee3af29a93b4",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -836,7 +836,7 @@
       "folder": "src/app/(lobby)/@modal/(.)preview/product/[productId]",
       "lines": 98,
       "hash": "7061cc4e06972acda2829f818cafc80d6e5eba5a13a6a57964d1b6e5f3cf4460",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 10
     },
@@ -845,7 +845,7 @@
       "folder": "src/app/(lobby)/@modal",
       "lines": 3,
       "hash": "b36538ed7a0b167d655064a683484cee8d52e0f2fe025ece6ca5729c7b13aef2",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -854,7 +854,7 @@
       "folder": "src/app/(lobby)/build-a-board",
       "lines": 108,
       "hash": "6d28d398204493851fcaea26b67a0cc2eabd0bdcdaff3f0551968a0b1aa85e50",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -863,7 +863,7 @@
       "folder": "src/app/(lobby)/collections/[category]/[subcategory]",
       "lines": 77,
       "hash": "59e585551e15c5f8a5f4b614742419a9c5d25a7c4d6a7bb57da814fa19f42ed5",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -872,7 +872,7 @@
       "folder": "src/app/(lobby)/collections/[category]",
       "lines": 5,
       "hash": "e5f418ab8837be14c48e26919bada476b009af18a34b2550e0fc2b836cf682c0",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -881,7 +881,7 @@
       "folder": "src/app/(lobby)/collections/[category]",
       "lines": 49,
       "hash": "a58911704a4acd883801e61e6e2c45e98146fc027403d9df58c0877bcbc18b69",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 7
     },
@@ -890,7 +890,7 @@
       "folder": "src/app/(lobby)",
       "lines": 23,
       "hash": "beaecbd8491b04624fb2af03aeec007cc720ef5bb751ebe46312c722d9a9c7f8",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 3
     },
@@ -899,7 +899,7 @@
       "folder": "src/app/(lobby)",
       "lines": 32,
       "hash": "e0d0505a734e60f4bd15cb33b22754a2a1c5169eed9a6a4a7c064041a979653a",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 5
     },
@@ -908,7 +908,7 @@
       "folder": "src/app/(lobby)/preview/product/[productId]",
       "lines": 15,
       "hash": "ac9e84f77ad425cc8a6bef0235f23224f5e0da444855d2938a5e0b5b7dc02393",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -935,7 +935,7 @@
       "folder": "src/app/(lobby)/product/[productId]",
       "lines": 90,
       "hash": "4f83c7cf607ad3e26a43bba3377000d94769b0b157d2f0a38024e1cf86ad3732",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 7
     },
@@ -944,7 +944,7 @@
       "folder": "src/app/(lobby)/product/[productId]",
       "lines": 15,
       "hash": "1e54f7374aada218504c5a97b112aa267c809d5bdccd70e7ec6bc607b58731bf",
-      "role": null,
+      "role": "boundary",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -953,7 +953,7 @@
       "folder": "src/app/(lobby)/product/[productId]",
       "lines": 187,
       "hash": "75220bf93da435a612f1e4283c8b3ead926e250be0fc546bd1dd7b5d1d451a22",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 13
     },
@@ -962,7 +962,7 @@
       "folder": "src/app/(lobby)/products",
       "lines": 25,
       "hash": "1ff2136292ccdc5ca7738dc9b3cb62d58b4ec180cebe3604f1e4060a5b34681f",
-      "role": null,
+      "role": "boundary",
       "fanIn": 1,
       "fanOut": 3
     },
@@ -971,7 +971,7 @@
       "folder": "src/app/(lobby)/products",
       "lines": 40,
       "hash": "c6ddb5645d837614fbfc482a60c7db10437935816b5e7828a60a7a7b080d9c09",
-      "role": null,
+      "role": "page",
       "fanIn": 0,
       "fanOut": 6
     },
@@ -980,7 +980,7 @@
       "folder": "src/app/api/email/newsletter",
       "lines": 76,
       "hash": "e94cd69df9c637925dc2cc9c86cc007ff79f2aaaa7acd41468f4815da7d6dcfe",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 6
     },
@@ -989,7 +989,7 @@
       "folder": "src/app/api/og",
       "lines": 96,
       "hash": "7f105558e794b10e7e632f35ebf78f2029aa7749bd2098543a483d4aa6984a79",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 2
     },
@@ -998,7 +998,7 @@
       "folder": "src/app/api/revalidate/[tag]",
       "lines": 23,
       "hash": "778cb90aae0752f4a018e01955d5c8066ba3f253875e63cba41762f7920ff224",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -1007,7 +1007,7 @@
       "folder": "src/app/api/revalidate",
       "lines": 12,
       "hash": "8e26cbba6e1dc306b0995d15ba65de2c322b2f22c9aa27ec8279cd8643fd4bd6",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -1025,7 +1025,7 @@
       "folder": "src/app/api/uploadthing",
       "lines": 11,
       "hash": "4ec8b98b8b9dbd91ceaefaee6758b7513dd22ee93f9be5d719baebe1cad9ad3f",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -1034,7 +1034,7 @@
       "folder": "src/app/api/webhooks/stripe",
       "lines": 234,
       "hash": "299c4347a93849bee263ca7121d63561641283807e073d966dd35f5a53fdc17c",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 5
     },
@@ -1043,7 +1043,7 @@
       "folder": "src/app",
       "lines": 101,
       "hash": "841c45043abc4d747c1667db09af67b25e7812cfe4b39c78f2c51c55e4fa0f9d",
-      "role": null,
+      "role": "layout",
       "fanIn": 0,
       "fanOut": 8
     },
@@ -1052,7 +1052,7 @@
       "folder": "src/app",
       "lines": 13,
       "hash": "8eab312d804f82940e07e6b3744e8bf41f96391c159327c89206f8d83d4be408",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 1
     },
@@ -1061,7 +1061,7 @@
       "folder": "src/app",
       "lines": 139,
       "hash": "58c534cf54f8cf1c5feb107ef384ff1b21f01121ec3ac98f7b1f3d81196d784f",
-      "role": null,
+      "role": "route",
       "fanIn": 0,
       "fanOut": 3
     },
@@ -2789,7 +2789,7 @@
       "folder": "src",
       "lines": 18,
       "hash": "ae8991a7ff341005ccedde5256c1feb51f411000c1f823bf8b870fe61cfab2a9",
-      "role": null,
+      "role": "middleware",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -2807,7 +2807,7 @@
       "folder": ".",
       "lines": 259,
       "hash": "04d060a364a05a1db4dd522fcf8ddba6338042cac424e1a357f20fb3ddf98818",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 0
     },
@@ -2816,7 +2816,7 @@
       "folder": ".",
       "lines": 36,
       "hash": "4c1d39c9c608112e62f6b2c0ec47f59cb68196fa8291645213460897949f235f",
-      "role": null,
+      "role": "config",
       "fanIn": 0,
       "fanOut": 0
     }

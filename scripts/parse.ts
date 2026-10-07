@@ -7,6 +7,7 @@
 // --read loads a written result, checks it against the contract, and prints it.
 
 import path from "node:path";
+import { detectAdapter } from "../lib/adapters/index.ts";
 import { parseRepository, type ParseResult } from "../lib/parser/index.ts";
 import { readResult, writeResult } from "../lib/parser/io.ts";
 
@@ -40,7 +41,7 @@ if (readPath !== null) {
     process.exit(1);
   }
   const started = performance.now();
-  result = parseRepository(dir);
+  result = parseRepository(dir, detectAdapter(dir));
   console.log(`parsed in ${((performance.now() - started) / 1000).toFixed(1)}s\n`);
 }
 
@@ -71,6 +72,10 @@ function print(r: ParseResult, everySkip: boolean): void {
     for (const [key, n] of [...groups].sort((a, b) => b[1] - a[1])) console.log(`  skip  ${pad(n, 5)}  ${key}`);
   }
   for (const d of r.excludedDirectories) console.log(`  dir   ${d.path}/  not walked: ${d.reason}`);
+
+  const roles = new Map<string, number>();
+  for (const f of r.files) roles.set(f.role ?? "unidentified", (roles.get(f.role ?? "unidentified") ?? 0) + 1);
+  console.log(`roles    ${[...roles].sort((a, b) => b[1] - a[1]).map(([role, n]) => `${role} ${n}`).join("  ")}`);
 
   const folders = new Set(r.files.map((f) => f.folder));
   console.log(`folders  ${folders.size} distinct`);
