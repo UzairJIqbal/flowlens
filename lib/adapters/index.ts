@@ -1,16 +1,20 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { noFrameworkAdapter, type FrameworkAdapter } from "../parser/adapter.ts";
+import { expressAdapter } from "./express.ts";
 import { nestjsAdapter } from "./nestjs.ts";
 import { nextjsAdapter } from "./nextjs.ts";
 import { reactAdapter } from "./react.ts";
 
 // Checked in this order and the first match wins. Next.js comes before React
-// because every Next app depends on React too.
+// because every Next app depends on React too, and NestJS before Express
+// because Nest runs on it. React comes before Express: a package depending on
+// both is a React app with a server, and its components are most of it.
 const DETECTION: readonly { dependency: string; adapter: FrameworkAdapter }[] = [
   { dependency: "next", adapter: nextjsAdapter },
   { dependency: "@nestjs/core", adapter: nestjsAdapter },
   { dependency: "react", adapter: reactAdapter },
+  { dependency: "express", adapter: expressAdapter },
 ];
 
 /**

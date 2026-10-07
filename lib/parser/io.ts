@@ -92,7 +92,16 @@ const parseResult = object({
   root: str,
   adapter: str,
   files: array(
-    object({ path: str, folder: str, lines: int, hash: str, role: nullableStr, fanIn: int, fanOut: int }),
+    object({
+      path: str,
+      folder: str,
+      lines: int,
+      hash: str,
+      role: nullableStr,
+      fanIn: int,
+      fanOut: int,
+      exports: (v, at) => (v === null ? undefined : array(str)(v, at)),
+    }),
   ),
   edges: array(object({ from: str, to: str, kinds: array(edgeKind), typeOnly: bool })),
   routes: array(object({ file: str, line: int, method: str, path: str })),
@@ -110,7 +119,7 @@ const parseResult = object({
   coverage: object({
     files: object({ found: int, parsed: int, skipped: int }),
     imports: counts,
-    byKind: object({ import: counts, reexport: counts, dynamic: counts }),
+    byKind: object({ import: counts, reexport: counts, dynamic: counts, require: counts }),
     unresolvedByReason: partialMap(unresolvedReason, int),
     excludedByReason: partialMap(excludedReason, int),
   }),

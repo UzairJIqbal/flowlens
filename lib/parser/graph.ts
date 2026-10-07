@@ -1,4 +1,4 @@
-import type { Edge, EdgeKind, ImportRecord } from "./types.ts";
+import { EDGE_KINDS, type Edge, type EdgeKind, type ImportRecord } from "./types.ts";
 
 // Pure functions over imports and edges. No I/O, nothing to mock.
 
@@ -21,11 +21,10 @@ export function buildEdges(imports: readonly ImportRecord[]): Edge[] {
       });
     }
   }
-  const order: EdgeKind[] = ["import", "reexport", "dynamic"];
   return [...byPair.values()].map((e) => ({
     from: e.from,
     to: e.to,
-    kinds: order.filter((k) => e.kinds.has(k)),
+    kinds: EDGE_KINDS.filter((k) => e.kinds.has(k)),
     typeOnly: e.typeOnly,
   }));
 }

@@ -70,9 +70,22 @@ const REACT = [
   { role: "config", label: "Config", one: "config", reached: true, hue: null },
 ] as const satisfies readonly RoleInfo[];
 
+// Wired up by imports from the app file, so the import graph sees them.
+const EXPRESS = [
+  { role: "router", label: "Routers", one: "router", reached: false, hue: 1 },
+  { role: "controller", label: "Controllers", one: "controller", reached: false, hue: 2 },
+  { role: "middleware", label: "Middleware", one: "middleware", reached: false, hue: 3 },
+  { role: "validator", label: "Validators", one: "validator", reached: false, hue: null },
+  { role: "service", label: "Services", one: "service", reached: false, hue: 4 },
+  { role: "model", label: "Models", one: "model", reached: false, hue: 5 },
+  { role: "config", label: "Config", one: "config", reached: true, hue: null },
+  { role: "test", label: "Tests", one: "test", reached: true, hue: null },
+] as const satisfies readonly RoleInfo[];
+
 export type NextjsRole = (typeof NEXTJS)[number]["role"];
 export type NestjsRole = (typeof NESTJS)[number]["role"];
 export type ReactRole = (typeof REACT)[number]["role"];
+export type ExpressRole = (typeof EXPRESS)[number]["role"];
 
 export interface Framework {
   /** The name people know it by; null for no framework. */
@@ -88,6 +101,8 @@ const FRAMEWORKS: Record<string, Framework> = {
   nestjs: { label: "NestJS", routes: true, roles: NESTJS },
   // Routing in a React app belongs to whichever router library it uses.
   react: { label: "React", routes: false, roles: REACT },
+  // Routes are assembled at runtime; see the adapter.
+  express: { label: "Express", routes: false, roles: EXPRESS },
 };
 
 const NONE: Framework = { label: null, routes: false, roles: [] };

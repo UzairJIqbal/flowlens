@@ -4,8 +4,8 @@ import type { FileEdge } from "./view.ts";
 // What the detail pane says, derived from the parser's files and edges. Pure,
 // so selecting something is a lookup in data the browser already holds.
 
-/** A parser file as the browser holds it; the hash is never shown. */
-export type RepoFile = Omit<FileNode, "hash">;
+/** A parser file as the browser holds it; the hash is never shown, and export names aren't stored. */
+export type RepoFile = Omit<FileNode, "hash" | "exports">;
 
 export interface Neighbours {
   /** Files this one imports. */
