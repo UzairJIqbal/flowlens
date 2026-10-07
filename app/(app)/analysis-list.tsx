@@ -19,6 +19,7 @@ const STATUS: Record<AnalysisStatus, { glyph: string; className: string }> = {
 
 const ORDER: AnalysisStatus[] = ["parsing", "queued", "complete", "failed"];
 
+/** Displays analysis summaries with live updates for rows that loaded unfinished. */
 export function AnalysisList({ analyses }: { analyses: AnalysisSummary[] }) {
   // Published stages received since the page loaded, layered over the rows
   // the server rendered. A row with one has moved, so it is no longer stale.
@@ -60,10 +61,12 @@ export function AnalysisList({ analyses }: { analyses: AnalysisSummary[] }) {
   );
 }
 
+/** Compares visible progress fields so repeated updates do not clear stale markers. */
 function same(a: Progress, b: Progress): boolean {
   return a.status === b.status && a.stage === b.stage && a.message === b.message;
 }
 
+/** Summarizes analyses by status and separately counts stale runs. */
 function StateCounts({ analyses }: { analyses: AnalysisSummary[] }) {
   const counts = new Map<AnalysisStatus, number>();
   for (const a of analyses) counts.set(a.progress.status, (counts.get(a.progress.status) ?? 0) + 1);
@@ -90,6 +93,7 @@ function StateCounts({ analyses }: { analyses: AnalysisSummary[] }) {
   );
 }
 
+/** Lists repositories with their progress, creation time, and map or pipeline link. */
 function Table({ analyses }: { analyses: AnalysisSummary[] }) {
   return (
     <div className="min-h-0 flex-1 overflow-auto">
@@ -146,6 +150,7 @@ function Table({ analyses }: { analyses: AnalysisSummary[] }) {
   );
 }
 
+/** Builds row detail text from the stale marker or the current parsing or failure message. */
 function describe({ progress, stale }: AnalysisSummary): string {
   if (stale) return "No progress past the time limit. Open it to run it again.";
   const where = progress.stage ? `${progress.stage}: ` : "";
@@ -159,6 +164,7 @@ function describe({ progress, stale }: AnalysisSummary): string {
   }
 }
 
+/** Explains how to create the first analysis in the active organization. */
 function Empty() {
   return (
     <div className="p-3 text-xs">

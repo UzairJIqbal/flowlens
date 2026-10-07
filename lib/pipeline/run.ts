@@ -152,18 +152,20 @@ export async function executeRun({ analysisId, repo }: ClaimedRun): Promise<void
   }
 }
 
+/** Claims and executes an analysis, throwing if it is missing or already running. */
 export async function runAnalysis(analysisId: string): Promise<void> {
   const run = await claimRun(analysisId);
   if (!run) throw new Error(`Analysis ${analysisId} doesn't exist or is already running`);
   await executeRun(run);
 }
 
+/** Records a stage and message for the progress trigger, throwing if the update fails. */
 async function enter(db: Admin, analysisId: string, stage: Stage, message: string): Promise<void> {
   const { error } = await db.from("analyses").update({ stage, stage_message: message }).eq("id", analysisId);
   if (error) throw new Error(`Could not record the ${stage} stage: ${error.message}`);
 }
 
-// The stage is left as it was, so the row says where the run stopped.
+/** Records a failure and finish time, preserving the stage where the run stopped. */
 async function fail(db: Admin, analysisId: string, cause: unknown): Promise<void> {
   const reason = cause instanceof Error ? cause.message : String(cause);
   const { error } = await db
@@ -174,8 +176,10 @@ async function fail(db: Admin, analysisId: string, cause: unknown): Promise<void
   if (error) throw new Error(`Run failed (${reason}) and the failure could not be recorded: ${error.message}`);
 }
 
-// The parser's coverage is interfaces, which the generated Json type won't
-// accept without a cast; rebuilt here as plain objects instead.
+/**
+ * The parser's coverage is interfaces, which the generated Json type won't
+ * accept without a cast; rebuilt here as plain objects instead.
+ */
 function toJson(coverage: Coverage): Json {
   return {
     files: { ...coverage.files },

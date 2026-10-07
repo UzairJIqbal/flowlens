@@ -91,8 +91,10 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
 
 type Page<T> = { data: T[] | null; error: { message: string } | null; count: number | null };
 
-// Reads until the count is reached. Coming up short throws: a map missing
-// files must never render as though it were the whole repository.
+/**
+ * Reads until the count is reached. Coming up short throws: a map missing
+ * files must never render as though it were the whole repository.
+ */
 async function readEvery<T>(what: string, page: (from: number, to: number) => PromiseLike<Page<T>>): Promise<T[]> {
   const rows: T[] = [];
   let total: number | null = null;
@@ -109,8 +111,10 @@ async function readEvery<T>(what: string, page: (from: number, to: number) => Pr
   return rows;
 }
 
-// Coverage is stored as the parser's JSON. Only the file counts are read here,
-// and they're checked rather than assumed.
+/**
+ * Coverage is stored as the parser's JSON. Only the file counts are read here,
+ * and they're checked rather than assumed.
+ */
 function fileCoverage(coverage: Json | null): { parsed: number; skipped: number } {
   const files = field(coverage, "files");
   const parsed = field(files, "parsed");
@@ -121,6 +125,7 @@ function fileCoverage(coverage: Json | null): { parsed: number; skipped: number 
   return { parsed, skipped };
 }
 
+/** Reads a property only from a JSON object, returning undefined for other values. */
 function field(value: Json | undefined | null, key: string): Json | undefined {
   if (value === null || value === undefined || typeof value !== "object" || Array.isArray(value)) return undefined;
   return value[key];

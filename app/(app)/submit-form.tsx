@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { submitAnalysis } from "@/lib/analyses/actions";
 
+/** Submits a repository URL and preserves rejected input alongside the server error. */
 export function SubmitForm() {
   const [state, action, pending] = useActionState(submitAnalysis, null);
 
