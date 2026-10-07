@@ -27,6 +27,7 @@ const GLYPH: Record<StageState, { glyph: string; className: string }> = {
   pending: { glyph: "○", className: "text-muted" },
 };
 
+/** Shows live stages and rerun controls, opening the map when a watched run completes. */
 export function ProgressView({
   analysis,
   rerun,
@@ -122,6 +123,7 @@ export function ProgressView({
   );
 }
 
+/** Explains the run outcome or stale state without repeating a stage failure message. */
 function Outcome({ analysis, view: { progress, stale } }: { analysis: AnalysisDetail; view: View }) {
   if (stale) {
     const since = analysis.startedAt ? `${utc(analysis.startedAt).time} UTC` : "it was created";
@@ -157,6 +159,7 @@ function Outcome({ analysis, view: { progress, stale } }: { analysis: AnalysisDe
   }
 }
 
+/** Derives a stage indicator from its position in the current run and the run status. */
 function stageState(stage: AnalysisStage, progress: Progress): StageState {
   const at = progress.stage ? STAGES.indexOf(progress.stage) : -1;
   const index = STAGES.indexOf(stage);
@@ -172,6 +175,7 @@ function stageState(stage: AnalysisStage, progress: Progress): StageState {
   }
 }
 
+/** Applies changed progress, clearing old messages on restart and the stale marker on movement. */
 function advance(view: View, next: Progress): View {
   const { progress } = view;
   // The catch-up read usually repeats what's on screen; that isn't movement.
@@ -186,6 +190,7 @@ function advance(view: View, next: Progress): View {
   return { progress: next, messages: record(restarted ? {} : view.messages, next), stale: false };
 }
 
+/** Retains messages observed during parsing for display after their stages finish. */
 function record(messages: View["messages"], progress: Progress): View["messages"] {
   if (progress.status !== "parsing" || !progress.stage || !progress.message) return messages;
   return { ...messages, [progress.stage]: progress.message };

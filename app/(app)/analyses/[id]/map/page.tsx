@@ -4,6 +4,7 @@ import { MapWorkspace } from "@/app/_components/map-workspace";
 import { getAnalysis } from "@/lib/analyses/read";
 import { getStoredMap } from "@/lib/analyses/map";
 
+/** Renders the stored map, redirecting to progress when no result is available. */
 export default async function AnalysisMapPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   // Read as the user: another organization's analysis is absent, not forbidden.
