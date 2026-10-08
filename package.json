@@ -10,12 +10,13 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node --test \"lib/**/*.test.ts\"",
+    "test": "node --test \"lib/**/*.test.ts\" \"evals/**/*.test.ts\"",
     "parse": "node scripts/parse.ts",
     "analyze": "node scripts/analyze.ts",
     "eval:paths": "node evals/paths.ts",
     "eval:roles": "node evals/roles.ts",
-    "eval:prompts": "node evals/prompts.ts"
+    "eval:prompts": "node evals/prompts.ts",
+    "eval:answers": "node evals/answers.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.11",

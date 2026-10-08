@@ -1,0 +1,4684 @@
+{
+  "answerCheck": "5eb49eaf-3ba1-4155-8d2b-8c5e9d985d3c",
+  "startedAt": "2026-10-08T20:50:52.161Z",
+  "repo": "immerjs/immer",
+  "commit": "8848a5b16938e5681a890d73de7bda24b5080498",
+  "tracedIn": "flowlens",
+  "rounds": 3,
+  "parse": {
+    "adapter": "none",
+    "files": 54,
+    "edges": 63,
+    "skipped": 100
+  },
+  "empty": [
+    "alias"
+  ],
+  "questions": [
+    {
+      "id": "importers:src/core/current.ts",
+      "template": "importers",
+      "pick": "re-export only",
+      "subject": "src/core/current.ts",
+      "text": "Which files import `src/core/current.ts`?",
+      "expected": [
+        "src/internal.ts"
+      ]
+    },
+    {
+      "id": "imports:src/core/current.ts",
+      "template": "imports",
+      "pick": "re-export only",
+      "subject": "src/core/current.ts",
+      "text": "Which files does `src/core/current.ts` import?",
+      "expected": [
+        "src/internal.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:src/core/current.ts",
+      "template": "blast-radius",
+      "pick": "re-export only",
+      "subject": "src/core/current.ts",
+      "text": "If `src/core/current.ts` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/empty.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/immer.ts",
+        "src/internal.ts",
+        "src/plugins/arrayMethods.ts",
+        "src/plugins/mapset.ts",
+        "src/plugins/patches.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "dependencies:src/core/current.ts",
+      "template": "dependencies",
+      "pick": "re-export only",
+      "subject": "src/core/current.ts",
+      "text": "What does `src/core/current.ts` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/internal.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/env.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "importers:src/plugins/mapset.ts",
+      "template": "importers",
+      "pick": "re-export only",
+      "subject": "src/plugins/mapset.ts",
+      "text": "Which files import `src/plugins/mapset.ts`?",
+      "expected": [
+        "src/immer.ts"
+      ]
+    },
+    {
+      "id": "imports:src/plugins/mapset.ts",
+      "template": "imports",
+      "pick": "re-export only",
+      "subject": "src/plugins/mapset.ts",
+      "text": "Which files does `src/plugins/mapset.ts` import?",
+      "expected": [
+        "src/internal.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:src/plugins/mapset.ts",
+      "template": "blast-radius",
+      "pick": "re-export only",
+      "subject": "src/plugins/mapset.ts",
+      "text": "If `src/plugins/mapset.ts` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/current.js",
+        "__tests__/curry.js",
+        "__tests__/draft.ts",
+        "__tests__/empty.ts",
+        "__tests__/frozen.js",
+        "__tests__/immutable.ts",
+        "__tests__/isDraftable.js",
+        "__tests__/manual.js",
+        "__tests__/map-set.js",
+        "__tests__/not-strict-copy.ts",
+        "__tests__/null.js",
+        "__tests__/original.js",
+        "__tests__/patch.js",
+        "__tests__/plugins.js",
+        "__tests__/produce.ts",
+        "__tests__/prototype-inspection.js",
+        "__tests__/readme.js",
+        "__tests__/redux.ts",
+        "__tests__/regressions.js",
+        "__tests__/type-external.ts",
+        "__tests__/updateScenarios.js",
+        "src/immer.ts",
+        "src/plugins/patches.ts"
+      ]
+    },
+    {
+      "id": "dependencies:src/plugins/mapset.ts",
+      "template": "dependencies",
+      "pick": "re-export only",
+      "subject": "src/plugins/mapset.ts",
+      "text": "What does `src/plugins/mapset.ts` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "src/core/current.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/internal.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/env.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "importers:src/immer.ts",
+      "template": "importers",
+      "pick": "heavily imported",
+      "subject": "src/immer.ts",
+      "text": "Which files import `src/immer.ts`?",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/current.js",
+        "__tests__/curry.js",
+        "__tests__/draft.ts",
+        "__tests__/empty.ts",
+        "__tests__/frozen.js",
+        "__tests__/immutable.ts",
+        "__tests__/isDraftable.js",
+        "__tests__/manual.js",
+        "__tests__/map-set.js",
+        "__tests__/not-strict-copy.ts",
+        "__tests__/null.js",
+        "__tests__/original.js",
+        "__tests__/patch.js",
+        "__tests__/plugins.js",
+        "__tests__/produce.ts",
+        "__tests__/prototype-inspection.js",
+        "__tests__/readme.js",
+        "__tests__/redux.ts",
+        "__tests__/regressions.js",
+        "__tests__/type-external.ts",
+        "__tests__/updateScenarios.js",
+        "src/plugins/patches.ts"
+      ]
+    },
+    {
+      "id": "imports:src/immer.ts",
+      "template": "imports",
+      "pick": "heavily imported",
+      "subject": "src/immer.ts",
+      "text": "Which files does `src/immer.ts` import?",
+      "expected": [
+        "src/internal.ts",
+        "src/plugins/arrayMethods.ts",
+        "src/plugins/mapset.ts",
+        "src/plugins/patches.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:src/immer.ts",
+      "template": "blast-radius",
+      "pick": "heavily imported",
+      "subject": "src/immer.ts",
+      "text": "If `src/immer.ts` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/current.js",
+        "__tests__/curry.js",
+        "__tests__/draft.ts",
+        "__tests__/empty.ts",
+        "__tests__/frozen.js",
+        "__tests__/immutable.ts",
+        "__tests__/isDraftable.js",
+        "__tests__/manual.js",
+        "__tests__/map-set.js",
+        "__tests__/not-strict-copy.ts",
+        "__tests__/null.js",
+        "__tests__/original.js",
+        "__tests__/patch.js",
+        "__tests__/plugins.js",
+        "__tests__/produce.ts",
+        "__tests__/prototype-inspection.js",
+        "__tests__/readme.js",
+        "__tests__/redux.ts",
+        "__tests__/regressions.js",
+        "__tests__/type-external.ts",
+        "__tests__/updateScenarios.js",
+        "src/plugins/patches.ts"
+      ]
+    },
+    {
+      "id": "dependencies:src/immer.ts",
+      "template": "dependencies",
+      "pick": "heavily imported",
+      "subject": "src/immer.ts",
+      "text": "What does `src/immer.ts` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "src/core/current.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/internal.ts",
+        "src/plugins/arrayMethods.ts",
+        "src/plugins/mapset.ts",
+        "src/plugins/patches.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/env.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "importers:src/internal.ts",
+      "template": "importers",
+      "pick": "heavily imported",
+      "subject": "src/internal.ts",
+      "text": "Which files import `src/internal.ts`?",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/empty.ts",
+        "src/core/current.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/immer.ts",
+        "src/plugins/arrayMethods.ts",
+        "src/plugins/mapset.ts",
+        "src/plugins/patches.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "imports:src/internal.ts",
+      "template": "imports",
+      "pick": "heavily imported",
+      "subject": "src/internal.ts",
+      "text": "Which files does `src/internal.ts` import?",
+      "expected": [
+        "src/core/current.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/env.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:src/internal.ts",
+      "template": "blast-radius",
+      "pick": "heavily imported",
+      "subject": "src/internal.ts",
+      "text": "If `src/internal.ts` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/current.js",
+        "__tests__/curry.js",
+        "__tests__/draft.ts",
+        "__tests__/empty.ts",
+        "__tests__/frozen.js",
+        "__tests__/immutable.ts",
+        "__tests__/isDraftable.js",
+        "__tests__/manual.js",
+        "__tests__/map-set.js",
+        "__tests__/not-strict-copy.ts",
+        "__tests__/null.js",
+        "__tests__/original.js",
+        "__tests__/patch.js",
+        "__tests__/plugins.js",
+        "__tests__/produce.ts",
+        "__tests__/prototype-inspection.js",
+        "__tests__/readme.js",
+        "__tests__/redux.ts",
+        "__tests__/regressions.js",
+        "__tests__/type-external.ts",
+        "__tests__/updateScenarios.js",
+        "src/core/current.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/immer.ts",
+        "src/plugins/arrayMethods.ts",
+        "src/plugins/mapset.ts",
+        "src/plugins/patches.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "dependencies:src/internal.ts",
+      "template": "dependencies",
+      "pick": "heavily imported",
+      "subject": "src/internal.ts",
+      "text": "What does `src/internal.ts` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "src/core/current.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/env.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "importers:src/core/finalize.ts",
+      "template": "importers",
+      "pick": "rarely imported",
+      "subject": "src/core/finalize.ts",
+      "text": "Which files import `src/core/finalize.ts`?",
+      "expected": [
+        "src/internal.ts"
+      ]
+    },
+    {
+      "id": "imports:src/core/finalize.ts",
+      "template": "imports",
+      "pick": "rarely imported",
+      "subject": "src/core/finalize.ts",
+      "text": "Which files does `src/core/finalize.ts` import?",
+      "expected": [
+        "src/internal.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:src/core/finalize.ts",
+      "template": "blast-radius",
+      "pick": "rarely imported",
+      "subject": "src/core/finalize.ts",
+      "text": "If `src/core/finalize.ts` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/empty.ts",
+        "src/core/current.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/immer.ts",
+        "src/internal.ts",
+        "src/plugins/arrayMethods.ts",
+        "src/plugins/mapset.ts",
+        "src/plugins/patches.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "dependencies:src/core/finalize.ts",
+      "template": "dependencies",
+      "pick": "rarely imported",
+      "subject": "src/core/finalize.ts",
+      "text": "What does `src/core/finalize.ts` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "src/core/current.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/internal.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/env.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    },
+    {
+      "id": "importers:src/plugins/patches.ts",
+      "template": "importers",
+      "pick": "rarely imported",
+      "subject": "src/plugins/patches.ts",
+      "text": "Which files import `src/plugins/patches.ts`?",
+      "expected": [
+        "src/immer.ts"
+      ]
+    },
+    {
+      "id": "imports:src/plugins/patches.ts",
+      "template": "imports",
+      "pick": "rarely imported",
+      "subject": "src/plugins/patches.ts",
+      "text": "Which files does `src/plugins/patches.ts` import?",
+      "expected": [
+        "src/immer.ts",
+        "src/internal.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:src/plugins/patches.ts",
+      "template": "blast-radius",
+      "pick": "rarely imported",
+      "subject": "src/plugins/patches.ts",
+      "text": "If `src/plugins/patches.ts` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "__tests__/base.js",
+        "__tests__/current.js",
+        "__tests__/curry.js",
+        "__tests__/draft.ts",
+        "__tests__/empty.ts",
+        "__tests__/frozen.js",
+        "__tests__/immutable.ts",
+        "__tests__/isDraftable.js",
+        "__tests__/manual.js",
+        "__tests__/map-set.js",
+        "__tests__/not-strict-copy.ts",
+        "__tests__/null.js",
+        "__tests__/original.js",
+        "__tests__/patch.js",
+        "__tests__/plugins.js",
+        "__tests__/produce.ts",
+        "__tests__/prototype-inspection.js",
+        "__tests__/readme.js",
+        "__tests__/redux.ts",
+        "__tests__/regressions.js",
+        "__tests__/type-external.ts",
+        "__tests__/updateScenarios.js",
+        "src/immer.ts"
+      ]
+    },
+    {
+      "id": "dependencies:src/plugins/patches.ts",
+      "template": "dependencies",
+      "pick": "rarely imported",
+      "subject": "src/plugins/patches.ts",
+      "text": "What does `src/plugins/patches.ts` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "src/core/current.ts",
+        "src/core/finalize.ts",
+        "src/core/immerClass.ts",
+        "src/core/proxy.ts",
+        "src/core/scope.ts",
+        "src/immer.ts",
+        "src/internal.ts",
+        "src/plugins/arrayMethods.ts",
+        "src/plugins/mapset.ts",
+        "src/types/types-external.ts",
+        "src/types/types-internal.ts",
+        "src/utils/common.ts",
+        "src/utils/env.ts",
+        "src/utils/errors.ts",
+        "src/utils/plugins.ts"
+      ]
+    }
+  ],
+  "finishedAt": "2026-10-08T21:09:05.721Z",
+  "sittings": [
+    {
+      "startedAt": "2026-10-08T20:50:52.161Z",
+      "flowlens": {
+        "commit": "7e9dbf40319e91c11c39d06cac7843578c839a2c",
+        "localChanges": true
+      }
+    },
+    {
+      "startedAt": "2026-10-08T20:56:31.350Z",
+      "flowlens": {
+        "commit": "7e9dbf40319e91c11c39d06cac7843578c839a2c",
+        "localChanges": true
+      }
+    },
+    {
+      "startedAt": "2026-10-08T20:58:46.371Z",
+      "flowlens": {
+        "commit": "7e9dbf40319e91c11c39d06cac7843578c839a2c",
+        "localChanges": true
+      }
+    },
+    {
+      "startedAt": "2026-10-08T21:00:28.467Z",
+      "flowlens": {
+        "commit": "7e9dbf40319e91c11c39d06cac7843578c839a2c",
+        "localChanges": true
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "question": "importers:src/core/current.ts",
+      "round": 1,
+      "threadId": "01a11d48-7ca2-724b-a3c9-b1e3f3f805a7",
+      "agentRunId": "01a11d48-7cab-758b-b11c-bc26f46e1a57",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "The file `src/internal.ts` imports `src/core/current.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/core/current.ts",
+      "round": 1,
+      "threadId": "01a11d48-cc70-772d-b6bb-d44d44dae17e",
+      "agentRunId": "01a11d48-cc75-7598-a723-392eb6d7a66c",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/core/current.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/core/current.ts",
+      "round": 1,
+      "threadId": "01a11d48-d4ed-72d7-8e7e-5e8fc43ca957",
+      "agentRunId": "01a11d48-d4f2-714f-b11a-faf3a52006cc",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/core/current.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "16 files"
+        }
+      ],
+      "text": "If `src/core/current.ts` changes, the following files could break (up to two levels out):\n\n**Depth 1:**\n- `src/internal.ts`\n\n**Depth 2:**\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/core/current.ts",
+      "round": 1,
+      "threadId": "01a11d49-1e04-7452-8f98-21bdc921528b",
+      "agentRunId": "01a11d49-1e0a-740d-ae1f-6697c66d5e7b",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/core/current.ts",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "To work, `src/core/current.ts` needs `src/internal.ts` (1 step away), which in turn needs the following files (2 steps away):\n\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/plugins/mapset.ts",
+      "round": 1,
+      "threadId": "01a11d49-2742-7505-8835-66684d105d0a",
+      "agentRunId": "01a11d49-2747-744b-b9ce-d443fa2e3d72",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/immer.ts` imports `src/plugins/mapset.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/plugins/mapset.ts",
+      "round": 1,
+      "threadId": "01a11d49-2f6d-707f-9782-3dfe7e0131f2",
+      "agentRunId": "01a11d49-2f71-74cc-b822-7b1ccdd09b31",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/plugins/mapset.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/plugins/mapset.ts",
+      "round": 1,
+      "threadId": "01a11d49-38ae-7508-aa72-0adb114beedd",
+      "agentRunId": "01a11d49-38b3-72ea-bbf2-7662879a98d6",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/plugins/mapset.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "24 files"
+        }
+      ],
+      "text": "If `src/plugins/mapset.ts` changes, the following files up to two levels out could break:\n\nAt depth 1:\n- `src/immer.ts`\n\nAt depth 2:\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/immer.ts",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/plugins/mapset.ts",
+      "round": 1,
+      "threadId": "01a11d49-4508-70d9-9bd2-03d18422a884",
+      "agentRunId": "01a11d49-450c-72aa-a38d-94df4c360695",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/plugins/mapset.ts",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "12 files"
+        }
+      ],
+      "text": "To work, `src/plugins/mapset.ts` needs `src/internal.ts` (at depth 1). \n\nAt depth 2, `src/internal.ts` imports the following files:\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/immer.ts",
+      "round": 1,
+      "threadId": "01a11d4d-a991-70e9-b565-db806741e93c",
+      "agentRunId": "01a11d4d-a996-736e-82e2-fd1c0cf1bb7a",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "imports 4 · imported by 23"
+        }
+      ],
+      "text": "`src/immer.ts` is imported by the following files:\n\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/immer.ts",
+      "round": 1,
+      "threadId": "01a11d4d-b613-74b4-b3e8-d183104eb4af",
+      "agentRunId": "01a11d4d-b618-774c-9cb1-f36fe182ccdd",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "imports 4 · imported by 23"
+        }
+      ],
+      "text": "`src/immer.ts` imports the following files:\n- `src/internal.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/immer.ts",
+      "round": 1,
+      "threadId": "01a11d4d-beb4-76ae-bac9-839e84f83956",
+      "agentRunId": "01a11d4d-beb8-7600-9cf7-70b91b2ba3c4",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/immer.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "23 files"
+        }
+      ],
+      "text": "If `src/immer.ts` changes, the following files up to two levels out could break:\n\nAt one level out:\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/immer.ts",
+      "round": 1,
+      "threadId": "01a11d4d-c923-748a-9c6c-f59e601dfe5e",
+      "agentRunId": "01a11d4d-c926-745f-b145-1a7d21903e49",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "15 files"
+        }
+      ],
+      "text": "`src/immer.ts` needs the following files to work, two levels deep:\n\nAt depth 1 (direct dependencies):\n- `src/internal.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n\nAt depth 2 (dependencies of the direct dependencies):\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/internal.ts",
+      "round": 1,
+      "threadId": "01a11d4d-d392-71fb-bdfe-65f80b7dffbd",
+      "agentRunId": "01a11d4d-d396-7144-a792-d3a16449de28",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "imports 11 · imported by 16"
+        }
+      ],
+      "text": "`src/internal.ts` is imported by the following files:\n\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/internal.ts",
+      "round": 1,
+      "threadId": "01a11d4d-dd58-71d5-abd4-3e0ca9a9eeb4",
+      "agentRunId": "01a11d4d-dd5c-700b-adff-1a0e6b8d4e22",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "imports 11 · imported by 16"
+        }
+      ],
+      "text": "`src/internal.ts` imports the following files:\n\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/internal.ts",
+      "round": 1,
+      "threadId": "01a11d4d-e706-7746-a38a-10d88e458d6b",
+      "agentRunId": "01a11d4d-e709-70ec-8842-0a8f20109bbe",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/internal.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "36 files"
+        }
+      ],
+      "text": "If `src/internal.ts` changes, up to two levels out of dependents, the following files could break:\n\nAt depth 1:\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`\n\nAt depth 2:\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/internal.ts",
+      "round": 1,
+      "threadId": "01a11d4e-0f0c-720e-bf19-1987b6b15a34",
+      "agentRunId": "01a11d4e-0f10-73ee-bece-a11b78ab9e7c",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "To work, `src/internal.ts` needs the following files directly imported at depth 1:\n\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`\n\nLooking at depth 2 (what those files import), none of those 11 files import any further dependencies in the graph.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/core/finalize.ts",
+      "round": 1,
+      "threadId": "01a11d4f-0933-720f-a707-9192b2b7f27d",
+      "agentRunId": "01a11d4f-093a-7122-8ab0-323abf836d73",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/internal.ts` imports `src/core/finalize.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/core/finalize.ts",
+      "round": 1,
+      "threadId": "01a11d4f-1365-75aa-9959-6a5ceaf03dc4",
+      "agentRunId": "01a11d4f-136a-71fe-a54a-204edad55108",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/core/finalize.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/core/finalize.ts",
+      "round": 1,
+      "threadId": "01a11d4f-295c-77c8-bc55-555d9180e0a2",
+      "agentRunId": "01a11d4f-2960-7244-9240-a94bda713029",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/core/finalize.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "16 files"
+        }
+      ],
+      "text": "If `src/core/finalize.ts` changes, up to two levels out, the files that could break (dependents) are:\n\n- At one level out: `src/internal.ts`\n- At two levels out: `__tests__/base.js`, `__tests__/empty.ts`, `src/core/current.ts`, `src/core/immerClass.ts`, `src/core/proxy.ts`, `src/core/scope.ts`, `src/immer.ts`, `src/plugins/arrayMethods.ts`, `src/plugins/mapset.ts`, `src/plugins/patches.ts`, `src/types/types-external.ts`, `src/types/types-internal.ts`, `src/utils/common.ts`, `src/utils/errors.ts`, and `src/utils/plugins.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/current.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/core/finalize.ts",
+      "round": 1,
+      "threadId": "01a11d4f-3351-7709-af4d-8b2edbcb1947",
+      "agentRunId": "01a11d4f-3355-70dd-afba-8bea45ec456f",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "To work, `src/core/finalize.ts` needs `src/internal.ts` (1 step away), which in turn needs the following files (2 steps away):\n\n- `src/core/current.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/plugins/patches.ts",
+      "round": 1,
+      "threadId": "01a11d4f-3cbb-768b-b5f6-aa15ce8afc24",
+      "agentRunId": "01a11d4f-3cbf-70d6-89a8-e9efaaf255d8",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "imports 2 · imported by 1"
+        }
+      ],
+      "text": "`src/immer.ts` is the only file that imports `src/plugins/patches.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/plugins/patches.ts",
+      "round": 1,
+      "threadId": "01a11d4f-457d-71e8-8ef7-c3007fb13498",
+      "agentRunId": "01a11d4f-4580-743d-ae8b-4d755cb320d9",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "imports 2 · imported by 1"
+        }
+      ],
+      "text": "`src/plugins/patches.ts` imports `src/immer.ts` and `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts",
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/plugins/patches.ts",
+      "round": 1,
+      "threadId": "01a11d51-47d0-746d-b8a1-90e51dcd8189",
+      "agentRunId": "01a11d51-47d7-7424-80fd-3eb8c8060fe8",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "23 files"
+        }
+      ],
+      "text": "If `src/plugins/patches.ts` changes, the following files up to two levels out could break:\n\n- Depth 1: `src/immer.ts`\n- Depth 2: `__tests__/base.js`, `__tests__/current.js`, `__tests__/curry.js`, `__tests__/draft.ts`, `__tests__/empty.ts`, `__tests__/frozen.js`, `__tests__/immutable.ts`, `__tests__/isDraftable.js`, `__tests__/manual.js`, `__tests__/map-set.js`, `__tests__/not-strict-copy.ts`, `__tests__/null.js`, `__tests__/original.js`, `__tests__/patch.js`, `__tests__/plugins.js`, `__tests__/produce.ts`, `__tests__/prototype-inspection.js`, `__tests__/readme.js`, `__tests__/redux.ts`, `__tests__/regressions.js`, `__tests__/type-external.ts`, and `__tests__/updateScenarios.js`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/plugins/patches.ts",
+      "round": 1,
+      "threadId": "01a11d51-555a-709a-b30f-a60df585ba0d",
+      "agentRunId": "01a11d51-555f-73a4-8e36-175a087cd667",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/plugins/patches.ts",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "15 files"
+        }
+      ],
+      "text": "`src/plugins/patches.ts` needs the following files two levels deep to work:\n\nAt one level away (imported directly by `src/plugins/patches.ts`):\n- `src/immer.ts`\n- `src/internal.ts`\n\nAt two levels away (imported by those files):\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/core/current.ts",
+      "round": 2,
+      "threadId": "01a11d51-5fb9-7776-bcf9-069a7ae846b4",
+      "agentRunId": "01a11d51-5fbf-77ea-b0f4-72115719ef1f",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/internal.ts` is the only file that imports `src/core/current.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/core/current.ts",
+      "round": 2,
+      "threadId": "01a11d51-69ab-70ca-8006-318cda764a34",
+      "agentRunId": "01a11d51-69ae-73fd-9441-c73093311a1c",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/core/current.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/core/current.ts",
+      "round": 2,
+      "threadId": "01a11d51-72ae-704e-b721-ddbb996c8acd",
+      "agentRunId": "01a11d51-72b2-76c9-a625-6b03b769920b",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "16 files"
+        }
+      ],
+      "text": "If `src/core/current.ts` changes, the following files could break (up to two levels out):\n\n**Depth 1 (direct dependents):**\n- `src/internal.ts`\n\n**Depth 2 (indirect dependents):**\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/core/current.ts",
+      "round": 2,
+      "threadId": "01a11d51-7cd2-77c8-a4a1-416730266bbf",
+      "agentRunId": "01a11d51-7cd5-733e-b4c5-948739282b46",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "To work, `src/core/current.ts` needs `src/internal.ts` (1 step away), which in turn needs the following files (2 steps away):\n\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/plugins/mapset.ts",
+      "round": 2,
+      "threadId": "01a11d51-86d8-7528-8498-1fbf6c3dc478",
+      "agentRunId": "01a11d51-86dc-727d-ba58-6d62da8b591d",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/immer.ts` imports `src/plugins/mapset.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/plugins/mapset.ts",
+      "round": 2,
+      "threadId": "01a11d51-90bd-76d5-af2a-60abfd890d02",
+      "agentRunId": "01a11d51-90c2-758f-99b2-cf321089e77b",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/plugins/mapset.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/plugins/mapset.ts",
+      "round": 2,
+      "threadId": "01a11d51-99a5-761b-b47d-cf21e32f7c14",
+      "agentRunId": "01a11d51-99a9-77c9-831e-cda0fc55916c",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "24 files"
+        }
+      ],
+      "text": "If `src/plugins/mapset.ts` changes, the following files up to two levels out could break:\n\nAt depth 1:\n- `src/immer.ts`\n\nAt depth 2:\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/immer.ts",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/plugins/mapset.ts",
+      "round": 2,
+      "threadId": "01a11d52-b2b1-773c-b31c-55988ec8a571",
+      "agentRunId": "01a11d52-b2b5-75ff-b218-476426fe2595",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "12 files"
+        }
+      ],
+      "text": "`src/plugins/mapset.ts` imports `src/internal.ts` (1 step away).\n\n`src/internal.ts` imports the following files (2 steps away from `src/plugins/mapset.ts`):\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/immer.ts",
+      "round": 2,
+      "threadId": "01a11d52-be8a-743d-84ae-1ad649b3e9ee",
+      "agentRunId": "01a11d52-be8e-74ee-b77d-e186c1a00aa5",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "imports 4 · imported by 23"
+        }
+      ],
+      "text": "`src/immer.ts` is imported by the following files:\n\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/immer.ts",
+      "round": 2,
+      "threadId": "01a11d52-e88e-777c-86b8-d800f4ea1bc6",
+      "agentRunId": "01a11d52-e892-7112-b3da-8441a9e9dc5c",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "imports 4 · imported by 23"
+        }
+      ],
+      "text": "`src/immer.ts` imports the following files:\n- `src/internal.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/immer.ts",
+      "round": 2,
+      "threadId": "01a11d52-f147-75a1-a68d-d76d6e6f5b90",
+      "agentRunId": "01a11d52-f14b-7765-8a47-3dff65799613",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/immer.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "23 files"
+        }
+      ],
+      "text": "If `src/immer.ts` changes, up to two levels out, the files that could break (dependents) are:\n\n- Depth 1:\n  - `__tests__/base.js`\n  - `__tests__/current.js`\n  - `__tests__/curry.js`\n  - `__tests__/draft.ts`\n  - `__tests__/empty.ts`\n  - `__tests__/frozen.js`\n  - `__tests__/immutable.ts`\n  - `__tests__/isDraftable.js`\n  - `__tests__/manual.js`\n  - `__tests__/map-set.js`\n  - `__tests__/not-strict-copy.ts`\n  - `__tests__/null.js`\n  - `__tests__/original.js`\n  - `__tests__/patch.js`\n  - `__tests__/plugins.js`\n  - `__tests__/produce.ts`\n  - `__tests__/prototype-inspection.js`\n  - `__tests__/readme.js`\n  - `__tests__/redux.ts`\n  - `__tests__/regressions.js`\n  - `__tests__/type-external.ts`\n  - `__tests__/updateScenarios.js`\n  - `src/plugins/patches.ts`\n\n- Depth 2:\n  - None (no further dependent files were found at depth 2).",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/immer.ts",
+      "round": 2,
+      "threadId": "01a11d52-fc92-70f5-8cc0-c3b93b9cbc41",
+      "agentRunId": "01a11d52-fc97-70be-9fad-a090e6786719",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/immer.ts",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "15 files"
+        }
+      ],
+      "text": "To work, `src/immer.ts` needs the following files (two levels deep):\n\nAt depth 1 (direct dependencies):\n- `src/internal.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n\nAt depth 2 (dependencies of the direct dependencies):\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/internal.ts",
+      "round": 2,
+      "threadId": "01a11d53-0656-7288-9466-8ec6b246ed1e",
+      "agentRunId": "01a11d53-065a-7599-8d6e-617fed722a3d",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "imports 11 · imported by 16"
+        }
+      ],
+      "text": "`src/internal.ts` is imported by the following files:\n\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/internal.ts",
+      "round": 2,
+      "threadId": "01a11d53-0f4a-7241-8a85-9c81ecbe8fd7",
+      "agentRunId": "01a11d53-0f4d-725b-9790-640075fabb85",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "imports 11 · imported by 16"
+        }
+      ],
+      "text": "`src/internal.ts` imports the following files:\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/internal.ts",
+      "round": 2,
+      "threadId": "01a11d53-184d-71b8-a105-f4147cf9c9be",
+      "agentRunId": "01a11d53-1851-742b-87be-40cd64cb42a4",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "36 files"
+        }
+      ],
+      "text": "If `src/internal.ts` changes, up to two levels of dependents could break:\n\nAt one level out:\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`\n\nAt two levels out:\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/internal.ts",
+      "round": 2,
+      "threadId": "01a11d53-9d0d-718a-9c95-577bfb9ef3b7",
+      "agentRunId": "01a11d53-9d10-7172-8752-8ac9f074f3a8",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/internal.ts",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "`src/internal.ts` needs the following files to work (two levels deep):\n\nAt depth 1:\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`\n\nTo check what these depth 1 files import in turn (depth 2), we can inspect their individual dependencies or neighbors if needed; however, the graph walk shows all unique dependencies up to depth 2 from `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/core/finalize.ts",
+      "round": 2,
+      "threadId": "01a11d53-fcdf-7103-b572-faf75120db3a",
+      "agentRunId": "01a11d53-fce3-7438-9ef9-b27d4ed92ca2",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/internal.ts` is the only file that imports `src/core/finalize.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/core/finalize.ts",
+      "round": 2,
+      "threadId": "01a11d54-0671-701a-9cf4-2dd2cbd8d43d",
+      "agentRunId": "01a11d54-0675-77be-958b-3ce98d6b36c7",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/core/finalize.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/core/finalize.ts",
+      "round": 2,
+      "threadId": "01a11d54-1061-70af-9a99-ed04785f11f8",
+      "agentRunId": "01a11d54-1065-772e-95ee-763e7558a0c5",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/core/finalize.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "16 files"
+        }
+      ],
+      "text": "If `src/core/finalize.ts` changes, the files that could break up to two levels out are:\n\n- At one level out: `src/internal.ts`\n- At two levels out: `__tests__/base.js`, `__tests__/empty.ts`, `src/core/current.ts`, `src/core/immerClass.ts`, `src/core/proxy.ts`, `src/core/scope.ts`, `src/immer.ts`, `src/plugins/arrayMethods.ts`, `src/plugins/mapset.ts`, `src/plugins/patches.ts`, `src/types/types-external.ts`, `src/types/types-internal.ts`, `src/utils/common.ts`, `src/utils/errors.ts`, and `src/utils/plugins.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/current.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/core/finalize.ts",
+      "round": 2,
+      "threadId": "01a11d54-1bfc-722e-b179-15d199cd78a1",
+      "agentRunId": "01a11d54-1c00-71ff-ba7f-8683281f840c",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "`src/core/finalize.ts` needs `src/internal.ts` to work (at depth 1). \n\nAt depth 2, `src/internal.ts` needs:\n- `src/core/current.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/plugins/patches.ts",
+      "round": 2,
+      "threadId": "01a11d54-2a25-778c-9127-015658d66d57",
+      "agentRunId": "01a11d54-2a28-7539-9126-2133973280b1",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "imports 2 · imported by 1"
+        }
+      ],
+      "text": "`src/immer.ts` is the only file that imports `src/plugins/patches.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/plugins/patches.ts",
+      "round": 2,
+      "threadId": "01a11d54-33aa-760e-941e-c8ccc2619132",
+      "agentRunId": "01a11d54-33ae-7399-9a7a-b3fbdeb68434",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "imports 2 · imported by 1"
+        }
+      ],
+      "text": "`src/plugins/patches.ts` imports `src/immer.ts` and `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts",
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/plugins/patches.ts",
+      "round": 2,
+      "threadId": "01a11d54-3c36-73ee-83cf-c1ea8790cd5c",
+      "agentRunId": "01a11d54-3c39-748f-b50e-62d3ed31ec0d",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/plugins/patches.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "23 files"
+        }
+      ],
+      "text": "If `src/plugins/patches.ts` changes, the following files up to two levels out could break:\n\n- Depth 1: `src/immer.ts`\n- Depth 2: `__tests__/base.js`, `__tests__/current.js`, `__tests__/curry.js`, `__tests__/draft.ts`, `__tests__/empty.ts`, `__tests__/frozen.js`, `__tests__/immutable.ts`, `__tests__/isDraftable.js`, `__tests__/manual.js`, `__tests__/map-set.js`, `__tests__/not-strict-copy.ts`, `__tests__/null.js`, `__tests__/original.js`, `__tests__/patch.js`, `__tests__/plugins.js`, `__tests__/produce.ts`, `__tests__/prototype-inspection.js`, `__tests__/readme.js`, `__tests__/redux.ts`, `__tests__/regressions.js`, `__tests__/type-external.ts`, and `__tests__/updateScenarios.js`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/plugins/patches.ts",
+      "round": 2,
+      "threadId": "01a11d54-4892-754b-aee9-eb651e1da652",
+      "agentRunId": "01a11d54-4895-720f-a0cc-43fabda9b593",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "15 files"
+        }
+      ],
+      "text": "To work, `src/plugins/patches.ts` needs the following files two levels deep:\n\nAt one level away (imported directly by `src/plugins/patches.ts`):\n- `src/immer.ts`\n- `src/internal.ts`\n\nAt two levels away (imported by those files):\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/core/current.ts",
+      "round": 3,
+      "threadId": "01a11d54-5354-7122-95a3-ec93a752fbf6",
+      "agentRunId": "01a11d54-5358-73a4-9727-a67a6e8952c0",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/internal.ts` imports `src/core/current.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/core/current.ts",
+      "round": 3,
+      "threadId": "01a11d54-5c5a-7689-912d-0e8e55b9d6c0",
+      "agentRunId": "01a11d54-5c5e-7651-87e9-e62416a881bc",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/core/current.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/core/current.ts",
+      "round": 3,
+      "threadId": "01a11d55-71d9-7414-8066-0ac9a96a84d5",
+      "agentRunId": "01a11d55-71dd-759c-bc1f-014cb2912817",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/core/current.ts"
+          },
+          "found": true,
+          "note": "16 files"
+        }
+      ],
+      "text": "If `src/core/current.ts` changes, the following files could break (up to two levels out):\n\nLevel 1:\n- `src/internal.ts`\n\nLevel 2:\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/core/current.ts",
+      "round": 3,
+      "threadId": "01a11d55-9c7e-755c-b7a7-1efa0a5e710d",
+      "agentRunId": "01a11d55-9c81-7448-b58f-68de9ddde672",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/core/current.ts",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "To work, `src/core/current.ts` needs `src/internal.ts` (1 step away), which in turn needs the following files (2 steps away):\n\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/plugins/mapset.ts",
+      "round": 3,
+      "threadId": "01a11d55-bc05-737d-8893-7df964f0813d",
+      "agentRunId": "01a11d55-bc09-7209-beae-93621daef54d",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/immer.ts` imports `src/plugins/mapset.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/plugins/mapset.ts",
+      "round": 3,
+      "threadId": "01a11d55-de81-72a7-994b-3150df6994d6",
+      "agentRunId": "01a11d55-de85-770e-9166-7bf947475ebf",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/plugins/mapset.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/plugins/mapset.ts",
+      "round": 3,
+      "threadId": "01a11d55-ff87-729e-bc5d-1acf633ed48b",
+      "agentRunId": "01a11d55-ff8b-748a-9a5c-51997ddf479c",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/plugins/mapset.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "24 files"
+        }
+      ],
+      "text": "If `src/plugins/mapset.ts` changes, the following files up to two levels out could break:\n\nAt 1 level out:\n- `src/immer.ts`\n\nAt 2 levels out:\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/immer.ts",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/plugins/mapset.ts",
+      "round": 3,
+      "threadId": "01a11d56-1d05-7510-843d-e8d8fc74d655",
+      "agentRunId": "01a11d56-1d0b-769e-a51e-f13632ce2cfa",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/plugins/mapset.ts"
+          },
+          "found": true,
+          "note": "12 files"
+        }
+      ],
+      "text": "To work, `src/plugins/mapset.ts` needs `src/internal.ts` (at depth 1).\n\nAt depth 2, `src/internal.ts` imports the following files:\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/immer.ts",
+      "round": 3,
+      "threadId": "01a11d56-45d5-752e-97f9-4ecd0752579f",
+      "agentRunId": "01a11d56-45d8-71c9-929f-fd200aa7527c",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "imports 4 · imported by 23"
+        }
+      ],
+      "text": "`src/immer.ts` is imported by the following files:\n\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/immer.ts",
+      "round": 3,
+      "threadId": "01a11d56-91c1-747a-aade-38568930d9f9",
+      "agentRunId": "01a11d56-91c4-748e-a4c2-ce7cc1c7af39",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "imports 4 · imported by 23"
+        }
+      ],
+      "text": "`src/immer.ts` imports the following files:\n\n- `src/internal.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/immer.ts",
+      "round": 3,
+      "threadId": "01a11d56-ba98-75f9-ac6b-27760e63c428",
+      "agentRunId": "01a11d56-ba9c-704e-a6db-42f0abb5258e",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "23 files"
+        }
+      ],
+      "text": "If `src/immer.ts` changes, the files that could break (up to two levels out) are:\n\n**Depth 1:**\n- `__tests__/base.js`\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/empty.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`\n- `src/plugins/patches.ts`\n\n**Depth 2:**\nNo additional files were found at depth 2 importing from the depth 1 files.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js",
+          "src/plugins/patches.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/plugins/patches.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/immer.ts",
+      "round": 3,
+      "threadId": "01a11d56-de6b-72b0-8d7c-c0963892fc79",
+      "agentRunId": "01a11d56-de6f-7549-84e8-f001a2448113",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/immer.ts"
+          },
+          "found": true,
+          "note": "15 files"
+        }
+      ],
+      "text": "`src/immer.ts` needs the following files to work, two levels deep:\n\nAt depth 1 (direct dependencies):\n- `src/internal.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n\nAt depth 2 (dependencies of the direct dependencies):\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/internal.ts",
+      "round": 3,
+      "threadId": "01a11d56-f1f1-74bd-8111-1163ed5f0057",
+      "agentRunId": "01a11d56-f1f5-773b-b8e6-989d8f08af2c",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "imports 11 · imported by 16"
+        }
+      ],
+      "text": "`src/internal.ts` is imported by the following files:\n\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/internal.ts",
+      "round": 3,
+      "threadId": "01a11d57-08bd-70bb-9bca-1f37652673a8",
+      "agentRunId": "01a11d57-08c1-7318-a148-f67c01bb5cc7",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "imports 11 · imported by 16"
+        }
+      ],
+      "text": "`src/internal.ts` imports the following files:\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/internal.ts",
+      "round": 3,
+      "threadId": "01a11d57-2e7d-700e-8978-f835dc37c449",
+      "agentRunId": "01a11d57-2e80-71ef-a8d8-686c26d7e336",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/internal.ts"
+          },
+          "found": true,
+          "note": "36 files"
+        }
+      ],
+      "text": "If `src/internal.ts` changes, the following files up to two levels out could break:\n\nAt depth 1 (files that directly import `src/internal.ts`):\n- `__tests__/base.js`\n- `__tests__/empty.ts`\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/immer.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/plugins/patches.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`\n\nAt depth 2 (files that import the depth 1 files):\n- `__tests__/current.js`\n- `__tests__/curry.js`\n- `__tests__/draft.ts`\n- `__tests__/frozen.js`\n- `__tests__/immutable.ts`\n- `__tests__/isDraftable.js`\n- `__tests__/manual.js`\n- `__tests__/map-set.js`\n- `__tests__/not-strict-copy.ts`\n- `__tests__/null.js`\n- `__tests__/original.js`\n- `__tests__/patch.js`\n- `__tests__/plugins.js`\n- `__tests__/produce.ts`\n- `__tests__/prototype-inspection.js`\n- `__tests__/readme.js`\n- `__tests__/redux.ts`\n- `__tests__/regressions.js`\n- `__tests__/type-external.ts`\n- `__tests__/updateScenarios.js`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/internal.ts",
+      "round": 3,
+      "threadId": "01a11d57-808f-7790-83a1-f88d9e75efda",
+      "agentRunId": "01a11d57-8093-726b-bea9-a9c0d44520c1",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/internal.ts",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "To work, `src/internal.ts` needs the following files directly imported at depth 1:\n\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`\n\nTo see what those files import at depth 2, we would need to walk the dependency graph for each of them individually.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/core/finalize.ts",
+      "round": 3,
+      "threadId": "01a11d57-cbe2-75bf-be51-6ab284b7f5fb",
+      "agentRunId": "01a11d57-cbe5-762c-8069-8a9d1f83bcb9",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/internal.ts` imports `src/core/finalize.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/core/finalize.ts",
+      "round": 3,
+      "threadId": "01a11d57-e2b8-74da-90d8-c152e416bd61",
+      "agentRunId": "01a11d57-e2bb-775f-9a61-980f39b8dabc",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`src/core/finalize.ts` imports `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/core/finalize.ts",
+      "round": 3,
+      "threadId": "01a11d58-24e7-76e9-9a02-ae20a1744359",
+      "agentRunId": "01a11d58-24ea-7263-bb44-b8dc9a330b1b",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "16 files"
+        }
+      ],
+      "text": "If `src/core/finalize.ts` changes, up to two levels out, the files that could break (dependents) are:\n\n- At 1 level out: `src/internal.ts`\n- At 2 levels out: `__tests__/base.js`, `__tests__/empty.ts`, `src/core/current.ts`, `src/core/immerClass.ts`, `src/core/proxy.ts`, `src/core/scope.ts`, `src/immer.ts`, `src/plugins/arrayMethods.ts`, `src/plugins/mapset.ts`, `src/plugins/patches.ts`, `src/types/types-external.ts`, `src/types/types-internal.ts`, `src/utils/common.ts`, `src/utils/errors.ts`, and `src/utils/plugins.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "__tests__/base.js",
+          "__tests__/empty.ts",
+          "src/core/current.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/immer.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/plugins/patches.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/empty.ts",
+            "src/core/current.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/plugins/patches.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/core/finalize.ts",
+      "round": 3,
+      "threadId": "01a11d58-657e-7386-896d-6c2ff9eba8ba",
+      "agentRunId": "01a11d58-6581-7544-91ac-1e70c4bc81aa",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/core/finalize.ts"
+          },
+          "found": true,
+          "note": "11 files"
+        }
+      ],
+      "text": "To work, `src/core/finalize.ts` needs `src/internal.ts` at depth 1. \n\nAt depth 2, `src/internal.ts` imports the following files:\n- `src/core/current.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/internal.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:src/plugins/patches.ts",
+      "round": 3,
+      "threadId": "01a11d58-8f7e-7672-a99c-b278a7a24c56",
+      "agentRunId": "01a11d58-8f82-772a-a77e-191027679af7",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "imports 2 · imported by 1"
+        }
+      ],
+      "text": "`src/immer.ts` is the only file that imports `src/plugins/patches.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:src/plugins/patches.ts",
+      "round": 3,
+      "threadId": "01a11d58-a55e-708e-b3c4-5f5602015053",
+      "agentRunId": "01a11d58-a562-7402-9f75-fdb2db4f2b77",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "imports 2 · imported by 1"
+        }
+      ],
+      "text": "`src/plugins/patches.ts` imports `src/immer.ts` and `src/internal.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "src/internal.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/immer.ts",
+            "src/internal.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:src/plugins/patches.ts",
+      "round": 3,
+      "threadId": "01a11d58-c195-70c8-800f-54cff96193c7",
+      "agentRunId": "01a11d58-c198-7245-b433-9aeb5e65fde3",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "src/plugins/patches.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "23 files"
+        }
+      ],
+      "text": "If `src/plugins/patches.ts` changes, the following files up to two levels out could break:\n\n- Level 1: `src/immer.ts`\n- Level 2: `__tests__/base.js`, `__tests__/current.js`, `__tests__/curry.js`, `__tests__/draft.ts`, `__tests__/empty.ts`, `__tests__/frozen.js`, `__tests__/immutable.ts`, `__tests__/isDraftable.js`, `__tests__/manual.js`, `__tests__/map-set.js`, `__tests__/not-strict-copy.ts`, `__tests__/null.js`, `__tests__/original.js`, `__tests__/patch.js`, `__tests__/plugins.js`, `__tests__/produce.ts`, `__tests__/prototype-inspection.js`, `__tests__/readme.js`, `__tests__/redux.ts`, `__tests__/regressions.js`, `__tests__/type-external.ts`, and `__tests__/updateScenarios.js`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "__tests__/base.js",
+          "__tests__/current.js",
+          "__tests__/curry.js",
+          "__tests__/draft.ts",
+          "__tests__/empty.ts",
+          "__tests__/frozen.js",
+          "__tests__/immutable.ts",
+          "__tests__/isDraftable.js",
+          "__tests__/manual.js",
+          "__tests__/map-set.js",
+          "__tests__/not-strict-copy.ts",
+          "__tests__/null.js",
+          "__tests__/original.js",
+          "__tests__/patch.js",
+          "__tests__/plugins.js",
+          "__tests__/produce.ts",
+          "__tests__/prototype-inspection.js",
+          "__tests__/readme.js",
+          "__tests__/redux.ts",
+          "__tests__/regressions.js",
+          "__tests__/type-external.ts",
+          "__tests__/updateScenarios.js"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "__tests__/base.js",
+            "__tests__/current.js",
+            "__tests__/curry.js",
+            "__tests__/draft.ts",
+            "__tests__/empty.ts",
+            "__tests__/frozen.js",
+            "__tests__/immutable.ts",
+            "__tests__/isDraftable.js",
+            "__tests__/manual.js",
+            "__tests__/map-set.js",
+            "__tests__/not-strict-copy.ts",
+            "__tests__/null.js",
+            "__tests__/original.js",
+            "__tests__/patch.js",
+            "__tests__/plugins.js",
+            "__tests__/produce.ts",
+            "__tests__/prototype-inspection.js",
+            "__tests__/readme.js",
+            "__tests__/redux.ts",
+            "__tests__/regressions.js",
+            "__tests__/type-external.ts",
+            "__tests__/updateScenarios.js",
+            "src/immer.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:src/plugins/patches.ts",
+      "round": 3,
+      "threadId": "01a11d58-e46d-755c-b85e-e5e09264d7ae",
+      "agentRunId": "01a11d58-e470-75aa-ac6b-e6833c79af67",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "src/plugins/patches.ts"
+          },
+          "found": true,
+          "note": "15 files"
+        }
+      ],
+      "text": "To work, `src/plugins/patches.ts` needs the following files two levels deep:\n\nAt one step away (direct dependencies):\n- `src/immer.ts`\n- `src/internal.ts`\n\nAt two steps away (dependencies of the direct dependencies):\n- `src/core/current.ts`\n- `src/core/finalize.ts`\n- `src/core/immerClass.ts`\n- `src/core/proxy.ts`\n- `src/core/scope.ts`\n- `src/plugins/arrayMethods.ts`\n- `src/plugins/mapset.ts`\n- `src/types/types-external.ts`\n- `src/types/types-internal.ts`\n- `src/utils/common.ts`\n- `src/utils/env.ts`\n- `src/utils/errors.ts`\n- `src/utils/plugins.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "src/immer.ts",
+          "src/internal.ts",
+          "src/core/current.ts",
+          "src/core/finalize.ts",
+          "src/core/immerClass.ts",
+          "src/core/proxy.ts",
+          "src/core/scope.ts",
+          "src/plugins/arrayMethods.ts",
+          "src/plugins/mapset.ts",
+          "src/types/types-external.ts",
+          "src/types/types-internal.ts",
+          "src/utils/common.ts",
+          "src/utils/env.ts",
+          "src/utils/errors.ts",
+          "src/utils/plugins.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "src/core/current.ts",
+            "src/core/finalize.ts",
+            "src/core/immerClass.ts",
+            "src/core/proxy.ts",
+            "src/core/scope.ts",
+            "src/immer.ts",
+            "src/internal.ts",
+            "src/plugins/arrayMethods.ts",
+            "src/plugins/mapset.ts",
+            "src/types/types-external.ts",
+            "src/types/types-internal.ts",
+            "src/utils/common.ts",
+            "src/utils/env.ts",
+            "src/utils/errors.ts",
+            "src/utils/plugins.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    }
+  ]
+}
