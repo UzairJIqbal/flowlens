@@ -29,7 +29,7 @@ export function SubmitForm({ handoff }: { handoff?: string }) {
       className="flex h-10 shrink-0 items-center gap-2 border-b border-border px-3 text-xs"
     >
       <label htmlFor="url" className="shrink-0 text-muted">
-        Public repository
+        Public repository or pull request
       </label>
       <input
         id="url"
@@ -39,7 +39,7 @@ export function SubmitForm({ handoff }: { handoff?: string }) {
         // The form resets after every submission; a rejected URL comes back
         // so it can be corrected rather than retyped.
         defaultValue={state?.url ?? handoff}
-        placeholder="https://github.com/owner/repository"
+        placeholder="https://github.com/owner/repository or …/pull/123"
         spellCheck={false}
         autoComplete="off"
         className="h-6 w-full max-w-md rounded border border-border bg-background px-2 font-mono placeholder:text-muted focus:border-accent focus:outline-none"

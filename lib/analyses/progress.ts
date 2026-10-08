@@ -22,6 +22,11 @@ export function analysisTopic(analysisId: string): string {
   return `analysis:${analysisId}`;
 }
 
+/** Returns the private realtime channel name for a pull request preview. */
+export function previewTopic(previewId: string): string {
+  return `preview:${previewId}`;
+}
+
 /** Builds progress from a stored row, preferring the error over the stage message. */
 export function rowProgress(row: {
   status: AnalysisStatus;

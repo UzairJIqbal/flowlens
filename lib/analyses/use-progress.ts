@@ -3,8 +3,9 @@
 import { useSession } from "@clerk/nextjs";
 import { useEffect, useEffectEvent, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { readPreviewProgress } from "@/lib/previews/actions";
 import { readProgress } from "./actions";
-import { analysisTopic, broadcastProgress, type Progress } from "./progress";
+import { analysisTopic, broadcastProgress, previewTopic, type Progress } from "./progress";
 
 export type Live =
   | { state: "idle" | "connecting" | "live" }
@@ -16,17 +17,27 @@ type Connection = {
   errors: ReadonlyMap<string, string>;
 };
 
+// Analyses and previews publish the same shape on their own topics; only the
+// channel name and the catch-up read differ.
+const RUNS = {
+  analysis: { topic: analysisTopic, read: readProgress },
+  preview: { topic: previewTopic, read: readPreviewProgress },
+} as const;
+
+export type RunKind = keyof typeof RUNS;
+
 /**
- * Subscribes to each analysis's private channel and hands every published
+ * Subscribes to each run's private channel and hands every published
  * stage to `onProgress`. Nothing is polled: the only read is one catch-up per
  * join, for whatever was published before the socket was listening.
  *
  * The returned state says whether the page is actually live, because a channel
  * the policy refuses looks exactly like a run that isn't moving.
  */
-export function useAnalysisProgress(
+export function useRunProgress(
+  kind: RunKind,
   ids: readonly string[],
-  onProgress: (analysisId: string, progress: Progress) => void,
+  onProgress: (id: string, progress: Progress) => void,
 ): Live {
   const { session } = useSession();
   const sessionId = session?.id;
@@ -38,6 +49,7 @@ export function useAnalysisProgress(
 
   useEffect(() => {
     if (!sessionId || key === "") return;
+    const { topic, read } = RUNS[kind];
 
     let active = true;
     const supabase = createBrowserSupabaseClient(() => token());
@@ -62,7 +74,7 @@ export function useAnalysisProgress(
 
     for (const id of key.split(",")) {
       supabase
-        .channel(analysisTopic(id), { config: { private: true } })
+        .channel(topic(id), { config: { private: true } })
         .on<Record<string, unknown>>("broadcast", { event: "*" }, ({ event, payload }) => {
           const progress = broadcastProgress(event, payload);
           if (!progress || !active) return;
@@ -74,7 +86,7 @@ export function useAnalysisProgress(
           if (status === "SUBSCRIBED") {
             record(id, null);
             const at = seen.get(id) ?? 0;
-            readProgress(id).then(
+            read(id).then(
               (progress) => {
                 if (progress && active && (seen.get(id) ?? 0) === at) deliver(id, progress);
               },
@@ -94,7 +106,7 @@ export function useAnalysisProgress(
       active = false;
       void supabase.removeAllChannels();
     };
-  }, [sessionId, key]);
+  }, [sessionId, key, kind]);
 
   if (key === "") return { state: "idle" };
   if (connection?.key !== key) return { state: "connecting" };

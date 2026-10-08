@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useActionState, useState } from "react";
+import { useActionState, useState, type ReactNode } from "react";
 import type { ActionState } from "@/lib/analyses/actions";
-import { STAGES, type AnalysisStage, type Progress } from "@/lib/analyses/progress";
-import type { AnalysisDetail } from "@/lib/analyses/read";
-import { useAnalysisProgress } from "@/lib/analyses/use-progress";
+import type { AnalysisStage, Progress } from "@/lib/analyses/progress";
+import { useRunProgress, type RunKind } from "@/lib/analyses/use-progress";
 import { utc } from "@/lib/utc";
 import { LiveLabel } from "@/app/_components/live-label";
 
@@ -27,14 +26,36 @@ const GLYPH: Record<StageState, { glyph: string; className: string }> = {
   pending: { glyph: "○", className: "text-muted" },
 };
 
+/** One run as the page loaded it: an analysis or a pull request preview. */
+export type RunDetail = {
+  id: string;
+  kind: RunKind;
+  stages: readonly AnalysisStage[];
+  progress: Progress;
+  stale: boolean;
+  startedAt: string | null;
+  /** The commit shown after "Complete", when the run has one stored. */
+  commitSha: string | null;
+  mapHref: string;
+};
+
 /** Shows live stages and rerun controls, opening the map when a watched run completes. */
 export function ProgressView({
-  analysis,
+  run: analysis,
+  crumbs,
   rerun,
+  rerunNote,
+  rerunsComplete,
 }: {
-  analysis: AnalysisDetail;
+  run: RunDetail;
+  /** The page heading after the "Analyses" crumb. */
+  crumbs: ReactNode;
   rerun: (state: ActionState) => Promise<ActionState>;
+  rerunNote: string;
+  /** False when a complete run can't change by running again. */
+  rerunsComplete: boolean;
 }) {
+  const { stages, mapHref } = analysis;
   const [view, setView] = useState<View>(() => ({
     progress: analysis.progress,
     messages: record({}, analysis.progress),
@@ -43,18 +64,17 @@ export function ProgressView({
   const [rerunState, rerunAction, rerunPending] = useActionState(rerun, null);
 
   const router = useRouter();
-  const mapHref = `/analyses/${analysis.id}/map`;
 
-  const live = useAnalysisProgress([analysis.id], (_, next) => {
+  const live = useRunProgress(analysis.kind, [analysis.id], (_, next) => {
     // A run finishing while this page watches goes straight to its map. Opening
     // the page on an analysis that was already complete doesn't: that visit is
     // for the pipeline itself, to re-run it.
     if (next.status === "complete" && view.progress.status !== "complete") router.push(mapHref);
-    setView((current) => advance(current, next));
+    setView((current) => advance(stages, current, next));
   });
 
   const { progress, messages, stale } = view;
-  const canRerun = progress.status !== "parsing" || stale;
+  const canRerun = (progress.status !== "parsing" || stale) && (rerunsComplete || progress.status !== "complete");
 
   return (
     <section className="flex min-h-0 flex-1 flex-col text-xs">
@@ -63,17 +83,14 @@ export function ProgressView({
           Analyses
         </Link>
         <span className="text-muted">/</span>
-        <h1 className="truncate font-mono">
-          <span className="text-muted">{analysis.repoOwner}/</span>
-          {analysis.repoName}
-        </h1>
+        {crumbs}
         <LiveLabel live={live} />
       </div>
 
       <div className="flex max-w-3xl flex-col gap-3 p-3">
         <ol>
-          {STAGES.map((stage) => {
-            const state = stageState(stage, progress);
+          {stages.map((stage) => {
+            const state = stageState(stages, stage, progress);
             const glyph = GLYPH[state];
             const message =
               state === "failed" ? progress.message : state === "pending" ? undefined : messages[stage];
@@ -114,7 +131,7 @@ export function ProgressView({
             >
               {rerunPending ? "Starting" : "Re-run"}
             </button>
-            <span className="text-muted">Fetches the latest commit and replaces the stored result.</span>
+            <span className="text-muted">{rerunNote}</span>
           </form>
         )}
         {rerunState && <p className="text-danger">{rerunState.error}</p>}
@@ -124,7 +141,7 @@ export function ProgressView({
 }
 
 /** Explains the run outcome or stale state without repeating a stage failure message. */
-function Outcome({ analysis, view: { progress, stale } }: { analysis: AnalysisDetail; view: View }) {
+function Outcome({ analysis, view: { progress, stale } }: { analysis: RunDetail; view: View }) {
   if (stale) {
     const since = analysis.startedAt ? `${utc(analysis.startedAt).time} UTC` : "it was created";
     return (
@@ -160,9 +177,9 @@ function Outcome({ analysis, view: { progress, stale } }: { analysis: AnalysisDe
 }
 
 /** Derives a stage indicator from its position in the current run and the run status. */
-function stageState(stage: AnalysisStage, progress: Progress): StageState {
-  const at = progress.stage ? STAGES.indexOf(progress.stage) : -1;
-  const index = STAGES.indexOf(stage);
+function stageState(stages: readonly AnalysisStage[], stage: AnalysisStage, progress: Progress): StageState {
+  const at = progress.stage ? stages.indexOf(progress.stage) : -1;
+  const index = stages.indexOf(stage);
   switch (progress.status) {
     case "queued":
       return "pending";
@@ -176,7 +193,7 @@ function stageState(stage: AnalysisStage, progress: Progress): StageState {
 }
 
 /** Applies changed progress, clearing old messages on restart and the stale marker on movement. */
-function advance(view: View, next: Progress): View {
+function advance(stages: readonly AnalysisStage[], view: View, next: Progress): View {
   const { progress } = view;
   // The catch-up read usually repeats what's on screen; that isn't movement.
   if (progress.status === next.status && progress.stage === next.stage && progress.message === next.message) {
@@ -186,7 +203,7 @@ function advance(view: View, next: Progress): View {
   const restarted =
     next.status === "parsing" &&
     (progress.status !== "parsing" ||
-      (next.stage !== null && progress.stage !== null && STAGES.indexOf(next.stage) < STAGES.indexOf(progress.stage)));
+      (next.stage !== null && progress.stage !== null && stages.indexOf(next.stage) < stages.indexOf(progress.stage)));
   return { progress: next, messages: record(restarted ? {} : view.messages, next), stale: false };
 }
 

@@ -318,6 +318,81 @@ export type Database = {
         }
         Relationships: []
       }
+      pr_previews: {
+        Row: {
+          base: Json | null
+          base_sha: string
+          changed: Json
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          head: Json | null
+          head_sha: string
+          id: string
+          organization_id: string
+          pr_number: number
+          pr_title: string
+          project_id: string
+          stage: Database["public"]["Enums"]["preview_stage"] | null
+          stage_message: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["analysis_status"]
+        }
+        Insert: {
+          base?: Json | null
+          base_sha: string
+          changed: Json
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          head?: Json | null
+          head_sha: string
+          id?: string
+          organization_id: string
+          pr_number: number
+          pr_title: string
+          project_id: string
+          stage?: Database["public"]["Enums"]["preview_stage"] | null
+          stage_message?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["analysis_status"]
+        }
+        Update: {
+          base?: Json | null
+          base_sha?: string
+          changed?: Json
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          head?: Json | null
+          head_sha?: string
+          id?: string
+          organization_id?: string
+          pr_number?: number
+          pr_title?: string
+          project_id?: string
+          stage?: Database["public"]["Enums"]["preview_stage"] | null
+          stage_message?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["analysis_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pr_previews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pr_previews_project_id_organization_id_fkey"
+            columns: ["project_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           created_at: string
@@ -428,6 +503,7 @@ export type Database = {
       analysis_status: "queued" | "parsing" | "complete" | "failed"
       edge_kind: "import" | "reexport" | "dynamic" | "require"
       file_role_source: "convention" | "model"
+      preview_stage: "fetch" | "parse" | "store"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -559,6 +635,7 @@ export const Constants = {
       analysis_status: ["queued", "parsing", "complete", "failed"],
       edge_kind: ["import", "reexport", "dynamic", "require"],
       file_role_source: ["convention", "model"],
+      preview_stage: ["fetch", "parse", "store"],
     },
   },
 } as const
