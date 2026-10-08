@@ -139,7 +139,10 @@ export async function executePreview({ previewId, repo, baseSha, headSha, change
     for (const side of ["base", "head"] as const) {
       await enter(db, previewId, "parse", `Parsing the ${side} side`);
       sides[side] = sideFromParse(parseRepository(checkouts[side], detectAdapter(checkouts[side])), changed);
-      // The checkout isn't needed once parsed; the next side gets the disk.
+      // Both checkouts are on disk until the base side is parsed: fetching each
+      // side just before parsing it would step the shown stages back from
+      // parse to fetch, which the progress view reads as a new run. Removing
+      // each once parsed only frees its space for what comes after.
       await rm(checkouts[side], { recursive: true, force: true });
     }
     const { base, head } = sides;
