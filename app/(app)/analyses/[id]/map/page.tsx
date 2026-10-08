@@ -19,7 +19,7 @@ export default async function AnalysisMapPage({ params }: { params: Promise<{ id
   const repo = {
     name: `${map.repoOwner}/${map.repoName}`,
     adapter: map.adapter,
-    coverage: map.coverage,
+    coverage: { parsed: map.coverage.files.parsed, skipped: map.coverage.files.skipped },
     routes: { found: map.routes.length, withheld: map.withheldRoutes.length },
   };
 

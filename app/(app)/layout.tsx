@@ -1,5 +1,6 @@
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { ThemeControl } from "@/app/_components/theme-control";
 import { THEME_COOKIE, parseTheme } from "@/lib/theme";
 
@@ -20,6 +21,9 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           afterLeaveOrganizationUrl="/setup"
         />
         <div className="ml-auto flex items-center gap-3">
+          <Link href="/settings" className="text-xs text-muted hover:text-foreground">
+            Settings
+          </Link>
           <ThemeControl initial={theme} />
           <UserButton />
         </div>

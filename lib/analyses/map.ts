@@ -4,10 +4,25 @@ import type { Database, Json } from "@/lib/supabase/database.types";
 import type { RepoFile } from "@/lib/map/detail";
 import type { FileEdge } from "@/lib/map/view";
 import { fanInOut } from "@/lib/parser/graph";
+import type { EdgeKind, OutcomeCounts } from "@/lib/parser/types";
 import { readEvery } from "./stored";
 
 export type StoredRoute = { method: string; path: string; file: string; line: number };
 export type StoredWithheldRoute = { file: string; line: number; reason: string };
+/** An edge with every kind of import behind it, as the parser merged them. */
+export type StoredEdge = FileEdge & { kinds: EdgeKind[] };
+
+/**
+ * The parser's coverage as stored, minus the per-kind breakdown: analyses
+ * stored before `require` was parsed have no entry for it, and a breakdown
+ * with a kind missing would read as none of that kind.
+ */
+export type StoredCoverage = {
+  files: { found: number; parsed: number; skipped: number };
+  imports: OutcomeCounts;
+  unresolvedByReason: Record<string, number>;
+  excludedByReason: Record<string, number>;
+};
 
 export type StoredMap = {
   repoOwner: string;
@@ -15,9 +30,11 @@ export type StoredMap = {
   commitSha: string;
   adapter: string;
   status: string;
-  coverage: { parsed: number; skipped: number };
+  /** When the stored graph was made; null while a re-run is going. */
+  finishedAt: string | null;
+  coverage: StoredCoverage;
   files: RepoFile[];
-  edges: FileEdge[];
+  edges: StoredEdge[];
   routes: StoredRoute[];
   withheldRoutes: StoredWithheldRoute[];
 };
@@ -37,7 +54,7 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
 export async function readStoredMap(supabase: SupabaseClient<Database>, analysisId: string): Promise<StoredMap | null> {
   const analysis = await supabase
     .from("analyses")
-    .select("status, commit_sha, adapter, coverage, withheld_routes, project:projects!inner(repo_owner, repo_name)")
+    .select("status, commit_sha, finished_at, adapter, coverage, withheld_routes, project:projects!inner(repo_owner, repo_name)")
     .eq("id", analysisId)
     .maybeSingle();
   if (analysis.error) throw new Error(`Could not load the analysis: ${analysis.error.message}`);
@@ -55,7 +72,7 @@ export async function readStoredMap(supabase: SupabaseClient<Database>, analysis
   const edgeRows = await readEvery("edges", (from, to) =>
     supabase
       .from("edges")
-      .select("source_file_id, target_file_id", { count: "exact" })
+      .select("source_file_id, target_file_id, kinds", { count: "exact" })
       .eq("analysis_id", analysisId)
       .order("id")
       .range(from, to),
@@ -76,7 +93,7 @@ export async function readStoredMap(supabase: SupabaseClient<Database>, analysis
     const to = pathOf.get(e.target_file_id);
     // The store guarantees this can't happen; if it does, the map is wrong.
     if (from === undefined || to === undefined) throw new Error("A stored edge points at a file that wasn't read");
-    return { from, to };
+    return { from, to, kinds: e.kinds };
   });
 
   const routes = routeRows.map((r) => {
@@ -107,7 +124,8 @@ export async function readStoredMap(supabase: SupabaseClient<Database>, analysis
     commitSha: data.commit_sha,
     adapter: data.adapter ?? "none",
     status: data.status,
-    coverage: fileCoverage(data.coverage),
+    finishedAt: data.finished_at,
+    coverage: storedCoverage(data.coverage),
     files,
     edges,
     routes,
@@ -116,17 +134,42 @@ export async function readStoredMap(supabase: SupabaseClient<Database>, analysis
 }
 
 /**
- * Coverage is stored as the parser's JSON. Only the file counts are read here,
- * and they're checked rather than assumed.
+ * Coverage is stored as the parser's JSON, and checked rather than assumed: a
+ * count that isn't there is an error, never a zero.
  */
-function fileCoverage(coverage: Json | null): { parsed: number; skipped: number } {
+export function storedCoverage(coverage: Json | null): StoredCoverage {
   const files = field(coverage, "files");
-  const parsed = field(files, "parsed");
-  const skipped = field(files, "skipped");
-  if (typeof parsed !== "number" || typeof skipped !== "number") {
-    throw new Error("The stored coverage has no file counts");
+  const imports = field(coverage, "imports");
+  return {
+    files: { found: count(files, "found"), parsed: count(files, "parsed"), skipped: count(files, "skipped") },
+    imports: {
+      seen: count(imports, "seen"),
+      internal: count(imports, "internal"),
+      external: count(imports, "external"),
+      excluded: count(imports, "excluded"),
+      unresolved: count(imports, "unresolved"),
+    },
+    unresolvedByReason: counts(field(coverage, "unresolvedByReason")),
+    excludedByReason: counts(field(coverage, "excludedByReason")),
+  };
+}
+
+function count(value: Json | undefined, key: string): number {
+  const n = field(value, key);
+  if (typeof n !== "number") throw new Error(`The stored coverage has no ${key} count`);
+  return n;
+}
+
+function counts(value: Json | undefined): Record<string, number> {
+  if (value === null || value === undefined || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("The stored coverage is missing its reasons");
   }
-  return { parsed, skipped };
+  return Object.fromEntries(
+    Object.entries(value).map(([reason, n]) => {
+      if (typeof n !== "number") throw new Error(`The stored coverage has a non-number count for ${reason}`);
+      return [reason, n];
+    }),
+  );
 }
 
 // Stored as the parser's JSON; each entry is checked rather than assumed. An
