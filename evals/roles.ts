@@ -25,6 +25,7 @@ if (process.argv.length > 2) {
   process.exit(1);
 }
 
+/** Narrows a value to a role the classifier is allowed to return. */
 const isModelRole = (value: unknown): value is ModelRole => MODEL_ROLES.some((r) => r === value);
 
 await ensureDataset(
@@ -78,6 +79,7 @@ if (examples.length < MINIMUM) {
   process.exit(1);
 }
 
+/** Validates an evaluation input as a file with no role label; throws on malformed fields. */
 function readFile(value: unknown): Unidentified {
   if (!isRecord(value)) throw new Error("file isn't an object");
   return {

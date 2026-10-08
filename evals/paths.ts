@@ -131,6 +131,7 @@ console.log(
 );
 if (unreadable.length > 0) console.log(`couldn't read:\n  ${unreadable.join("\n  ")}`);
 
+/** Returns the text around the first matching token, bounded by sentence or line breaks. */
 function sentenceWith(text: string, token: string): string {
   const at = text.indexOf(token);
   const start = Math.max(text.lastIndexOf(". ", at) + 1, text.lastIndexOf("\n", at) + 1, 0);
@@ -138,6 +139,7 @@ function sentenceWith(text: string, token: string): string {
   return text.slice(start, stop.length === 0 ? text.length : Math.min(...stop) + 1).trim();
 }
 
+/** Formats a fraction as a percentage with one decimal place. */
 function pct(fraction: number): string {
   return `${(fraction * 100).toFixed(1)}%`;
 }

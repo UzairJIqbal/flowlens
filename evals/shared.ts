@@ -65,12 +65,14 @@ export function spread<T>(items: readonly T[], count: number): T[] {
   return Array.from({ length: count }, (_, i) => items[Math.floor((i * items.length) / count)]);
 }
 
+/** Consumes a command-line flag and reports whether it was present. */
 export function flag(name: string): boolean {
   const at = process.argv.indexOf(name);
   if (at !== -1) process.argv.splice(at, 1);
   return at !== -1;
 }
 
+/** Consumes a named command-line option and its value; exits if a present option has no value. */
 export function option(name: string): string | undefined {
   const at = process.argv.indexOf(name);
   if (at === -1) return undefined;
@@ -90,6 +92,7 @@ export function counter(label: string, total: number): () => void {
   return () => console.log(`${label} ${++done}/${total}`);
 }
 
+/** Returns the arithmetic mean, or NaN when there are no scores. */
 export function mean(scores: readonly number[]): number {
   return scores.length === 0 ? NaN : scores.reduce((a, b) => a + b, 0) / scores.length;
 }
@@ -99,30 +102,36 @@ export function mean(scores: readonly number[]): number {
 
 type Fields = Record<string, unknown>;
 
+/** Narrows a value to a non-null object, excluding arrays. */
 export function isRecord(value: unknown): value is Fields {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** Reads a string or throws an error identifying the malformed field. */
 export function str(value: unknown, what: string): string {
   if (typeof value !== "string") throw new Error(`${what} isn't a string`);
   return value;
 }
 
+/** Reads a number or throws an error identifying the malformed field. */
 export function num(value: unknown, what: string): number {
   if (typeof value !== "number") throw new Error(`${what} isn't a number`);
   return value;
 }
 
+/** Reads a list of strings, identifying a malformed element by its index. */
 export function strings(value: unknown, what: string): string[] {
   if (!Array.isArray(value)) throw new Error(`${what} isn't a list`);
   return value.map((v, i) => str(v, `${what}[${i}]`));
 }
 
+/** Reads a non-array object or throws an error identifying the malformed field. */
 function record(value: unknown, what: string): Fields {
   if (!isRecord(value)) throw new Error(`${what} isn't an object`);
   return value;
 }
 
+/** Validates a stored file description, including its nullable role and attribution. */
 function described(value: unknown, what: string): Described {
   const d = record(value, what);
   const kind = d.kind === null ? null : str(d.kind, `${what}.kind`);
@@ -131,6 +140,7 @@ function described(value: unknown, what: string): Described {
   return { path: str(d.path, `${what}.path`), kind, by };
 }
 
+/** Reconstructs file facts from untyped trace or dataset input; throws on malformed fields. */
 export function readFacts(value: unknown): FileFacts {
   const f = record(value, "facts");
   const file = record(f.file, "facts.file");
@@ -148,6 +158,7 @@ export function readFacts(value: unknown): FileFacts {
   };
 }
 
+/** Reconstructs folder facts and boundary edges from untyped trace input; throws on malformed fields. */
 export function readFolderFacts(value: unknown): FolderFacts {
   const f = record(value, "facts");
   const files = f.files;
