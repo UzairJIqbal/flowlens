@@ -8,7 +8,7 @@ import type { Target } from "@/lib/map/prose";
 import { folderFan, type ChangeSide } from "@/lib/map/view";
 import { fanInOut } from "@/lib/parser/graph";
 import type { ChangedFile } from "@/lib/pipeline/github";
-import { changeLetter, changedBoxes, combine } from "@/lib/previews/combine";
+import { changeLetter, changedBoxes, combine, oldName } from "@/lib/previews/combine";
 import type { PreviewSide } from "@/lib/previews/side";
 import { CategoryRail } from "./category-rail";
 import { ChangeList } from "./change-list";
@@ -65,8 +65,9 @@ export function PreviewWorkspace({
   const marks = useMemo(() => {
     const out = new Map<string, { letter: string; title: string }>();
     for (const c of changed) {
-      out.set(c.path, { letter: changeLetter(c.status), title: c.previousPath === null ? c.status : `renamed from ${c.previousPath}` });
-      if (c.previousPath !== null) out.set(c.previousPath, { letter: changeLetter(c.status), title: `renamed to ${c.path}` });
+      out.set(c.path, { letter: changeLetter(c.status), title: c.previousPath === null ? c.status : `${c.status} from ${c.previousPath}` });
+      const old = oldName(c);
+      if (old !== null) out.set(old, { letter: changeLetter(c.status), title: `renamed to ${c.path}` });
     }
     return out;
   }, [changed]);

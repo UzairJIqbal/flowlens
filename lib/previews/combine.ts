@@ -17,7 +17,7 @@ export type Change = {
   /** Every import pair on either side; a pair on one side alone carries which. */
   edges: FileEdge[];
   diff: GraphDiff;
-  /** Every path GitHub listed as changed, the old name of a rename included. */
+  /** Every path GitHub listed as changed, the old name of a rename included. A copy's source is left as it was. */
   changedPaths: string[];
   /** Within two imports of a changed file, on the side after the change. */
   affected: Reached[];
@@ -38,7 +38,14 @@ export function combine(base: PreviewSide, head: PreviewSide, changed: readonly 
   const addedPairs = new Set(added.map((e) => `${e.from}\0${e.to}`));
   for (const e of edges) if (addedPairs.has(`${e.from}\0${e.to}`)) e.change = "added";
 
-  const changedPaths = [...new Set(changed.flatMap((c) => (c.previousPath === null ? [c.path] : [c.path, c.previousPath])))].sort();
+  const changedPaths = [
+    ...new Set(
+      changed.flatMap((c) => {
+        const old = oldName(c);
+        return old === null ? [c.path] : [c.path, old];
+      }),
+    ),
+  ].sort();
   const sides = (s: PreviewSide) => ({ files: s.files.map((f) => f.path), edges: s.edges });
 
   return {
@@ -49,6 +56,15 @@ export function combine(base: PreviewSide, head: PreviewSide, changed: readonly 
     affected: affected(changedPaths, head.edges),
     gap: coverageGap(sideCoverage(base), sideCoverage(head)),
   };
+}
+
+/**
+ * The path a rename moved away from, which no longer exists after the change.
+ * A copy also reports where it came from, but its source is untouched, so it
+ * isn't changed and stays in the blast radius like any other file.
+ */
+export function oldName(c: ChangedFile): string | null {
+  return c.status === "renamed" ? c.previousPath : null;
 }
 
 /**

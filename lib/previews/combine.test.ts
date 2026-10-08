@@ -57,6 +57,14 @@ test("affected is measured after the change, and a rename counts both names as c
   ]);
 });
 
+test("a copy's source is not changed, so what imports it is not affected", () => {
+  const base = side(["page.ts", "util.ts"], [["page.ts", "util.ts"]]);
+  const head = side(["copy.ts", "page.ts", "util.ts"], [["page.ts", "util.ts"]]);
+  const change = combine(base, head, [{ path: "copy.ts", status: "copied", previousPath: "util.ts" }]);
+  assert.deepEqual(change.changedPaths, ["copy.ts"]);
+  assert.deepEqual(change.affected, []);
+});
+
 test("two sides parsed unequally raise the coverage gap", () => {
   const base = side(["a.ts", "b.ts"], [["a.ts", "b.ts"]], { internal: 90, unresolved: 10 });
   const head = side(["a.ts", "b.ts"], [["a.ts", "b.ts"]], { internal: 70, unresolved: 30 });
