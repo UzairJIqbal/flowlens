@@ -63,6 +63,7 @@ export function pathFeedback(text: string, shown: Iterable<string>) {
   };
 }
 
+/** Recognizes file paths, excluding URL fragments and bare filenames outside source-code formatting. */
 function pathShaped(token: string, code: boolean): boolean {
   // What's left of a URL once the colon ends the candidate.
   if (token.startsWith("//")) return false;
@@ -70,6 +71,7 @@ function pathShaped(token: string, code: boolean): boolean {
   return token.includes("/") || (code && SOURCE.test(token));
 }
 
+/** Removes surrounding prose punctuation before checking a candidate path. */
 function trim(word: string): string {
   let start = 0;
   let end = word.length;

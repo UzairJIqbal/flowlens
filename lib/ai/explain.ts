@@ -76,6 +76,7 @@ export async function explainFile(facts: FileFacts, cache: Cache, source: () => 
   return answer;
 }
 
+/** Explains a folder from stored facts, using the cache and scoring the returned answer for invented paths. */
 export async function explainFolder(facts: FolderFacts, cache: Cache): Promise<Answer> {
   const answer = await cached("explain-folder", cache, { system: FOLDER_SYSTEM, facts }, facts, (f) =>
     complete({ system: FOLDER_SYSTEM, user: folderMessage(f) }),
@@ -84,8 +85,10 @@ export async function explainFolder(facts: FolderFacts, cache: Cache): Promise<A
   return answer;
 }
 
-// The invented-path check, live: every answer given, hit or miss, is scored on
-// its own run, so the dashboard's score is over what people were actually shown.
+/**
+ * Scores each traced answer for invented paths, including cache hits, so the
+ * dashboard reflects what people were shown. Skips answers without a run ID.
+ */
 async function scorePaths(answer: Answer, shown: string[]): Promise<void> {
   if (answer.runId !== null) await recordFeedback(answer.runId, pathFeedback(answer.output, shown));
 }
@@ -95,10 +98,12 @@ export function shownForFile(f: FileFacts): string[] {
   return [f.file.path, ...f.imports.map((d) => d.path), ...f.importedBy.map((d) => d.path)];
 }
 
+/** Lists paths shown in the folder message, including both endpoints of boundary imports. */
 export function shownForFolder(f: FolderFacts): string[] {
   return [...f.files.map((d) => d.path), ...[...f.incoming, ...f.outgoing].flatMap((e) => [e.from, e.to])];
 }
 
+/** Builds the file explanation prompt, marking source text truncated to the character limit. */
 export function fileMessage(f: FileFacts, source: string): string {
   const cut = source.length > SOURCE_LIMIT;
   return [

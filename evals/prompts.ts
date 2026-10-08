@@ -91,8 +91,10 @@ const JUDGE_SCHEMA = {
   },
 };
 
-// No cache read in this trace: a judge's verdict is never stored or reused, so
-// there is no hit to make visible.
+/**
+ * Scores an explanation's specificity with the model. Verdicts are never
+ * stored or reused, so this trace has no cache read.
+ */
 const judge = traceable(async (facts: FileFacts, source: string, explanation: string) => {
   const output = await complete({
     system: JUDGE_SYSTEM,
@@ -166,6 +168,7 @@ function scores(results: typeof retired, key: string): Map<string, number | null
   return byExample;
 }
 
+/** Prints paired scores for one metric and returns the number of examples excluded. */
 function line(key: string, scale: string) {
   const before = scores(retired, key);
   const after = scores(current, key);
