@@ -180,6 +180,9 @@ async function fail(db: Admin, previewId: string, cause: unknown): Promise<void>
   const { error } = await db
     .from("pr_previews")
     .update({ status: "failed", error: reason || "Failed without a message", finished_at: new Date().toISOString() })
-    .eq("id", previewId);
+    .eq("id", previewId)
+    // A run replaced as stale can fail after its replacement stored the
+    // preview; a stored preview stays stored.
+    .neq("status", "complete");
   if (error) throw new Error(`Preview failed (${reason}) and the failure could not be recorded: ${error.message}`);
 }
