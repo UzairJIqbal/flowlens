@@ -1,13 +1,15 @@
 {
   "name": "flowlens",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.9.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
     "parse": "node scripts/parse.ts",
     "analyze": "node scripts/analyze.ts",
     "eval:paths": "node evals/paths.ts",
