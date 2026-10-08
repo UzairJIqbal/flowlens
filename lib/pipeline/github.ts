@@ -68,9 +68,19 @@ export function parsePullRequestUrl(input: string): PullRequestRef {
   return { ...repo, number: Number(parts[3]) };
 }
 
-/** True for a URL pointing at a pull request rather than a repository. */
+/**
+ * True for a URL shaped like owner/repository/pull/..., so a malformed pull
+ * request URL is still refused with the pull request's own message. Matched by
+ * position, so an owner or repository named "pull" isn't mistaken for one.
+ */
 export function isPullRequestUrl(input: string): boolean {
-  return /\/pull\/[0-9]+/.test(input);
+  const trimmed = input.trim();
+  try {
+    const url = new URL(/^[a-z]+:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`);
+    return url.pathname.split("/").filter(Boolean)[2] === "pull";
+  } catch {
+    return false;
+  }
 }
 
 const API_HEADERS = {

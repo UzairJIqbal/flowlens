@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, test } from "node:test";
-import { MAX_CHANGED_FILES, readPullRequest } from "./github.ts";
+import { isPullRequestUrl, MAX_CHANGED_FILES, readPullRequest } from "./github.ts";
 
 // GitHub stands in as a fetch that answers the two calls a preview makes.
 
@@ -52,4 +52,12 @@ test("299 files are read in full, against the merge base", async () => {
   const pr = await readPullRequest(PR);
   assert.equal(pr.changed.length, MAX_CHANGED_FILES - 1);
   assert.equal(pr.baseSha, SHA_C);
+});
+
+test("a pull request URL is recognised by its path, not by /pull/ anywhere in it", () => {
+  assert.equal(isPullRequestUrl("https://github.com/o/r/pull/5"), true);
+  assert.equal(isPullRequestUrl("github.com/pull/repo/pull/5/files"), true);
+  // An owner named "pull" is a repository, with or without a number for a name.
+  assert.equal(isPullRequestUrl("https://github.com/pull/123"), false);
+  assert.equal(isPullRequestUrl("github.com/pull/repo"), false);
 });
