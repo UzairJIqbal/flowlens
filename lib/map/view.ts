@@ -14,7 +14,19 @@ export interface FileFacts {
 export interface FileEdge {
   from: string;
   to: string;
+  /** Only on a pull request preview: the import pair exists on one side of the change alone. */
+  change?: EdgeChange;
 }
+
+/** Added: only after the change. Removed: only before it. */
+export type EdgeChange = "added" | "removed";
+
+/** Which side of a change the map is showing. */
+export type ChangeSide = "before" | "after" | "both";
+
+/** Whether an edge exists on the side shown. An edge with no change exists on both. */
+export const onSide = (change: EdgeChange | undefined, side: ChangeSide) =>
+  side === "both" || change === undefined || change === (side === "before" ? "removed" : "added");
 
 export interface FolderView {
   kind: "folder";
@@ -48,6 +60,9 @@ export interface PanelView extends Omit<FolderView, "kind"> {
 
 export type BoxView = FolderView | PanelView;
 
+/** An edge whose ends sit in one box: drawn as a loop off its left edge, never laid out. */
+export const isLoop = (e: { source: string; target: string }) => e.source === e.target;
+
 export interface EdgeView {
   id: string;
   source: string;
@@ -56,6 +71,8 @@ export interface EdgeView {
   targetHandle: string | null;
   /** The file-to-file edges this line stands for. */
   files: FileEdge[];
+  /** Shared by every edge in `files`: lines are never merged across a change. */
+  change: EdgeChange | null;
 }
 
 export interface MapView {
@@ -182,17 +199,42 @@ export function buildView(
   for (const e of edges) {
     const from = anchor.get(e.from)!;
     const to = anchor.get(e.to)!;
-    // Imports inside one box aren't drawn; selection still follows them.
-    if (from.box === to.box) continue;
+    // Imports inside one box aren't drawn; selection still follows them. The
+    // exception is a preview's added or removed import inside an open panel:
+    // it is the change itself, so it loops from row to row. A folded box has
+    // no rows to loop between, and its bar already says it holds a change.
+    if (from.box === to.box && (e.change === undefined || from.handle === null || to.handle === null)) continue;
     const sourceHandle = from.handle === null ? null : handleOut(from.handle);
     const targetHandle = to.handle === null ? null : handleIn(to.handle);
-    const id = `${from.box}|${sourceHandle ?? ""}>${to.box}|${targetHandle ?? ""}`;
+    // Split by change, so a dashed line never stands for imports that are still there.
+    const id = `${from.box}|${sourceHandle ?? ""}>${to.box}|${targetHandle ?? ""}${e.change ? `|${e.change}` : ""}`;
     const existing = merged.get(id);
     if (existing) existing.files.push(e);
-    else merged.set(id, { id, source: from.box, sourceHandle, target: to.box, targetHandle, files: [e] });
+    else merged.set(id, { id, source: from.box, sourceHandle, target: to.box, targetHandle, files: [e], change: e.change ?? null });
   }
 
   return { boxes, edges: [...merged.values()].sort((a, b) => (a.id < b.id ? -1 : 1)) };
+}
+
+/**
+ * The same boxes with their counts taken from other edges. A preview lays out
+ * over both sides, so switching side moves nothing, and shows the counts of
+ * the side on screen. Sizes stay as laid out: a side never has more edges than
+ * both together, so its counts always fit.
+ */
+export function recount(
+  view: MapView,
+  fan: Map<string, { fanIn: number; fanOut: number }>,
+  files: Map<string, { fanIn: number; fanOut: number }>,
+): MapView {
+  return {
+    edges: view.edges,
+    boxes: view.boxes.map((box) =>
+      box.kind === "folder"
+        ? { ...box, ...fan.get(box.id)! }
+        : { ...box, ...fan.get(box.id)!, rows: box.rows.map((r) => ({ ...r, ...files.get(r.path)! })) },
+    ),
+  };
 }
 
 /** Row order inside an open panel. Most depended-on first: those are the rows edges arrive at. */

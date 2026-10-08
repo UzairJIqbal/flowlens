@@ -14,11 +14,11 @@
   --accent: #2563eb;
   --danger: #dc2626;
   --edge: #a1a1aa;
-  --edge-uses: #2563eb;
-  --edge-used-by: #d97706;
-  /* File kinds, numbered: the taxonomy says which role gets which. Kept clear of blue (selection), amber (direction) and red (failure). */
+  --edge-uses: #d97706;
+  --edge-used-by: #16a34a;
+  /* File kinds, numbered: the taxonomy says which role gets which. Kept clear of blue (selection), green and amber (direction) and red (failure). */
   --kind-1: #7c3aed;
-  --kind-2: #65a30d;
+  --kind-2: #c026d3;
   --kind-3: #0891b2;
   --kind-4: #0d9488;
   --kind-5: #db2777;
@@ -37,10 +37,10 @@
     --accent: #60a5fa;
     --danger: #f87171;
     --edge: #52525b;
-    --edge-uses: #60a5fa;
-    --edge-used-by: #fbbf24;
+    --edge-uses: #fbbf24;
+    --edge-used-by: #4ade80;
     --kind-1: #a78bfa;
-    --kind-2: #a3e635;
+    --kind-2: #e879f9;
     --kind-3: #22d3ee;
     --kind-4: #2dd4bf;
     --kind-5: #f472b6;
@@ -59,10 +59,10 @@
   --accent: #60a5fa;
   --danger: #f87171;
   --edge: #52525b;
-  --edge-uses: #60a5fa;
-  --edge-used-by: #fbbf24;
+  --edge-uses: #fbbf24;
+  --edge-used-by: #4ade80;
   --kind-1: #a78bfa;
-  --kind-2: #a3e635;
+  --kind-2: #e879f9;
   --kind-3: #22d3ee;
   --kind-4: #2dd4bf;
   --kind-5: #f472b6;
@@ -104,6 +104,21 @@ body {
 
 .dependency-map .react-flow__edge.used-by .react-flow__edge-path {
   stroke: var(--edge-used-by);
+}
+
+/*
+ * A pull request preview's own edges. Line styles, not colours: colour already
+ * means direction. The same classes draw the key.
+ */
+.dependency-map .react-flow__edge.added .react-flow__edge-path,
+.edge-added {
+  stroke-width: 1.6;
+}
+
+.dependency-map .react-flow__edge.removed .react-flow__edge-path,
+.edge-removed {
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
 }
 
 /* Handles are attachment points for edges, never something to grab. */

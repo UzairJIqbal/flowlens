@@ -38,9 +38,14 @@ export interface MapActions {
   toggleCategory: (role: string | null) => void;
 }
 
-export function useMapState(fold: Fold, facts: Map<string, FileFacts>): [MapState, MapActions] {
+/** `startOpen` is read once, on the first render: which panels the map starts with open. */
+export function useMapState(
+  fold: Fold,
+  facts: Map<string, FileFacts>,
+  startOpen: ReadonlySet<string> = new Set(),
+): [MapState, MapActions] {
   const [selection, setSelection] = useState<Selection | null>(null);
-  const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set());
+  const [open, setOpen] = useState<ReadonlySet<string>>(() => startOpen);
   const [scroll, setScroll] = useState<ReadonlyMap<string, number>>(() => new Map());
   const [hover, setHover] = useState<Hover | null>(null);
   const [category, setCategory] = useState<Category | null>(null);

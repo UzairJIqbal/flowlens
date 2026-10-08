@@ -5,7 +5,7 @@ import type { Database } from "../supabase/database.types.ts";
 import { getCurrentRunTree, traceable } from "langsmith/traceable";
 import { MODEL, traceOptions } from "./client.ts";
 
-export type Task = "explain-file" | "explain-folder" | "classify";
+export type Task = "explain-file" | "explain-folder" | "classify" | "explain-change";
 
 export interface Cache {
   get(key: string): Promise<string | null>;

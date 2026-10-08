@@ -44,10 +44,18 @@ export interface FolderFacts {
 // reliably obey that and the leftovers print as raw markdown.
 const FORMAT = `Formatting: plain paragraphs. The only formatting you may use is inline code in single backticks, bold in double asterisks, and bullet lines starting with "- ". No headings, numbered lists, code blocks, links, tables or italics.`;
 
-const RULES = `- Name only files you were given, as full repository paths in backticks, exactly as written in the lists. Never name, guess or imply any other file or connection: the lists are every connection a parser found by resolving real imports.
-- Leave out anything that can't be told from what you were given rather than guess.
+const NAME_ONLY = `- Name only files you were given, as full repository paths in backticks, exactly as written in the lists. Never name, guess or imply any other file or connection`;
+const REST = `- Leave out anything that can't be told from what you were given rather than guess.
 - Describe, don't judge. No ratings, no review, no suggestions or improvements.
 - ${FORMAT}`;
+
+const RULES = `${NAME_ONLY}: the lists are every connection a parser found by resolving real imports.
+${REST}`;
+
+// A change's lists are cut past a limit, so unlike a file's or folder's they
+// can't be called complete: a connection left off a cut list still exists.
+const CHANGE_RULES = `${NAME_ONLY}. The lists are what a parser found by resolving real imports, but one ending in "more not shown here" is cut short: never say a file or connection is absent, and never count one, from a list that was cut.
+${REST}`;
 
 export const FILE_SYSTEM = `You explain one file of a codebase to a developer reading its dependency map. You are given its source, every file in the repository it imports, and every file in the repository that imports it.
 
@@ -60,6 +68,81 @@ const FOLDER_SYSTEM = `You explain one folder of a codebase to a developer readi
 Answer two things about the folder as a whole: what it holds, and why files outside it import into it, meaning which of its files they reach for and what that suggests the folder provides. Talk about the folder, not any one file in it. Reason only from the paths, kinds and imports; say nothing that would need the source. Under 180 words: one or two short paragraphs, optionally with a few bullets.
 
 ${RULES}`;
+
+const CHANGE_SYSTEM = `You explain one pull request to a developer looking at its dependency map, drawn before and after the change. You are given the files the pull request changes, the imports between files that it adds and removes, and the files that import a changed file within two steps, all found by a parser reading both commits. You are not given source code.
+
+Say what the change does to how the codebase's files connect: which files it adds, removes or renames, which connections appear or disappear and what that suggests moved where, and which parts of the codebase sit within reach of it. Reason only from the paths, statuses and imports; say nothing that would need the source. Under 180 words: one or two short paragraphs, optionally with a few bullets.
+
+${CHANGE_RULES}
+- Never say whether the change is safe, risky, large, good or bad.`;
+
+export interface ChangeFacts {
+  repository: string;
+  pullRequest: number;
+  /** The merge base and the head, the two commits parsed. */
+  base: string;
+  head: string;
+  framework: string | null;
+  changed: { path: string; status: string; previousPath: string | null }[];
+  addedImports: { from: string; to: string; kind: string }[];
+  removedImports: { from: string; to: string; kind: string }[];
+  affected: { path: string; depth: number }[];
+  /** How many of each list were left out of the lists above, so the model is never told a cut list is whole. */
+  omitted: { changed: number; addedImports: number; removedImports: number; affected: number };
+  /** Which of the two parses' coverage shares differ enough to put imports in the diff on their own. */
+  coverageDiffers: string[];
+}
+
+/** Explains a pull request's structural change from the computed diff alone. */
+export async function explainChange(facts: ChangeFacts, cache: Cache): Promise<Answer> {
+  const answer = await cached("explain-change", cache, { system: CHANGE_SYSTEM, facts }, facts, (f) =>
+    complete({ system: CHANGE_SYSTEM, user: changeMessage(f) }),
+  );
+  await scorePaths(answer, shownForChange(facts));
+  return answer;
+}
+
+/** Every path the change message lists. */
+export function shownForChange(f: ChangeFacts): string[] {
+  return [
+    ...f.changed.flatMap((c) => (c.previousPath === null ? [c.path] : [c.path, c.previousPath])),
+    ...[...f.addedImports, ...f.removedImports].flatMap((e) => [e.from, e.to]),
+    ...f.affected.map((a) => a.path),
+  ];
+}
+
+function changeMessage(f: ChangeFacts): string {
+  const more = (n: number) => (n > 0 ? `\n- …and ${n} more not shown here.` : "");
+  const imports = (title: string, empty: string, list: ChangeFacts["addedImports"], omitted: number) =>
+    list.length === 0
+      ? empty
+      : `${title}:\n${list.map((e) => `- \`${e.from}\` ${KIND_VERB[e.kind] ?? e.kind} \`${e.to}\``).join("\n")}${more(omitted)}`;
+  return [
+    `Repository: ${f.repository}, pull request #${f.pullRequest}, comparing its merge base ${f.base.slice(0, 7)} with its head ${f.head.slice(0, 7)}. Framework: ${f.framework ?? "none detected"}.`,
+    `Changed files, as GitHub lists them:\n${f.changed
+      .map((c) => `- \`${c.path}\`, ${c.status}${c.previousPath === null ? "" : ` from \`${c.previousPath}\``}`)
+      .join("\n")}${more(f.omitted.changed)}`,
+    imports("Imports the change adds", "The change adds no import between files.", f.addedImports, f.omitted.addedImports),
+    imports("Imports the change removes", "The change removes no import between files.", f.removedImports, f.omitted.removedImports),
+    f.affected.length === 0
+      ? "No file imports a changed file, directly or through one other file."
+      : `Files that import a changed file, after the change (1 means directly, 2 through one other file):\n${f.affected
+          .map((a) => `- \`${a.path}\` (${a.depth})`)
+          .join("\n")}${more(f.omitted.affected)}`,
+    ...(f.coverageDiffers.length === 0
+      ? []
+      : [
+          `The parser covered the two commits differently (${f.coverageDiffers.join(" and ")}), so some added or removed imports may come from what it could read on one side rather than from the change. Say so.`,
+        ]),
+  ].join("\n\n");
+}
+
+const KIND_VERB: Record<string, string> = {
+  import: "imports",
+  reexport: "re-exports from",
+  dynamic: "dynamically imports",
+  require: "requires",
+};
 
 /**
  * Past this the source is cut, and the model is told where. A file the parser

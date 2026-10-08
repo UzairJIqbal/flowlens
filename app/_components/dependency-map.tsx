@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BaseEdge,
   Handle,
   MarkerType,
   Panel,
@@ -12,6 +13,7 @@ import {
   useStoreApi,
   useUpdateNodeInternals,
   type Edge,
+  type EdgeProps,
   type Node,
   type NodeMouseHandler,
   type NodeProps,
@@ -28,26 +30,46 @@ import {
   folderFan,
   handleIn,
   handleOut,
+  isLoop,
   litFiles,
+  onSide,
+  recount,
+  type ChangeSide,
+  type EdgeChange,
   type FileEdge,
   type FileFacts,
   type FolderView,
   type PanelView,
 } from "@/lib/map/view";
+import { fanInOut } from "@/lib/parser/graph";
 import { Swatch } from "./category-rail";
 import type { MapActions, MapState } from "./map-state";
 
 /**
  * null when nothing is selected, so nothing is dimmed. `selected` is the files
  * the selection stands for; `lit` adds every file one edge away from them.
+ * On a preview with nothing selected, `selection` is null and the change
+ * itself is lit: the changed files, and their blast radius.
  */
-type Lit = { selection: Selection; selected: ReadonlySet<string>; lit: ReadonlySet<string> } | null;
+type Lit = { selection: Selection | null; selected: ReadonlySet<string>; lit: ReadonlySet<string> } | null;
+
+/** What a pull request preview lays over the map. Absent on an analysis's map. */
+export type ChangeLayer = {
+  side: ChangeSide;
+  /** Each changed file's status letter, and what it stands for. */
+  marks: ReadonlyMap<string, { letter: string; title: string }>;
+  /** Files not on the side shown. They keep their place, greyed. */
+  greyed: ReadonlySet<string>;
+  /** Lit when nothing is selected: the changed files, and those plus everything within their blast radius. */
+  focus: { changed: ReadonlySet<string>; lit: ReadonlySet<string> };
+};
 
 /** The rail's picked category and its files; null when none is picked, so nothing is dimmed by it. */
 export type Matched = { label: string; color: string | null; files: ReadonlySet<string> } | null;
 
-type FolderNode = Node<{ box: FolderView; lit: Lit; matched: Matched }, "folder">;
-type PanelNode = Node<{ box: PanelView; lit: Lit; matched: Matched }, "panel">;
+type NodeData = { lit: Lit; matched: Matched; change: ChangeLayer | null };
+type FolderNode = Node<{ box: FolderView } & NodeData, "folder">;
+type PanelNode = Node<{ box: PanelView } & NodeData, "panel">;
 
 const Actions = createContext<MapActions | null>(null);
 
@@ -68,6 +90,11 @@ interface MapProps {
   matched: Matched;
   state: MapState;
   actions: MapActions;
+  /**
+   * On a preview, `edges` is both sides together, so the layout is the same
+   * whichever side is shown and switching moves nothing.
+   */
+  change?: ChangeLayer;
 }
 
 export function DependencyMap(props: MapProps) {
@@ -78,8 +105,9 @@ export function DependencyMap(props: MapProps) {
   );
 }
 
-function Canvas({ fold, fan, facts, edges, matched, state, actions }: MapProps) {
+function Canvas({ fold, fan, facts, edges, matched, state, actions, change: layer }: MapProps) {
   const { selection, open, scroll, hover, hovered } = state;
+  const change = layer ?? null;
 
   const view = useMemo(
     () => buildView(fold, fan, facts, edges, open, scroll),
@@ -87,42 +115,58 @@ function Canvas({ fold, fan, facts, edges, matched, state, actions }: MapProps) 
   );
   const placed = useMemo(() => layoutView(view), [view]);
 
+  // The edges that exist on the side shown; all of them outside a preview.
+  const side = change?.side ?? "both";
+  const shown = useMemo(() => edges.filter((e) => onSide(e.change, side)), [edges, side]);
+  // Counts are of the side shown, so a number on a box always counts lines on screen.
+  const counted = useMemo(
+    () =>
+      change === null
+        ? view
+        : recount(view, folderFan(fold, shown), fanInOut(fold.nodes.flatMap((n) => n.files), shown)),
+    [change, view, fold, shown],
+  );
+
+  const focus = change?.focus ?? null;
   const lit = useMemo<Lit>(() => {
-    if (selection === null) return null;
+    if (selection === null) return focus === null ? null : { selection: null, selected: focus.changed, lit: focus.lit };
     const selected = new Set(filesOf(selection, fold));
-    return { selection, selected, lit: litFiles(selected, edges) };
-  }, [selection, fold, edges]);
+    return { selection, selected, lit: litFiles(selected, shown) };
+  }, [selection, fold, shown, focus]);
 
   const nodes = useMemo(
     () =>
-      view.boxes.map((box): FolderNode | PanelNode => {
+      counted.boxes.map((box): FolderNode | PanelNode => {
         // Boxes sit above every edge, so a line never runs across a box's rows.
         const common = { id: box.id, position: placed.get(box.id)!, width: box.width, height: box.height, zIndex: 1 };
         return box.kind === "folder"
-          ? { ...common, type: "folder", data: { box, lit, matched } }
-          : { ...common, type: "panel", data: { box, lit, matched } };
+          ? { ...common, type: "folder", data: { box, lit, matched, change } }
+          : { ...common, type: "panel", data: { box, lit, matched, change } };
       }),
-    [view, placed, lit, matched],
+    [counted, placed, lit, matched, change],
   );
 
   const rfEdges = useMemo(() => {
-    const drawn = view.edges.map((e): Edge => {
-      const state = edgeState(lit, matched, e.files);
-      return {
+    // SVG paints in document order, so the selection's edges go last and are
+    // never crossed out by a dimmed one. Stable sort keeps the layout order.
+    const drawn = view.edges
+      .map((e) => ({ e, state: edgeState(lit, matched, e.files, e.change) }))
+      .sort((a, b) => Number(a.state === "uses" || a.state === "used-by") - Number(b.state === "uses" || b.state === "used-by"));
+    return drawn.map(
+      ({ e, state }): Edge => ({
         id: e.id,
+        type: isLoop(e) ? "loop" : undefined,
         source: e.source,
         target: e.target,
         sourceHandle: e.sourceHandle,
         targetHandle: e.targetHandle,
-        className: state ?? undefined,
+        // Hidden rather than left out, so the layout never sees a side switch.
+        hidden: !onSide(e.change ?? undefined, side),
+        className: [state, e.change].filter((c) => c !== null).join(" ") || undefined,
         markerEnd: { type: MarkerType.ArrowClosed, width: 11, height: 11, color: EDGE_COLOR[state ?? "plain"] },
-      };
-    });
-    // SVG paints in document order, so the selection's edges go last and are
-    // never crossed out by a dimmed one. Stable sort keeps the layout order.
-    const onTop = (e: Edge) => Number(e.className === "uses" || e.className === "used-by");
-    return drawn.sort((a, b) => onTop(a) - onTop(b));
-  }, [view, lit, matched]);
+      }),
+    );
+  }, [view, lit, matched, side]);
 
   // Refit after an open, from the map or the pane, against the layout that
   // open produced. The effect depends on `placed`, so it can only ever see
@@ -172,6 +216,7 @@ function Canvas({ fold, fan, facts, edges, matched, state, actions }: MapProps) 
           nodes={nodes}
           edges={rfEdges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodeClick={onNodeClick}
           onPaneClick={actions.clear}
           nodesDraggable={false}
@@ -182,7 +227,7 @@ function Canvas({ fold, fan, facts, edges, matched, state, actions }: MapProps) 
           fitView
           fitViewOptions={{ padding: FIT_PADDING, maxZoom: 1.5 }}
         >
-          {lit !== null && <EdgeKey />}
+          {(lit !== null || change !== null) && <EdgeKey direction={lit !== null} change={change !== null} />}
         </ReactFlow>
       </Pointed>
     </Actions>
@@ -194,14 +239,23 @@ function Canvas({ fold, fan, facts, edges, matched, state, actions }: MapProps) 
  * a selected file imports across it, "used-by" when it imports a selected
  * file. Edges not touching the selection dim; with no selection, all are grey.
  * A drawn edge only ever runs one way between two boxes and the selection sits
- * in at most one of them, so it can't be both. With a rail category picked,
- * an edge with no end in it dims too, whatever the selection says.
+ * in at most one of them, so it can't be both; a loop inside a selected folder
+ * reads as "uses". With a rail category picked, an edge with no end in it dims
+ * too, whatever the selection says.
+ *
+ * On a preview with nothing selected, the blast radius is lit: an edge between
+ * two lit files is one the radius was walked along, toward the change, so it
+ * is "used-by". An added or removed edge is the change itself and never dims.
  */
 type EdgeState = "uses" | "used-by" | "dim" | null;
 
-function edgeState(lit: Lit, matched: Matched, files: readonly FileEdge[]): EdgeState {
+function edgeState(lit: Lit, matched: Matched, files: readonly FileEdge[], change: EdgeChange | null): EdgeState {
   if (matched !== null && !files.some((f) => matched.files.has(f.from) || matched.files.has(f.to))) return "dim";
   if (lit === null) return null;
+  if (lit.selection === null) {
+    if (files.some((f) => lit.lit.has(f.from) && lit.lit.has(f.to))) return "used-by";
+    return change === null ? "dim" : null;
+  }
   if (files.some((f) => lit.selected.has(f.from))) return "uses";
   if (files.some((f) => lit.selected.has(f.to))) return "used-by";
   return "dim";
@@ -226,12 +280,22 @@ const POINTED_ROW = "ring-1 ring-inset ring-accent";
 // Either one is enough: both are ways of saying "not this".
 const dimmed = (lit: Lit, matched: Matched, files: readonly string[]) =>
   (lit !== null && !files.some((f) => lit.lit.has(f))) || (matched !== null && !files.some((f) => matched.files.has(f)));
-const isSelectedFolder = (lit: Lit, id: string) => lit?.selection.kind === "folder" && lit.selection.id === id;
+const isSelectedFolder = (lit: Lit, id: string) => lit?.selection?.kind === "folder" && lit.selection.id === id;
 
-function FolderBox({ data: { box, lit, matched } }: NodeProps<FolderNode>) {
+// A box holding a changed file carries a bar on its left edge, so a change
+// folded out of sight can still be found. No colour: colour means direction.
+const CHANGED_BOX = "border-l-[3px] border-l-foreground";
+const holdsChange = (change: ChangeLayer | null, files: readonly string[]) =>
+  change !== null && files.some((f) => change.marks.has(f));
+
+// Not on the side shown: there is no file, so nothing to read, but its place is kept.
+const GREYED = "text-muted";
+
+function FolderBox({ data: { box, lit, matched, change } }: NodeProps<FolderNode>) {
   const actions = use(Actions)!;
   const { hovered } = use(Pointed);
   const selected = isSelectedFolder(lit, box.id);
+  const gone = change !== null && box.files.every((f) => change.greyed.has(f));
   return (
     <Backing pointed={box.files.some((f) => hovered.has(f))}>
       <div
@@ -240,10 +304,12 @@ function FolderBox({ data: { box, lit, matched } }: NodeProps<FolderNode>) {
         title={`${box.id} — ${box.files.length} files, ${box.fanIn} depend on it`}
         className={`flex h-full w-full cursor-pointer items-center justify-between gap-1.5 rounded-sm border bg-surface px-2.5 font-mono text-[11px] ${
           selected ? "border-foreground" : "border-border hover:border-muted"
-        } ${dimmed(lit, matched, box.files) ? DIM : ""}`}
+        } ${holdsChange(change, box.files) ? CHANGED_BOX : ""} ${gone ? "border-dashed" : ""} ${
+          dimmed(lit, matched, box.files) ? DIM : ""
+        }`}
       >
         <Handle type="target" position={Position.Left} isConnectable={false} />
-        <span className="truncate">{box.label}</span>
+        <span className={`truncate ${gone ? GREYED : ""}`}>{box.label}</span>
         {matched === null ? (
           <span className="tabular-nums text-muted">{box.files.length}</span>
         ) : (
@@ -255,7 +321,7 @@ function FolderBox({ data: { box, lit, matched } }: NodeProps<FolderNode>) {
   );
 }
 
-function PanelBox({ id, data: { box, lit, matched } }: NodeProps<PanelNode>) {
+function PanelBox({ id, data: { box, lit, matched, change } }: NodeProps<PanelNode>) {
   const actions = use(Actions)!;
   const { hover } = use(Pointed);
   const pointedFile = hover?.kind === "file" ? hover.path : null;
@@ -285,7 +351,7 @@ function PanelBox({ id, data: { box, lit, matched } }: NodeProps<PanelNode>) {
       <div
         className={`flex h-full w-full cursor-default flex-col rounded-sm border bg-background font-mono text-[11px] ${
           isSelectedFolder(lit, box.id) ? "border-foreground" : "border-foreground/40"
-        } ${panelDim ? DIM : ""}`}
+        } ${holdsChange(change, box.files) ? CHANGED_BOX : ""} ${panelDim ? DIM : ""}`}
       >
         <button
           type="button"
@@ -308,7 +374,9 @@ function PanelBox({ id, data: { box, lit, matched } }: NodeProps<PanelNode>) {
           {box.scrolls && (
             <OutOfView slot="above" files={box.above} dim={rowDim(box.above)} pointed={pointedFile} />
           )}
-          {box.rows.map((row) => (
+          {box.rows.map((row) => {
+            const mark = change?.marks.get(row.path);
+            return (
             <div
               key={row.path}
               onClick={() => actions.selectFile(row.path)}
@@ -316,17 +384,23 @@ function PanelBox({ id, data: { box, lit, matched } }: NodeProps<PanelNode>) {
               onMouseLeave={() => actions.hover(null)}
               title={row.path}
               className={`relative flex h-5 cursor-pointer items-center gap-2 px-2.5 ${
-                lit?.selection.kind === "file" && lit.selection.path === row.path
+                lit?.selection?.kind === "file" && lit.selection.path === row.path
                   ? "bg-surface font-semibold"
                   : "hover:bg-surface"
               } ${pointedFile === row.path ? POINTED_ROW : ""} ${rowDim([row.path]) ? DIM : ""}`}
             >
               <Handle id={handleIn({ file: row.path })} type="target" position={Position.Left} isConnectable={false} />
-              <span className="truncate">{row.label}</span>
+              {change !== null && (
+                <span className="w-2 shrink-0 font-semibold" title={mark?.title}>
+                  {mark?.letter}
+                </span>
+              )}
+              <span className={`truncate ${change?.greyed.has(row.path) ? GREYED : ""}`}>{row.label}</span>
               <span className="ml-auto tabular-nums text-muted">{row.fanIn}</span>
               <Handle id={handleOut({ file: row.path })} type="source" position={Position.Right} isConnectable={false} />
             </div>
-          ))}
+            );
+          })}
           {box.scrolls && (
             <OutOfView slot="below" files={box.below} dim={rowDim(box.below)} pointed={pointedFile} />
           )}
@@ -384,19 +458,38 @@ function MatchCount({ matched, files }: { matched: Exclude<Matched, null>; files
   );
 }
 
-/** Says what the two edge colours mean; only shown while they're on screen. */
-function EdgeKey() {
+/** Says what the edge colours and line styles mean; each only while it's on screen. */
+function EdgeKey({ direction, change }: { direction: boolean; change: boolean }) {
   const swatch = (color: string) => (
     <span className="inline-block h-0.5 w-3 align-middle" style={{ background: color }} aria-hidden />
   );
+  const line = (style: string) => (
+    <svg width="14" height="4" className="align-middle" aria-hidden>
+      <line x1="0" y1="2" x2="14" y2="2" stroke="var(--foreground)" className={style} />
+    </svg>
+  );
   return (
     <Panel position="bottom-left" className="flex gap-3 rounded-sm border border-border bg-background px-2 py-1 text-[11px] text-muted">
-      <span className="flex items-center gap-1.5">
-        {swatch(EDGE_COLOR.uses)} imports
-      </span>
-      <span className="flex items-center gap-1.5">
-        {swatch(EDGE_COLOR["used-by"])} imported by
-      </span>
+      {direction && (
+        <>
+          <span className="flex items-center gap-1.5">
+            {swatch(EDGE_COLOR.uses)} imports
+          </span>
+          <span className="flex items-center gap-1.5">
+            {swatch(EDGE_COLOR["used-by"])} imported by
+          </span>
+        </>
+      )}
+      {change && (
+        <>
+          <span className="flex items-center gap-1.5">
+            {line("edge-added")} added
+          </span>
+          <span className="flex items-center gap-1.5">
+            {line("edge-removed")} removed
+          </span>
+        </>
+      )}
     </Panel>
   );
 }
@@ -411,3 +504,26 @@ function Backing({ pointed, children }: { pointed: boolean; children: React.Reac
 }
 
 const nodeTypes = { folder: FolderBox, panel: PanelBox };
+
+// How far a loop reaches left of its box: further for rows further apart, so
+// loops between different rows nest instead of lying on top of each other.
+// Capped short of the gap between columns, so it never reaches the next box.
+const LOOP_MIN = 12;
+const LOOP_MAX = 48;
+
+/**
+ * An added or removed import between two rows of one open panel. Both ends
+ * are taken at the box's left edge: the source row's out-handle sits on the
+ * right, and only its height is used, so no handle had to be added for loops.
+ */
+function LoopEdge({ sourceY, targetX, targetY, markerEnd, interactionWidth }: EdgeProps) {
+  const span = Math.abs(targetY - sourceY);
+  const reach = Math.min(LOOP_MAX, LOOP_MIN + span / 4);
+  // Two rows sharing a "more" row would start and end on one point; spread
+  // the control points so the loop still has a shape to see.
+  const lift = span < 1 ? 6 : 0;
+  const path = `M ${targetX} ${sourceY} C ${targetX - reach} ${sourceY - lift}, ${targetX - reach} ${targetY + lift}, ${targetX} ${targetY}`;
+  return <BaseEdge path={path} markerEnd={markerEnd} interactionWidth={interactionWidth} />;
+}
+
+const edgeTypes = { loop: LoopEdge };

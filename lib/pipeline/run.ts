@@ -11,7 +11,7 @@ import { labelUnidentified } from "./label.ts";
 import { STALE_AFTER_MINUTES } from "./stale.ts";
 
 type Stage = Enums<"analysis_stage">;
-type Admin = ReturnType<typeof createAdminClient>;
+export type Admin = ReturnType<typeof createAdminClient>;
 
 /**
  * Finds or creates the one analysis for a repository in an organization.
@@ -26,13 +26,35 @@ export async function submitRepository(
 ): Promise<{ analysisId: string; created: boolean }> {
   const repo = parseRepositoryUrl(url);
   const db = createAdminClient();
+  const projectId = await recordProject(db, organizationId, repo);
 
-  // Clerk owns organizations; the row exists only so analyses can point at it.
+  const inserted = await db
+    .from("analyses")
+    .upsert(
+      { organization_id: organizationId, project_id: projectId },
+      { onConflict: "project_id", ignoreDuplicates: true },
+    )
+    .select("id");
+  if (inserted.error) throw new Error(`Could not create the analysis: ${inserted.error.message}`);
+  if (inserted.data.length > 0) return { analysisId: inserted.data[0].id, created: true };
+
+  const existing = await db.from("analyses").select("id").eq("project_id", projectId).single();
+  if (existing.error) throw new Error(`Could not read the existing analysis: ${existing.error.message}`);
+  return { analysisId: existing.data.id, created: false };
+}
+
+/**
+ * The organization's row and its project for a repository, created if absent,
+ * returning the project's id. Insert-if-absent then read, so two submissions
+ * racing each other still end on one project.
+ *
+ * `organizationId` must come from the verified session, never from input.
+ */
+export async function recordProject(db: Admin, organizationId: string, repo: RepositoryRef): Promise<string> {
+  // Clerk owns organizations; the row exists only so everything else can point at it.
   const org = await db.from("organizations").upsert({ id: organizationId }, { ignoreDuplicates: true });
   if (org.error) throw new Error(`Could not record the organization: ${org.error.message}`);
 
-  // Insert-if-absent then read, at both levels, so two submissions racing
-  // each other still end on one project and one analysis.
   const projectInsert = await db
     .from("projects")
     .upsert(
@@ -49,20 +71,7 @@ export async function submitRepository(
     .eq("repo_name", repo.name)
     .single();
   if (project.error) throw new Error(`Could not read the repository back: ${project.error.message}`);
-
-  const inserted = await db
-    .from("analyses")
-    .upsert(
-      { organization_id: organizationId, project_id: project.data.id },
-      { onConflict: "project_id", ignoreDuplicates: true },
-    )
-    .select("id");
-  if (inserted.error) throw new Error(`Could not create the analysis: ${inserted.error.message}`);
-  if (inserted.data.length > 0) return { analysisId: inserted.data[0].id, created: true };
-
-  const existing = await db.from("analyses").select("id").eq("project_id", project.data.id).single();
-  if (existing.error) throw new Error(`Could not read the existing analysis: ${existing.error.message}`);
-  return { analysisId: existing.data.id, created: false };
+  return project.data.id;
 }
 
 /** A run that has been claimed and is the only one allowed to write this row. */

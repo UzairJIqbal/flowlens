@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { AnalysisStatus, AnalysisSummary } from "@/lib/analyses/list";
 import type { Progress } from "@/lib/analyses/progress";
-import { useAnalysisProgress } from "@/lib/analyses/use-progress";
+import { useRunProgress, type RunKind } from "@/lib/analyses/use-progress";
 import { LiveLabel } from "@/app/_components/live-label";
 import { utc } from "@/lib/utc";
 
@@ -19,8 +19,14 @@ const STATUS: Record<AnalysisStatus, { glyph: string; className: string }> = {
 
 const ORDER: AnalysisStatus[] = ["parsing", "queued", "complete", "failed"];
 
-/** Displays analysis summaries with live updates for rows that loaded unfinished. */
-export function AnalysisList({ analyses }: { analyses: AnalysisSummary[] }) {
+/** An analysis, or a pull request preview with its number and title. */
+export type RunSummary = AnalysisSummary & { pr?: { number: number; title: string } };
+
+/** Where a run's pages live; its map is under the same path. */
+const PATH: Record<RunKind, string> = { analysis: "/analyses", preview: "/previews" };
+
+/** Displays analysis or preview summaries with live updates for rows that loaded unfinished. */
+export function AnalysisList({ kind, title, analyses }: { kind: RunKind; title: string; analyses: RunSummary[] }) {
   // Published stages received since the page loaded, layered over the rows
   // the server rendered. A row with one has moved, so it is no longer stale.
   const [moved, setMoved] = useState<Record<string, Progress>>({});
@@ -31,7 +37,7 @@ export function AnalysisList({ analyses }: { analyses: AnalysisSummary[] }) {
     .filter((a) => a.progress.status === "queued" || a.progress.status === "parsing")
     .map((a) => a.id);
 
-  const live = useAnalysisProgress(unfinished, (id, progress) => {
+  const live = useRunProgress(kind, unfinished, (id, progress) => {
     const rendered = analyses.find((a) => a.id === id)?.progress;
     setMoved((current) => {
       const shown = current[id] ?? rendered;
@@ -46,17 +52,18 @@ export function AnalysisList({ analyses }: { analyses: AnalysisSummary[] }) {
   });
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col">
+    // Previews sit above the analyses and never take the page from them.
+    <section className={`flex min-h-0 flex-col ${kind === "analysis" ? "flex-1" : "max-h-[40%] shrink-0 border-b border-border"}`}>
       <div className="flex h-9 shrink-0 items-center gap-4 border-b border-border px-3 text-xs">
         <h1 className="font-semibold">
-          Analyses
+          {title}
           <span className="ml-1.5 font-normal tabular-nums text-muted">{rows.length}</span>
         </h1>
         {rows.length > 0 && <StateCounts analyses={rows} />}
         <LiveLabel live={live} />
       </div>
 
-      {rows.length === 0 ? <Empty /> : <Table analyses={rows} />}
+      {rows.length === 0 ? <Empty /> : <Table kind={kind} analyses={rows} />}
     </section>
   );
 }
@@ -94,7 +101,7 @@ function StateCounts({ analyses }: { analyses: AnalysisSummary[] }) {
 }
 
 /** Lists repositories with their progress, creation time, and map or pipeline link. */
-function Table({ analyses }: { analyses: AnalysisSummary[] }) {
+function Table({ kind, analyses }: { kind: RunKind; analyses: RunSummary[] }) {
   return (
     <div className="min-h-0 flex-1 overflow-auto">
       <table className="w-full min-w-160 table-fixed border-collapse text-xs">
@@ -106,7 +113,7 @@ function Table({ analyses }: { analyses: AnalysisSummary[] }) {
         </colgroup>
         <thead className="sticky top-0 bg-surface text-left text-muted">
           <tr className="border-b border-border">
-            <th className="h-7 px-3 font-normal">Repository</th>
+            <th className="h-7 px-3 font-normal">{kind === "analysis" ? "Repository" : "Pull request"}</th>
             <th className="h-7 px-3 font-normal">State</th>
             <th className="h-7 px-3 font-normal">Created, UTC</th>
             <th className="h-7 px-3 font-normal">Detail</th>
@@ -119,13 +126,19 @@ function Table({ analyses }: { analyses: AnalysisSummary[] }) {
             const detail = describe(a);
             return (
               <tr key={a.id} className="border-b border-border hover:bg-surface">
-                <td className="h-7 truncate px-3 font-mono">
+                <td className="h-7 truncate px-3 font-mono" title={a.pr?.title}>
                   <Link
-                    href={a.progress.status === "complete" ? `/analyses/${a.id}/map` : `/analyses/${a.id}`}
+                    href={`${PATH[kind]}/${a.id}${a.progress.status === "complete" ? "/map" : ""}`}
                     className="hover:text-accent"
                   >
                     <span className="text-muted">{a.repoOwner}/</span>
                     {a.repoName}
+                    {a.pr && (
+                      <>
+                        <span className="text-muted">#</span>
+                        {a.pr.number} <span className="font-sans text-muted">{a.pr.title}</span>
+                      </>
+                    )}
                   </Link>
                 </td>
                 <td className={`h-7 truncate px-3 ${status.className}`}>

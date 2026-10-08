@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
+    "test": "node --test \"lib/**/*.test.ts\"",
     "parse": "node scripts/parse.ts",
     "analyze": "node scripts/analyze.ts",
     "eval:paths": "node evals/paths.ts",
