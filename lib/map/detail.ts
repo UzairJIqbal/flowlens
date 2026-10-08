@@ -4,8 +4,13 @@ import type { FileEdge } from "./view.ts";
 // What the detail pane says, derived from the parser's files and edges. Pure,
 // so selecting something is a lookup in data the browser already holds.
 
-/** A parser file as the browser holds it; the hash is never shown, and export names aren't stored. */
-export type RepoFile = Omit<FileNode, "hash" | "exports">;
+/**
+ * A parser file as the browser holds it; the hash is never shown, and export
+ * names aren't stored. `role` is only ever convention's. `label` is a model's
+ * role for a file convention left unidentified, kept apart so the map's
+ * categories and routes stay convention's alone.
+ */
+export type RepoFile = Omit<FileNode, "hash" | "exports"> & { label: string | null };
 
 export interface Neighbours {
   /** Files this one imports. */

@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
+import type { Tracing } from "@/lib/ai/client";
 import type { StoredRoute, StoredWithheldRoute } from "@/lib/analyses/map";
 import { insights as findInsights } from "@/lib/graph/insights";
 import { categoryCounts, inCategory, kindsOf } from "@/lib/map/categories";
 import { neighbours as neighboursOf, type RepoFile } from "@/lib/map/detail";
 import { fold as foldFiles } from "@/lib/map/fold";
+import type { Target } from "@/lib/map/prose";
 import { folderFan, type FileEdge } from "@/lib/map/view";
+import { AskPanel } from "./ask-panel";
 import { CategoryRail } from "./category-rail";
 import { DependencyMap, type Matched } from "./dependency-map";
 import { DetailPane, type RepoInfo } from "./detail-pane";
@@ -20,6 +23,8 @@ import { RouteTable } from "./route-table";
  * or hovering is a lookup and never a request.
  */
 export function MapWorkspace({
+  analysisId,
+  tracing,
   title,
   repo,
   files,
@@ -27,6 +32,8 @@ export function MapWorkspace({
   routes,
   withheldRoutes,
 }: {
+  analysisId: string;
+  tracing: Tracing;
   title: ReactNode;
   repo: RepoInfo;
   files: RepoFile[];
@@ -35,6 +42,7 @@ export function MapWorkspace({
   withheldRoutes: StoredWithheldRoute[];
 }) {
   const [centre, setCentre] = useState<Centre>("map");
+  const [pane, setPane] = useState<Pane>("overview");
   const fold = useMemo(() => foldFiles(files), [files]);
   const fan = useMemo(() => folderFan(fold, edges), [fold, edges]);
   const facts = useMemo(() => new Map(files.map((f) => [f.path, f])), [files]);
@@ -43,6 +51,16 @@ export function MapWorkspace({
   const categories = useMemo(() => categoryCounts(files, repo.adapter), [files, repo.adapter]);
   const insights = useMemo(() => findInsights(files, edges, kinds.importedToBeReached), [files, edges, kinds]);
   const [state, actions] = useMapState(fold, facts);
+  // What a path in the model's prose leads to on this map, if anything.
+  const resolve = useCallback(
+    (path: string): Target | null =>
+      facts.has(path)
+        ? { kind: "file", path }
+        : path !== "." && fold.nodes.some((n) => n.id === path)
+          ? { kind: "folder", id: path }
+          : null,
+    [facts, fold],
+  );
   const { category } = state;
   const matched = useMemo<Matched>(
     () =>
@@ -84,26 +102,72 @@ export function MapWorkspace({
           </div>
         </div>
       }
+      detailHeader={<PaneTabs pane={pane} onChange={setPane} />}
       detail={
-        <DetailPane
-          repo={repo}
-          kinds={kinds}
-          files={files}
-          facts={facts}
-          fold={fold}
-          fan={fan}
-          neighbours={neighbours}
-          edges={edges}
-          insights={insights}
-          state={state}
-          actions={actions}
-        />
+        // Both stay mounted, hidden rather than removed, so going back to
+        // either finds it as it was left: the same scroll, the same tab, the
+        // same conversation.
+        <>
+          <div className={`absolute inset-0 overflow-y-auto ${pane === "overview" ? "" : "invisible"}`}>
+            <DetailPane
+              analysisId={analysisId}
+              tracing={tracing}
+              repo={repo}
+              kinds={kinds}
+              files={files}
+              facts={facts}
+              fold={fold}
+              fan={fan}
+              neighbours={neighbours}
+              edges={edges}
+              insights={insights}
+              resolve={resolve}
+              state={state}
+              actions={actions}
+            />
+          </div>
+          <div className={`absolute inset-0 ${pane === "ask" ? "" : "invisible"}`}>
+            <AskPanel
+              analysisId={analysisId}
+              selection={state.selection}
+              resolve={resolve}
+              actions={actions}
+              hovered={state.hovered}
+            />
+          </div>
+        </>
       }
     />
   );
 }
 
 type Centre = "map" | "routes";
+
+// Ask is a mode of the whole pane rather than a tab beside Structure and
+// Explanation: those are about the selection and vanish without one, and a
+// question about the repository isn't a question about a file.
+type Pane = "overview" | "ask";
+
+function PaneTabs({ pane, onChange }: { pane: Pane; onChange: (p: Pane) => void }) {
+  return (
+    <div role="tablist" className="flex h-7 shrink-0 items-stretch gap-3 border-b border-border px-3 text-xs">
+      {(["overview", "ask"] as const).map((p) => (
+        <button
+          key={p}
+          type="button"
+          role="tab"
+          aria-selected={pane === p}
+          onClick={() => onChange(p)}
+          className={`-mb-px flex items-center border-b capitalize ${
+            pane === p ? "border-foreground font-semibold text-foreground" : "border-transparent text-muted hover:text-foreground"
+          }`}
+        >
+          {p}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function CentreTabs({ centre, routes, onChange }: { centre: Centre; routes: number; onChange: (c: Centre) => void }) {
   return (

@@ -7,6 +7,7 @@ import { createAdminClient } from "../supabase/admin.ts";
 import type { Enums, Json } from "../supabase/database.types.ts";
 import { frameworkOf } from "../taxonomy.ts";
 import { downloadArchive, extractArchive, parseRepositoryUrl, resolveHead, type RepositoryRef } from "./github.ts";
+import { labelUnidentified } from "./label.ts";
 import { STALE_AFTER_MINUTES } from "./stale.ts";
 
 type Stage = Enums<"analysis_stage">;
@@ -65,7 +66,7 @@ export async function submitRepository(
 }
 
 /** A run that has been claimed and is the only one allowed to write this row. */
-export type ClaimedRun = { analysisId: string; repo: RepositoryRef };
+export type ClaimedRun = { analysisId: string; organizationId: string; repo: RepositoryRef };
 
 /**
  * Moves the analysis into a run, or returns null if one is already going. A
@@ -91,10 +92,14 @@ export async function claimRun(analysisId: string): Promise<ClaimedRun | null> {
     })
     .eq("id", analysisId)
     .or(`status.neq.parsing,started_at.lt.${staleBefore}`)
-    .select("project:projects!inner(repo_owner, repo_name)");
+    .select("organization_id, project:projects!inner(repo_owner, repo_name)");
   if (error) throw new Error(`Could not start the run: ${error.message}`);
   if (data.length === 0) return null;
-  return { analysisId, repo: { owner: data[0].project.repo_owner, name: data[0].project.repo_name } };
+  return {
+    analysisId,
+    organizationId: data[0].organization_id,
+    repo: { owner: data[0].project.repo_owner, name: data[0].project.repo_name },
+  };
 }
 
 /**
@@ -105,7 +110,7 @@ export async function claimRun(analysisId: string): Promise<ClaimedRun | null> {
  * Runs with the secret key: the caller must already know the user may act on
  * this analysis.
  */
-export async function executeRun({ analysisId, repo }: ClaimedRun): Promise<void> {
+export async function executeRun({ analysisId, organizationId, repo }: ClaimedRun): Promise<void> {
   const db = createAdminClient();
   // Inside the try, so even failing to make a temp directory ends the row failed.
   let workspace: string | undefined;
@@ -131,22 +136,42 @@ export async function executeRun({ analysisId, repo }: ClaimedRun): Promise<void
     await enter(db, analysisId, "parse", `${framework}. Parsing imports`);
     const result = parseRepository(checkout, adapter);
 
+    const unidentified = result.files.filter((f) => f.role === null).length;
+    await enter(db, analysisId, "label", `Labelling ${unidentified} files no convention identified`);
+    const labelled = await labelUnidentified(organizationId, named, result);
+    // A failed batch leaves its files unlabelled, never guessed; it's recorded
+    // where every other run problem is.
+    const labelWarnings = labelled.failures.map(
+      (f) => `Could not label ${f.files} unidentified files: ${f.reason}`,
+    );
+
     await enter(
       db,
       analysisId,
       "store",
-      `Storing ${result.files.length} files, ${result.edges.length} edges and ${result.routes.length} routes`,
+      `Labelled ${labelled.roles.size} of ${labelled.asked} unidentified files. Storing ${result.files.length} files, ${result.edges.length} edges and ${result.routes.length} routes`,
     );
     const stored = await db.rpc("store_analysis", {
       p_analysis: analysisId,
       p_commit: sha,
       p_adapter: result.adapter,
-      p_files: result.files.map(({ path, folder, lines, hash, role }) => ({ path, folder, lines, hash, role })),
+      p_files: result.files.map(({ path, folder, lines, hash, role }) => {
+        // Convention first; a model only ever fills a file convention left empty.
+        const label = role === null ? (labelled.roles.get(path) ?? null) : null;
+        return {
+          path,
+          folder,
+          lines,
+          hash,
+          role: role ?? label,
+          roleSource: role !== null ? "convention" : label !== null ? "model" : null,
+        };
+      }),
       p_edges: result.edges.map(({ from, to, kinds, typeOnly }) => ({ from, to, kinds, typeOnly })),
       p_routes: result.routes.map(({ file, line, method, path }) => ({ file, line, method, path })),
       p_withheld_routes: result.withheldRoutes.map(({ file, line, reason }) => ({ file, line, reason })),
       p_coverage: toJson(result.coverage),
-      p_warnings: result.warnings,
+      p_warnings: [...result.warnings, ...labelWarnings],
     });
     if (stored.error) throw new Error(`Could not store the result: ${stored.error.message}`);
   } catch (error) {

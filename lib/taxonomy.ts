@@ -107,5 +107,14 @@ const FRAMEWORKS: Record<string, Framework> = {
 
 const NONE: Framework = { label: null, routes: false, roles: [] };
 
+/**
+ * The only roles a model may give a file no convention identified. None of
+ * them is routable: page, route and controller decide the route table and the
+ * entry-point colouring, and only convention may say those. The database
+ * refuses anything else from the model too.
+ */
+export const MODEL_ROLES = ["service", "repository", "model", "util", "config", "component", "hook"] as const;
+export type ModelRole = (typeof MODEL_ROLES)[number];
+
 /** An adapter name nothing here knows, including "none", gets no categories. */
 export const frameworkOf = (adapter: string): Framework => FRAMEWORKS[adapter] ?? NONE;

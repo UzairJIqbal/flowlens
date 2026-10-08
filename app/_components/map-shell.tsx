@@ -7,11 +7,14 @@ export function MapShell({
   title,
   rail,
   map,
+  detailHeader,
   detail,
 }: {
   title: ReactNode;
   rail?: ReactNode;
   map?: ReactNode;
+  /** A full-height bar replacing the column's title, for when the column has modes. */
+  detailHeader?: ReactNode;
   detail?: ReactNode;
 }) {
   return (
@@ -24,8 +27,9 @@ export function MapShell({
       <section className="relative min-h-0 overflow-hidden">{map}</section>
 
       <aside className="flex min-h-0 flex-col border-l border-border">
-        <ColumnHeader>Detail</ColumnHeader>
-        <div className="min-h-0 flex-1 overflow-y-auto">{detail}</div>
+        {detailHeader ?? <ColumnHeader>Detail</ColumnHeader>}
+        {/* Positioned rather than scrolled here: each of the column's modes scrolls itself. */}
+        <div className="relative min-h-0 flex-1">{detail}</div>
       </aside>
     </div>
   );

@@ -15,8 +15,8 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
         {/* Switching, creating and inviting (Manage → Members) all live here. */}
         <OrganizationSwitcher
           hidePersonal
-          afterSelectOrganizationUrl="/"
-          afterCreateOrganizationUrl="/"
+          afterSelectOrganizationUrl="/analyses"
+          afterCreateOrganizationUrl="/analyses"
           afterLeaveOrganizationUrl="/setup"
         />
         <div className="ml-auto flex items-center gap-3">

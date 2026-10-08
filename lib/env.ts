@@ -15,6 +15,9 @@ const required = [
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
   // The pipeline's writer. Server only: it bypasses row-level security.
   "SUPABASE_SECRET_KEY",
+  // The model's key. Tracing is optional and read where the client is built,
+  // because a missing LangSmith key must not stop anything.
+  "GOOGLE_API_KEY",
 ] as const;
 
 type EnvKey = (typeof required)[number];

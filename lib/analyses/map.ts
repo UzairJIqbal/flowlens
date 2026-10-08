@@ -1,8 +1,10 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseClient } from "@/lib/supabase/server";
-import type { Json } from "@/lib/supabase/database.types";
+import type { Database, Json } from "@/lib/supabase/database.types";
 import type { RepoFile } from "@/lib/map/detail";
 import type { FileEdge } from "@/lib/map/view";
 import { fanInOut } from "@/lib/parser/graph";
+import { readEvery } from "./stored";
 
 export type StoredRoute = { method: string; path: string; file: string; line: number };
 export type StoredWithheldRoute = { file: string; line: number; reason: string };
@@ -20,18 +22,19 @@ export type StoredMap = {
   withheldRoutes: StoredWithheldRoute[];
 };
 
-// Supabase caps rows per request, so a large repository is read in pages.
-const PAGE = 1000;
+/** The stored graph of one analysis, read as the signed-in user. */
+export async function getStoredMap(analysisId: string): Promise<StoredMap | null> {
+  return readStoredMap(await createSupabaseClient(), analysisId);
+}
 
 /**
- * The stored graph of one analysis, read as the signed-in user. Null when the
- * policy doesn't return the analysis or nothing has been stored for it yet.
- * The last stored graph stays readable while a re-run is going, because the
- * store replaces it in one transaction at the very end.
+ * The stored graph of one analysis, as whoever the client reads as: the
+ * signed-in user for the map, the agent's credential for its lookups. Null
+ * when the policy doesn't return the analysis or nothing has been stored for
+ * it yet. The last stored graph stays readable while a re-run is going,
+ * because the store replaces it in one transaction at the very end.
  */
-export async function getStoredMap(analysisId: string): Promise<StoredMap | null> {
-  const supabase = await createSupabaseClient();
-
+export async function readStoredMap(supabase: SupabaseClient<Database>, analysisId: string): Promise<StoredMap | null> {
   const analysis = await supabase
     .from("analyses")
     .select("status, commit_sha, adapter, coverage, withheld_routes, project:projects!inner(repo_owner, repo_name)")
@@ -90,9 +93,10 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
     path: f.path,
     folder: f.folder,
     lines: f.lines,
-    // Labels a model adds later sit beside these; the map shows what the
-    // adapter recognised by convention.
+    // The map shows what the adapter recognised by convention; a model's
+    // label sits beside it and is shown only in the detail pane.
     role: f.file_roles.find((r) => r.source === "convention")?.role ?? null,
+    label: f.file_roles.find((r) => r.source === "model")?.role ?? null,
     fanIn: fan.get(f.path)?.fanIn ?? 0,
     fanOut: fan.get(f.path)?.fanOut ?? 0,
   }));
@@ -109,28 +113,6 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
     routes,
     withheldRoutes: withheld(data.withheld_routes),
   };
-}
-
-type Page<T> = { data: T[] | null; error: { message: string } | null; count: number | null };
-
-/**
- * Reads until the count is reached. Coming up short throws: a map missing
- * files must never render as though it were the whole repository.
- */
-async function readEvery<T>(what: string, page: (from: number, to: number) => PromiseLike<Page<T>>): Promise<T[]> {
-  const rows: T[] = [];
-  let total: number | null = null;
-  for (;;) {
-    const { data, error, count } = await page(rows.length, rows.length + PAGE - 1);
-    if (error) throw new Error(`Could not read the stored ${what}: ${error.message}`);
-    total ??= count;
-    if (total === null) throw new Error(`No count came back for the stored ${what}`);
-    if (!data || data.length === 0 || rows.length + data.length > total) break;
-    rows.push(...data);
-    if (rows.length === total) break;
-  }
-  if (rows.length !== total) throw new Error(`Read ${rows.length} of ${total} stored ${what}`);
-  return rows;
 }
 
 /**

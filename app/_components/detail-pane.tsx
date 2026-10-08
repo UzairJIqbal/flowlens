@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import type { Tracing } from "@/lib/ai/client";
 import { INSIGHT_ORDER, INSIGHT_SENTENCES, type Cycle, type InsightKind, type Insights } from "@/lib/graph/insights";
 import { DEFAULT_DEPTH, reach, type Direction, type Link as EdgeLink } from "@/lib/graph/reach";
 import { categoryCounts, type Kinds } from "@/lib/map/categories";
@@ -11,7 +12,9 @@ import {
   type RepoFile,
 } from "@/lib/map/detail";
 import type { Fold } from "@/lib/map/fold";
+import type { Target } from "@/lib/map/prose";
 import type { folderFan } from "@/lib/map/view";
+import { Explanation, type Entries } from "./explanation";
 import type { MapActions, MapState } from "./map-state";
 
 export interface RepoInfo {
@@ -33,6 +36,8 @@ const IMPORTS_COLOR = "var(--edge-uses)";
 const IMPORTED_BY_COLOR = "var(--edge-used-by)";
 
 export function DetailPane({
+  analysisId,
+  tracing,
   repo,
   kinds,
   files,
@@ -42,9 +47,12 @@ export function DetailPane({
   neighbours,
   edges,
   insights,
+  resolve,
   state,
   actions,
 }: {
+  analysisId: string;
+  tracing: Tracing;
   repo: RepoInfo;
   kinds: Kinds;
   files: RepoFile[];
@@ -54,6 +62,8 @@ export function DetailPane({
   neighbours: Map<string, Neighbours>;
   edges: EdgeLink[];
   insights: Insights;
+  /** What a path in the prose leads to on this map, if anything. */
+  resolve: (path: string) => Target | null;
   state: MapState;
   actions: MapActions;
 }) {
@@ -63,6 +73,9 @@ export function DetailPane({
   const [tab, setTab] = useState<Tab>("structure");
   const [walk, setWalk] = useState<Direction | null>(null);
   const [insightsOpen, setInsightsOpen] = useState(false);
+  // An explanation already fetched stays when the selection moves away and
+  // comes back: a cache nobody can feel is not a cache.
+  const [entries, setEntries] = useState<Entries>(() => new Map());
   const { selection, hovered } = state;
   const link = { actions, hovered };
 
@@ -84,7 +97,16 @@ export function DetailPane({
     <div className="text-xs">
       <Tabs tab={tab} onChange={setTab} />
       {tab === "explanation" ? (
-        <p className="px-3 py-3 text-muted">No explanation yet. Nothing generates one in this version.</p>
+        <Explanation
+          analysisId={analysisId}
+          selection={selection}
+          entries={entries}
+          setEntries={setEntries}
+          resolve={resolve}
+          actions={actions}
+          hovered={hovered}
+          tracing={tracing}
+        />
       ) : selection.kind === "file" ? (
         <FileStructure
           file={facts.get(selection.path)!}
@@ -286,9 +308,19 @@ function FileStructure({
       <Facts>
         <Fact label="kind">
           {file.role === null ? (
-            <span className="text-muted" title="No convention identified this file">
-              unidentified
-            </span>
+            file.label === null ? (
+              <span className="text-muted" title="No convention identified this file">
+                unidentified
+              </span>
+            ) : (
+              <>
+                {file.label}
+                <span className="text-muted" title="No convention identified this file; a model labelled it">
+                  {" "}
+                  · labelled by a model
+                </span>
+              </>
+            )
           ) : (
             kinds.one(file.role)
           )}
