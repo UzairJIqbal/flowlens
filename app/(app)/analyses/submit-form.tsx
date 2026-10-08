@@ -1,11 +1,27 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
 import { submitAnalysis } from "@/lib/analyses/actions";
 
-/** Submits a repository URL and preserves rejected input alongside the server error. */
-export function SubmitForm() {
+/**
+ * Submits a repository URL and preserves rejected input alongside the server error.
+ * A `handoff` URL is submitted once on arrival: it was typed into the landing
+ * page, so it already had its click.
+ */
+export function SubmitForm({ handoff }: { handoff?: string }) {
   const [state, action, pending] = useActionState(submitAnalysis, null);
+  // Effects run twice in development; the submission should happen once.
+  const handedOff = useRef(false);
+
+  useEffect(() => {
+    if (!handoff || handedOff.current) return;
+    handedOff.current = true;
+    // Out of the address bar, so a reload doesn't submit it again.
+    window.history.replaceState(null, "", "/analyses");
+    const form = new FormData();
+    form.set("url", handoff);
+    startTransition(() => action(form));
+  }, [handoff, action]);
 
   return (
     <form
@@ -22,7 +38,7 @@ export function SubmitForm() {
         required
         // The form resets after every submission; a rejected URL comes back
         // so it can be corrected rather than retyped.
-        defaultValue={state?.url}
+        defaultValue={state?.url ?? handoff}
         placeholder="https://github.com/owner/repository"
         spellCheck={false}
         autoComplete="off"

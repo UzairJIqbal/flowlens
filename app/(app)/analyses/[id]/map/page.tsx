@@ -26,7 +26,7 @@ export default async function AnalysisMapPage({ params }: { params: Promise<{ id
   return (
     <section className="flex min-h-0 flex-1 flex-col">
       <div className="flex h-9 shrink-0 items-center gap-2 border-b border-border px-3 text-xs">
-        <Link href="/" className="text-muted hover:text-foreground">
+        <Link href="/analyses" className="text-muted hover:text-foreground">
           Analyses
         </Link>
         <span className="text-muted">/</span>

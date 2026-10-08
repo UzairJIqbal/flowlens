@@ -59,7 +59,7 @@ export function ProgressView({
   return (
     <section className="flex min-h-0 flex-1 flex-col text-xs">
       <div className="flex h-9 shrink-0 items-center gap-2 border-b border-border px-3">
-        <Link href="/" className="text-muted hover:text-foreground">
+        <Link href="/analyses" className="text-muted hover:text-foreground">
           Analyses
         </Link>
         <span className="text-muted">/</span>
