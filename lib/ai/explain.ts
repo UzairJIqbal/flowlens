@@ -44,10 +44,18 @@ export interface FolderFacts {
 // reliably obey that and the leftovers print as raw markdown.
 const FORMAT = `Formatting: plain paragraphs. The only formatting you may use is inline code in single backticks, bold in double asterisks, and bullet lines starting with "- ". No headings, numbered lists, code blocks, links, tables or italics.`;
 
-const RULES = `- Name only files you were given, as full repository paths in backticks, exactly as written in the lists. Never name, guess or imply any other file or connection: the lists are every connection a parser found by resolving real imports.
-- Leave out anything that can't be told from what you were given rather than guess.
+const NAME_ONLY = `- Name only files you were given, as full repository paths in backticks, exactly as written in the lists. Never name, guess or imply any other file or connection`;
+const REST = `- Leave out anything that can't be told from what you were given rather than guess.
 - Describe, don't judge. No ratings, no review, no suggestions or improvements.
 - ${FORMAT}`;
+
+const RULES = `${NAME_ONLY}: the lists are every connection a parser found by resolving real imports.
+${REST}`;
+
+// A change's lists are cut past a limit, so unlike a file's or folder's they
+// can't be called complete: a connection left off a cut list still exists.
+const CHANGE_RULES = `${NAME_ONLY}. The lists are what a parser found by resolving real imports, but one ending in "more not shown here" is cut short: never say a file or connection is absent, and never count one, from a list that was cut.
+${REST}`;
 
 export const FILE_SYSTEM = `You explain one file of a codebase to a developer reading its dependency map. You are given its source, every file in the repository it imports, and every file in the repository that imports it.
 
@@ -65,7 +73,7 @@ const CHANGE_SYSTEM = `You explain one pull request to a developer looking at it
 
 Say what the change does to how the codebase's files connect: which files it adds, removes or renames, which connections appear or disappear and what that suggests moved where, and which parts of the codebase sit within reach of it. Reason only from the paths, statuses and imports; say nothing that would need the source. Under 180 words: one or two short paragraphs, optionally with a few bullets.
 
-${RULES}
+${CHANGE_RULES}
 - Never say whether the change is safe, risky, large, good or bad.`;
 
 export interface ChangeFacts {
