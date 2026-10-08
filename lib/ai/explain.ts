@@ -1,5 +1,6 @@
 import { cached, type Answer, type Cache } from "./cache.ts";
-import { complete } from "./client.ts";
+import { complete, recordFeedback } from "./client.ts";
+import { pathFeedback } from "./invented.ts";
 
 // Explanations are written from what the parser found and nothing else. The
 // model is handed every neighbour; it is never asked to find one, and the
@@ -48,7 +49,7 @@ const RULES = `- Name only files you were given, as full repository paths in bac
 - Describe, don't judge. No ratings, no review, no suggestions or improvements.
 - ${FORMAT}`;
 
-const FILE_SYSTEM = `You explain one file of a codebase to a developer reading its dependency map. You are given its source, every file in the repository it imports, and every file in the repository that imports it.
+export const FILE_SYSTEM = `You explain one file of a codebase to a developer reading its dependency map. You are given its source, every file in the repository it imports, and every file in the repository that imports it.
 
 Say what the file does and what part it plays among those neighbours: what it provides to the files that import it, and what it relies on from the files it imports. Under 180 words: one or two short paragraphs, optionally with a few bullets.
 
@@ -67,19 +68,38 @@ ${RULES}`;
 const SOURCE_LIMIT = 60_000;
 
 /** `source` is fetched only on a cache miss; the key stands in the file's hash for it. */
-export function explainFile(facts: FileFacts, cache: Cache, source: () => Promise<string>): Promise<Answer> {
-  return cached("explain-file", cache, { system: FILE_SYSTEM, facts }, facts, async (f) =>
+export async function explainFile(facts: FileFacts, cache: Cache, source: () => Promise<string>): Promise<Answer> {
+  const answer = await cached("explain-file", cache, { system: FILE_SYSTEM, facts }, facts, async (f) =>
     complete({ system: FILE_SYSTEM, user: fileMessage(f, await source()) }),
   );
+  await scorePaths(answer, shownForFile(facts));
+  return answer;
 }
 
-export function explainFolder(facts: FolderFacts, cache: Cache): Promise<Answer> {
-  return cached("explain-folder", cache, { system: FOLDER_SYSTEM, facts }, facts, (f) =>
+export async function explainFolder(facts: FolderFacts, cache: Cache): Promise<Answer> {
+  const answer = await cached("explain-folder", cache, { system: FOLDER_SYSTEM, facts }, facts, (f) =>
     complete({ system: FOLDER_SYSTEM, user: folderMessage(f) }),
   );
+  await scorePaths(answer, shownForFolder(facts));
+  return answer;
 }
 
-function fileMessage(f: FileFacts, source: string): string {
+// The invented-path check, live: every answer given, hit or miss, is scored on
+// its own run, so the dashboard's score is over what people were actually shown.
+async function scorePaths(answer: Answer, shown: string[]): Promise<void> {
+  if (answer.runId !== null) await recordFeedback(answer.runId, pathFeedback(answer.output, shown));
+}
+
+/** Every path the file's message lists. The source isn't counted: the prompt allows only the lists. */
+export function shownForFile(f: FileFacts): string[] {
+  return [f.file.path, ...f.imports.map((d) => d.path), ...f.importedBy.map((d) => d.path)];
+}
+
+export function shownForFolder(f: FolderFacts): string[] {
+  return [...f.files.map((d) => d.path), ...[...f.incoming, ...f.outgoing].flatMap((e) => [e.from, e.to])];
+}
+
+export function fileMessage(f: FileFacts, source: string): string {
   const cut = source.length > SOURCE_LIMIT;
   return [
     header(f),

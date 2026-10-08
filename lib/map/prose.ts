@@ -129,10 +129,11 @@ export interface Piece {
 }
 
 // Characters a repository path can contain, generously: Next.js route groups
-// and dynamic segments put brackets and parentheses in real paths.
-const CANDIDATE = /[A-Za-z0-9_@$~+\-.[\]()/]+/g;
-const LEADING = "([{'\"";
-const TRAILING = ")]}'\".,:;!?";
+// and dynamic segments put brackets and parentheses in real paths. Shared with
+// the invented-path check, so what it reads as a path is what links here.
+export const CANDIDATE = /[A-Za-z0-9_@$~+\-.[\]()/]+/g;
+export const LEADING = "([{'\"";
+export const TRAILING = ")]}'\".,:;!?";
 
 /**
  * Splits text so every repository path in it is its own piece, carrying where

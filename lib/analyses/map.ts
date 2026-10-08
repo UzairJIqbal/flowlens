@@ -3,6 +3,7 @@ import type { Json } from "@/lib/supabase/database.types";
 import type { RepoFile } from "@/lib/map/detail";
 import type { FileEdge } from "@/lib/map/view";
 import { fanInOut } from "@/lib/parser/graph";
+import { readEvery } from "./stored";
 
 export type StoredRoute = { method: string; path: string; file: string; line: number };
 export type StoredWithheldRoute = { file: string; line: number; reason: string };
@@ -19,9 +20,6 @@ export type StoredMap = {
   routes: StoredRoute[];
   withheldRoutes: StoredWithheldRoute[];
 };
-
-// Supabase caps rows per request, so a large repository is read in pages.
-const PAGE = 1000;
 
 /**
  * The stored graph of one analysis, read as the signed-in user. Null when the
@@ -110,28 +108,6 @@ export async function getStoredMap(analysisId: string): Promise<StoredMap | null
     routes,
     withheldRoutes: withheld(data.withheld_routes),
   };
-}
-
-type Page<T> = { data: T[] | null; error: { message: string } | null; count: number | null };
-
-/**
- * Reads until the count is reached. Coming up short throws: a map missing
- * files must never render as though it were the whole repository.
- */
-export async function readEvery<T>(what: string, page: (from: number, to: number) => PromiseLike<Page<T>>): Promise<T[]> {
-  const rows: T[] = [];
-  let total: number | null = null;
-  for (;;) {
-    const { data, error, count } = await page(rows.length, rows.length + PAGE - 1);
-    if (error) throw new Error(`Could not read the stored ${what}: ${error.message}`);
-    total ??= count;
-    if (total === null) throw new Error(`No count came back for the stored ${what}`);
-    if (!data || data.length === 0 || rows.length + data.length > total) break;
-    rows.push(...data);
-    if (rows.length === total) break;
-  }
-  if (rows.length !== total) throw new Error(`Read ${rows.length} of ${total} stored ${what}`);
-  return rows;
 }
 
 /**

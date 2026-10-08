@@ -6,6 +6,7 @@
 // Writes real rows for that organization, exactly as the app will. A
 // repository already analysed there is left alone unless --rerun is given.
 
+import "./load-env.ts";
 import { flushTraces, tracing } from "../lib/ai/client.ts";
 import { createAdminClient } from "../lib/supabase/admin.ts";
 import { runAnalysis, submitRepository } from "../lib/pipeline/run.ts";

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "../supabase/admin.ts";
 import type { Database } from "../supabase/database.types.ts";
-import { traceable } from "langsmith/traceable";
+import { getCurrentRunTree, traceable } from "langsmith/traceable";
 import { MODEL, traceOptions } from "./client.ts";
 
 export type Task = "explain-file" | "explain-folder" | "classify";
@@ -69,6 +69,8 @@ async function write(organizationId: string, key: string, task: Task, output: st
 export interface Answer {
   output: string;
   cached: boolean;
+  /** The traced run that produced it, for scoring it afterwards. */
+  runId: string | null;
 }
 
 /**
@@ -91,12 +93,15 @@ export function cached<I>(
   // The argument is only what the trace records as the run's input. Typed
   // `unknown` because traceable's types can't be resolved over a generic one.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- recorded, not read
-  const run = traceable(async (recorded: unknown): Promise<Answer> => {
+  const run = traceable(async (recorded: unknown): Promise<Omit<Answer, "runId">> => {
+    runId = getCurrentRunTree(true)?.id ?? null;
     const hit = await read(key);
     if (hit !== null) return { output: hit, cached: true };
     const output = await ask(input);
     await cache.put(key, task, output);
     return { output, cached: false };
   }, traceOptions(task, { metadata: { model: MODEL, cache_key: key } }));
-  return run(input);
+  // Kept out of the run's output, so the trace records the answer alone.
+  let runId: string | null = null;
+  return run(input).then((answer) => ({ ...answer, runId }));
 }
