@@ -1,5 +1,5 @@
 import { Graph, layout as dagreLayout } from "@dagrejs/dagre";
-import type { MapView } from "./view.ts";
+import { isLoop, type MapView } from "./view.ts";
 
 export interface Placed {
   x: number;
@@ -17,7 +17,9 @@ export function layoutView(view: MapView): Map<string, Placed> {
   g.setDefaultEdgeLabel(() => ({}));
 
   for (const box of view.boxes) g.setNode(box.id, { width: box.width, height: box.height });
-  for (const e of view.edges) g.setEdge(e.source, e.target);
+  // A loop joins a box to itself and says nothing about where boxes go, so
+  // the layout only ever sees edges between boxes, preview or not.
+  for (const e of view.edges) if (!isLoop(e)) g.setEdge(e.source, e.target);
 
   dagreLayout(g);
 

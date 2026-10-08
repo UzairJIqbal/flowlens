@@ -8,7 +8,7 @@ import type { Target } from "@/lib/map/prose";
 import { folderFan, type ChangeSide } from "@/lib/map/view";
 import { fanInOut } from "@/lib/parser/graph";
 import type { ChangedFile } from "@/lib/pipeline/github";
-import { changeLetter, combine } from "@/lib/previews/combine";
+import { changeLetter, changedBoxes, combine } from "@/lib/previews/combine";
 import type { PreviewSide } from "@/lib/previews/side";
 import { CategoryRail } from "./category-rail";
 import { ChangeList } from "./change-list";
@@ -50,7 +50,8 @@ export function PreviewWorkspace({
   // Categories are the after side's framework: that is the codebase the change leaves.
   const kinds = useMemo(() => kindsOf(head.adapter), [head.adapter]);
   const categories = useMemo(() => categoryCounts(files, head.adapter), [files, head.adapter]);
-  const [state, actions] = useMapState(fold, facts);
+  const startOpen = useMemo(() => changedBoxes(fold, change.changedPaths), [fold, change]);
+  const [state, actions] = useMapState(fold, facts, startOpen);
 
   const { category } = state;
   const matched = useMemo<Matched>(

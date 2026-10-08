@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BaseEdge,
   Handle,
   MarkerType,
   Panel,
@@ -12,6 +13,7 @@ import {
   useStoreApi,
   useUpdateNodeInternals,
   type Edge,
+  type EdgeProps,
   type Node,
   type NodeMouseHandler,
   type NodeProps,
@@ -28,6 +30,7 @@ import {
   folderFan,
   handleIn,
   handleOut,
+  isLoop,
   litFiles,
   onSide,
   recount,
@@ -152,6 +155,7 @@ function Canvas({ fold, fan, facts, edges, matched, state, actions, change: laye
     return drawn.map(
       ({ e, state }): Edge => ({
         id: e.id,
+        type: isLoop(e) ? "loop" : undefined,
         source: e.source,
         target: e.target,
         sourceHandle: e.sourceHandle,
@@ -212,6 +216,7 @@ function Canvas({ fold, fan, facts, edges, matched, state, actions, change: laye
           nodes={nodes}
           edges={rfEdges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodeClick={onNodeClick}
           onPaneClick={actions.clear}
           nodesDraggable={false}
@@ -234,8 +239,9 @@ function Canvas({ fold, fan, facts, edges, matched, state, actions, change: laye
  * a selected file imports across it, "used-by" when it imports a selected
  * file. Edges not touching the selection dim; with no selection, all are grey.
  * A drawn edge only ever runs one way between two boxes and the selection sits
- * in at most one of them, so it can't be both. With a rail category picked,
- * an edge with no end in it dims too, whatever the selection says.
+ * in at most one of them, so it can't be both; a loop inside a selected folder
+ * reads as "uses". With a rail category picked, an edge with no end in it dims
+ * too, whatever the selection says.
  *
  * On a preview with nothing selected, the blast radius is lit: an edge between
  * two lit files is one the radius was walked along, toward the change, so it
@@ -498,3 +504,26 @@ function Backing({ pointed, children }: { pointed: boolean; children: React.Reac
 }
 
 const nodeTypes = { folder: FolderBox, panel: PanelBox };
+
+// How far a loop reaches left of its box: further for rows further apart, so
+// loops between different rows nest instead of lying on top of each other.
+// Capped short of the gap between columns, so it never reaches the next box.
+const LOOP_MIN = 12;
+const LOOP_MAX = 48;
+
+/**
+ * An added or removed import between two rows of one open panel. Both ends
+ * are taken at the box's left edge: the source row's out-handle sits on the
+ * right, and only its height is used, so no handle had to be added for loops.
+ */
+function LoopEdge({ sourceY, targetX, targetY, markerEnd, interactionWidth }: EdgeProps) {
+  const span = Math.abs(targetY - sourceY);
+  const reach = Math.min(LOOP_MAX, LOOP_MIN + span / 4);
+  // Two rows sharing a "more" row would start and end on one point; spread
+  // the control points so the loop still has a shape to see.
+  const lift = span < 1 ? 6 : 0;
+  const path = `M ${targetX} ${sourceY} C ${targetX - reach} ${sourceY - lift}, ${targetX - reach} ${targetY + lift}, ${targetX} ${targetY}`;
+  return <BaseEdge path={path} markerEnd={markerEnd} interactionWidth={interactionWidth} />;
+}
+
+const edgeTypes = { loop: LoopEdge };

@@ -60,6 +60,9 @@ export interface PanelView extends Omit<FolderView, "kind"> {
 
 export type BoxView = FolderView | PanelView;
 
+/** An edge whose ends sit in one box: drawn as a loop off its left edge, never laid out. */
+export const isLoop = (e: { source: string; target: string }) => e.source === e.target;
+
 export interface EdgeView {
   id: string;
   source: string;
@@ -196,8 +199,11 @@ export function buildView(
   for (const e of edges) {
     const from = anchor.get(e.from)!;
     const to = anchor.get(e.to)!;
-    // Imports inside one box aren't drawn; selection still follows them.
-    if (from.box === to.box) continue;
+    // Imports inside one box aren't drawn; selection still follows them. The
+    // exception is a preview's added or removed import inside an open panel:
+    // it is the change itself, so it loops from row to row. A folded box has
+    // no rows to loop between, and its bar already says it holds a change.
+    if (from.box === to.box && (e.change === undefined || from.handle === null || to.handle === null)) continue;
     const sourceHandle = from.handle === null ? null : handleOut(from.handle);
     const targetHandle = to.handle === null ? null : handleIn(to.handle);
     // Split by change, so a dashed line never stands for imports that are still there.

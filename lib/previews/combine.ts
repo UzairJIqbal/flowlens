@@ -1,5 +1,6 @@
 import { affected, coverageGap, diffGraphs, pairChanges, type CoverageGap, type GraphDiff } from "../graph/diff.ts";
 import type { Reached } from "../graph/reach.ts";
+import type { Fold } from "../map/fold.ts";
 import type { FileEdge } from "../map/view.ts";
 import type { ChangedFile } from "../pipeline/github.ts";
 import { sideCoverage, type PreviewFile, type PreviewSide } from "./side.ts";
@@ -48,6 +49,18 @@ export function combine(base: PreviewSide, head: PreviewSide, changed: readonly 
     affected: affected(changedPaths, head.edges),
     gap: coverageGap(sideCoverage(base), sideCoverage(head)),
   };
+}
+
+/**
+ * The boxes a preview starts with open: every one holding a changed file, so
+ * the marks and the imports changed inside a box are on screen before any
+ * click. Paths no side parsed have no box.
+ */
+export function changedBoxes(fold: Fold, changedPaths: readonly string[]): Set<string> {
+  return new Set(changedPaths.flatMap((p) => {
+    const box = fold.nodeOf.get(p);
+    return box === undefined ? [] : [box];
+  }));
 }
 
 /** GitHub's status as one letter, the way `git status --short` writes it. */
