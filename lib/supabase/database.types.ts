@@ -407,6 +407,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      mint_agent_credential: { Args: { p_analysis: string }; Returns: string }
       store_analysis: {
         Args: {
           p_adapter: string

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import type { Tracing } from "@/lib/ai/client";
 import { INSIGHT_ORDER, INSIGHT_SENTENCES, type Cycle, type InsightKind, type Insights } from "@/lib/graph/insights";
 import { DEFAULT_DEPTH, reach, type Direction, type Link as EdgeLink } from "@/lib/graph/reach";
@@ -47,6 +47,7 @@ export function DetailPane({
   neighbours,
   edges,
   insights,
+  resolve,
   state,
   actions,
 }: {
@@ -61,6 +62,8 @@ export function DetailPane({
   neighbours: Map<string, Neighbours>;
   edges: EdgeLink[];
   insights: Insights;
+  /** What a path in the prose leads to on this map, if anything. */
+  resolve: (path: string) => Target | null;
   state: MapState;
   actions: MapActions;
 }) {
@@ -75,15 +78,6 @@ export function DetailPane({
   const [entries, setEntries] = useState<Entries>(() => new Map());
   const { selection, hovered } = state;
   const link = { actions, hovered };
-  const resolve = useCallback(
-    (path: string): Target | null =>
-      facts.has(path)
-        ? { kind: "file", path }
-        : path !== "." && fold.nodes.some((n) => n.id === path)
-          ? { kind: "folder", id: path }
-          : null,
-    [facts, fold],
-  );
 
   // The resting state, not a placeholder: deselecting always lands here.
   if (selection === null)

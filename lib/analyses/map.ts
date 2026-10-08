@@ -1,5 +1,6 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseClient } from "@/lib/supabase/server";
-import type { Json } from "@/lib/supabase/database.types";
+import type { Database, Json } from "@/lib/supabase/database.types";
 import type { RepoFile } from "@/lib/map/detail";
 import type { FileEdge } from "@/lib/map/view";
 import { fanInOut } from "@/lib/parser/graph";
@@ -21,15 +22,19 @@ export type StoredMap = {
   withheldRoutes: StoredWithheldRoute[];
 };
 
-/**
- * The stored graph of one analysis, read as the signed-in user. Null when the
- * policy doesn't return the analysis or nothing has been stored for it yet.
- * The last stored graph stays readable while a re-run is going, because the
- * store replaces it in one transaction at the very end.
- */
+/** The stored graph of one analysis, read as the signed-in user. */
 export async function getStoredMap(analysisId: string): Promise<StoredMap | null> {
-  const supabase = await createSupabaseClient();
+  return readStoredMap(await createSupabaseClient(), analysisId);
+}
 
+/**
+ * The stored graph of one analysis, as whoever the client reads as: the
+ * signed-in user for the map, the agent's credential for its lookups. Null
+ * when the policy doesn't return the analysis or nothing has been stored for
+ * it yet. The last stored graph stays readable while a re-run is going,
+ * because the store replaces it in one transaction at the very end.
+ */
+export async function readStoredMap(supabase: SupabaseClient<Database>, analysisId: string): Promise<StoredMap | null> {
   const analysis = await supabase
     .from("analyses")
     .select("status, commit_sha, adapter, coverage, withheld_routes, project:projects!inner(repo_owner, repo_name)")

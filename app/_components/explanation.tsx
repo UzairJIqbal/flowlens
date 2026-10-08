@@ -165,7 +165,7 @@ function Reanalyse({ analysisId }: { analysisId: string }) {
   );
 }
 
-function Prose({
+export function Prose({
   text,
   resolve,
   actions,
@@ -199,7 +199,7 @@ function Prose({
   );
 }
 
-function Spans({
+export function Spans({
   spans,
   resolve,
   actions,

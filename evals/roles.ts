@@ -111,9 +111,10 @@ const results = await evaluate(
     description: "Classifier on files whose role a convention assigned, with the role hidden.",
     maxConcurrency: 2,
     evaluators: [
-      ({ outputs, referenceOutputs }: { outputs: Record<string, unknown>; referenceOutputs?: Record<string, unknown> }) => {
+      // A failed run arrives with no outputs at all, and scores 0 like any wrong answer.
+      ({ outputs, referenceOutputs }: { outputs?: Record<string, unknown>; referenceOutputs?: Record<string, unknown> }) => {
         const expected = referenceOutputs?.role;
-        const got = outputs.role;
+        const got = outputs?.role;
         return {
           key: "role_match",
           score: got === expected ? 1 : 0,

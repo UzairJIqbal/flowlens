@@ -109,14 +109,15 @@ const judge = traceable(async (facts: FileFacts, source: string, explanation: st
 type Fields = Record<string, unknown>;
 
 /** The evaluators for one experiment; the judge, the last call per file, moves its counter. */
+// A failed run arrives with no outputs at all.
 const evaluators = (tick: () => void) => [
-  ({ inputs, outputs }: { inputs: Fields; outputs: Fields }) => {
-    if (typeof outputs.output !== "string") return { key: ONLY_SHOWN_PATHS, score: null, comment: "no explanation" };
+  ({ inputs, outputs }: { inputs: Fields; outputs?: Fields }) => {
+    if (typeof outputs?.output !== "string") return { key: ONLY_SHOWN_PATHS, score: null, comment: "no explanation" };
     return pathFeedback(outputs.output, shownForFile(readFacts(inputs.facts)));
   },
-  async ({ inputs, outputs }: { inputs: Fields; outputs: Fields }) => {
+  async ({ inputs, outputs }: { inputs: Fields; outputs?: Fields }) => {
     try {
-      if (typeof outputs.output !== "string") return { key: SPECIFICITY, score: null, comment: "no explanation" };
+      if (typeof outputs?.output !== "string") return { key: SPECIFICITY, score: null, comment: "no explanation" };
       const verdict = await judge(readFacts(inputs.facts), str(inputs.source, "source"), outputs.output);
       return { key: SPECIFICITY, score: verdict.score, comment: verdict.reason };
     } finally {
@@ -166,7 +167,7 @@ function scores(results: typeof retired, key: string): Map<string, number | null
   return byExample;
 }
 
-function line(key: string, scale: string) {
+async function line(key: string, scale: string) {
   const before = scores(retired, key);
   const after = scores(current, key);
   // Only examples both experiments scored, so the two means are over the same files.
@@ -178,6 +179,12 @@ function line(key: string, scale: string) {
       a.push(s);
       b.push(t);
     }
+  }
+  // Means over nothing would print NaN, which reads like a result.
+  if (a.length === 0) {
+    console.error(`\nNo file has a ${key} score from both experiments, so there is nothing to compare.`);
+    await flushTraces();
+    process.exit(1);
   }
   const wins = b.filter((s, i) => s > a[i]).length;
   const losses = b.filter((s, i) => s < a[i]).length;
@@ -191,8 +198,8 @@ function line(key: string, scale: string) {
 }
 
 console.log(`\n${"".padEnd(20)} ${"retired".padStart(7)} ${"current".padStart(7)} ${"diff".padStart(7)}`);
-const unscoredPaths = line(ONLY_SHOWN_PATHS, "share with no invented path");
-const unscoredJudged = line(SPECIFICITY, "1 to 5, model-judged");
+const unscoredPaths = await line(ONLY_SHOWN_PATHS, "share with no invented path");
+const unscoredJudged = await line(SPECIFICITY, "1 to 5, model-judged");
 if (unscoredPaths + unscoredJudged > 0) {
   console.log(`left out where either experiment failed: ${unscoredPaths} for paths, ${unscoredJudged} for specificity`);
 }

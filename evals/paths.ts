@@ -65,9 +65,18 @@ const runs = client.runs.query({
 const byAnswer = new Map<string, Explained>();
 let total = 0;
 let unanswered = 0;
+// Inputs in a shape this can't read, such as a run traced before a change to
+// the facts. Counted, not guessed at, and the rest still scored.
+const unreadable: string[] = [];
 for await (const run of runs) {
   if (++total > MAX_RUNS) break;
-  const explained = read(run);
+  let explained: Explained | null;
+  try {
+    explained = read(run);
+  } catch (error) {
+    unreadable.push(`${projectUrl}/r/${String(run.id)}: ${error instanceof Error ? error.message : String(error)}`);
+    continue;
+  }
   if (explained === null) {
     unanswered++;
     continue;
@@ -117,8 +126,10 @@ console.log(
 );
 console.log(
   `${Math.min(total, MAX_RUNS)} runs since ${since.toISOString().slice(0, 10)}, ${scored.length} distinct answers` +
-    (unanswered > 0 ? `, ${unanswered} errored and weren't scored` : ""),
+    (unanswered > 0 ? `, ${unanswered} errored and weren't scored` : "") +
+    (unreadable.length > 0 ? `, ${unreadable.length} couldn't be read and weren't scored` : ""),
 );
+if (unreadable.length > 0) console.log(`couldn't read:\n  ${unreadable.join("\n  ")}`);
 
 function sentenceWith(text: string, token: string): string {
   const at = text.indexOf(token);
