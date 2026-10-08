@@ -1,0 +1,1587 @@
+{
+  "answerCheck": "57d1d226-9cc3-45c1-8447-4bbbaae11459",
+  "startedAt": "2026-10-08T21:18:05.518Z",
+  "repo": "shadcn-ui/taxonomy",
+  "commit": "298a8857c7128a0d121e7f699dfd729f23b3966d",
+  "tracedIn": "flowlens",
+  "rounds": 3,
+  "parse": {
+    "adapter": "nextjs",
+    "files": 129,
+    "edges": 258,
+    "skipped": 57
+  },
+  "empty": [
+    "re-export only"
+  ],
+  "questions": [
+    {
+      "id": "importers:components/analytics.tsx",
+      "template": "importers",
+      "pick": "alias",
+      "subject": "components/analytics.tsx",
+      "text": "Which files import `components/analytics.tsx`?",
+      "expected": [
+        "app/layout.tsx"
+      ]
+    },
+    {
+      "id": "imports:components/analytics.tsx",
+      "template": "imports",
+      "pick": "alias",
+      "subject": "components/analytics.tsx",
+      "text": "Which files does `components/analytics.tsx` import?",
+      "expected": []
+    },
+    {
+      "id": "blast-radius:components/analytics.tsx",
+      "template": "blast-radius",
+      "pick": "alias",
+      "subject": "components/analytics.tsx",
+      "text": "If `components/analytics.tsx` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "app/layout.tsx"
+      ]
+    },
+    {
+      "id": "dependencies:components/analytics.tsx",
+      "template": "dependencies",
+      "pick": "alias",
+      "subject": "components/analytics.tsx",
+      "text": "What does `components/analytics.tsx` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": []
+    },
+    {
+      "id": "importers:components/ui/dialog.tsx",
+      "template": "importers",
+      "pick": "alias",
+      "subject": "components/ui/dialog.tsx",
+      "text": "Which files import `components/ui/dialog.tsx`?",
+      "expected": [
+        "components/ui/command.tsx"
+      ]
+    },
+    {
+      "id": "imports:components/ui/dialog.tsx",
+      "template": "imports",
+      "pick": "alias",
+      "subject": "components/ui/dialog.tsx",
+      "text": "Which files does `components/ui/dialog.tsx` import?",
+      "expected": [
+        "lib/utils.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:components/ui/dialog.tsx",
+      "template": "blast-radius",
+      "pick": "alias",
+      "subject": "components/ui/dialog.tsx",
+      "text": "If `components/ui/dialog.tsx` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "components/ui/command.tsx"
+      ]
+    },
+    {
+      "id": "dependencies:components/ui/dialog.tsx",
+      "template": "dependencies",
+      "pick": "alias",
+      "subject": "components/ui/dialog.tsx",
+      "text": "What does `components/ui/dialog.tsx` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "env.mjs",
+        "lib/utils.ts"
+      ]
+    },
+    {
+      "id": "importers:lib/utils.ts",
+      "template": "importers",
+      "pick": "heavily imported",
+      "subject": "lib/utils.ts",
+      "text": "Which files import `lib/utils.ts`?",
+      "expected": [
+        "app/(auth)/login/page.tsx",
+        "app/(auth)/register/page.tsx",
+        "app/(docs)/docs/[[...slug]]/page.tsx",
+        "app/(docs)/guides/[...slug]/page.tsx",
+        "app/(docs)/guides/page.tsx",
+        "app/(marketing)/[...slug]/page.tsx",
+        "app/(marketing)/blog/[...slug]/page.tsx",
+        "app/(marketing)/blog/page.tsx",
+        "app/(marketing)/layout.tsx",
+        "app/(marketing)/page.tsx",
+        "app/(marketing)/pricing/page.tsx",
+        "app/api/users/stripe/route.ts",
+        "app/layout.tsx",
+        "components/billing-form.tsx",
+        "components/callout.tsx",
+        "components/editor.tsx",
+        "components/empty-placeholder.tsx",
+        "components/main-nav.tsx",
+        "components/mdx-card.tsx",
+        "components/mdx-components.tsx",
+        "components/mobile-nav.tsx",
+        "components/nav.tsx",
+        "components/page-header.tsx",
+        "components/pager.tsx",
+        "components/post-create-button.tsx",
+        "components/post-item.tsx",
+        "components/search.tsx",
+        "components/shell.tsx",
+        "components/sidebar-nav.tsx",
+        "components/site-footer.tsx",
+        "components/toc.tsx",
+        "components/ui/accordion.tsx",
+        "components/ui/alert-dialog.tsx",
+        "components/ui/alert.tsx",
+        "components/ui/avatar.tsx",
+        "components/ui/badge.tsx",
+        "components/ui/button.tsx",
+        "components/ui/calendar.tsx",
+        "components/ui/card.tsx",
+        "components/ui/checkbox.tsx",
+        "components/ui/command.tsx",
+        "components/ui/context-menu.tsx",
+        "components/ui/dialog.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/ui/hover-card.tsx",
+        "components/ui/input.tsx",
+        "components/ui/label.tsx",
+        "components/ui/menubar.tsx",
+        "components/ui/navigation-menu.tsx",
+        "components/ui/popover.tsx",
+        "components/ui/progress.tsx",
+        "components/ui/radio-group.tsx",
+        "components/ui/scroll-area.tsx",
+        "components/ui/select.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/sheet.tsx",
+        "components/ui/skeleton.tsx",
+        "components/ui/slider.tsx",
+        "components/ui/switch.tsx",
+        "components/ui/tabs.tsx",
+        "components/ui/textarea.tsx",
+        "components/ui/toast.tsx",
+        "components/ui/toggle.tsx",
+        "components/ui/tooltip.tsx",
+        "components/user-auth-form.tsx",
+        "components/user-name-form.tsx"
+      ]
+    },
+    {
+      "id": "imports:lib/utils.ts",
+      "template": "imports",
+      "pick": "heavily imported",
+      "subject": "lib/utils.ts",
+      "text": "Which files does `lib/utils.ts` import?",
+      "expected": [
+        "env.mjs"
+      ]
+    },
+    {
+      "id": "blast-radius:lib/utils.ts",
+      "template": "blast-radius",
+      "pick": "heavily imported",
+      "subject": "lib/utils.ts",
+      "text": "If `lib/utils.ts` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "app/(auth)/login/page.tsx",
+        "app/(auth)/register/page.tsx",
+        "app/(dashboard)/dashboard/billing/loading.tsx",
+        "app/(dashboard)/dashboard/billing/page.tsx",
+        "app/(dashboard)/dashboard/layout.tsx",
+        "app/(dashboard)/dashboard/loading.tsx",
+        "app/(dashboard)/dashboard/page.tsx",
+        "app/(dashboard)/dashboard/settings/loading.tsx",
+        "app/(dashboard)/dashboard/settings/page.tsx",
+        "app/(docs)/docs/[[...slug]]/page.tsx",
+        "app/(docs)/docs/layout.tsx",
+        "app/(docs)/guides/[...slug]/page.tsx",
+        "app/(docs)/guides/page.tsx",
+        "app/(docs)/layout.tsx",
+        "app/(editor)/editor/[postId]/loading.tsx",
+        "app/(editor)/editor/[postId]/not-found.tsx",
+        "app/(editor)/editor/[postId]/page.tsx",
+        "app/(marketing)/[...slug]/page.tsx",
+        "app/(marketing)/blog/[...slug]/page.tsx",
+        "app/(marketing)/blog/page.tsx",
+        "app/(marketing)/layout.tsx",
+        "app/(marketing)/page.tsx",
+        "app/(marketing)/pricing/page.tsx",
+        "app/api/users/stripe/route.ts",
+        "app/layout.tsx",
+        "components/billing-form.tsx",
+        "components/callout.tsx",
+        "components/card-skeleton.tsx",
+        "components/editor.tsx",
+        "components/empty-placeholder.tsx",
+        "components/main-nav.tsx",
+        "components/mdx-card.tsx",
+        "components/mdx-components.tsx",
+        "components/mobile-nav.tsx",
+        "components/mode-toggle.tsx",
+        "components/nav.tsx",
+        "components/page-header.tsx",
+        "components/pager.tsx",
+        "components/post-create-button.tsx",
+        "components/post-item.tsx",
+        "components/post-operations.tsx",
+        "components/search.tsx",
+        "components/shell.tsx",
+        "components/sidebar-nav.tsx",
+        "components/site-footer.tsx",
+        "components/toc.tsx",
+        "components/ui/accordion.tsx",
+        "components/ui/alert-dialog.tsx",
+        "components/ui/alert.tsx",
+        "components/ui/avatar.tsx",
+        "components/ui/badge.tsx",
+        "components/ui/button.tsx",
+        "components/ui/calendar.tsx",
+        "components/ui/card.tsx",
+        "components/ui/checkbox.tsx",
+        "components/ui/command.tsx",
+        "components/ui/context-menu.tsx",
+        "components/ui/dialog.tsx",
+        "components/ui/dropdown-menu.tsx",
+        "components/ui/hover-card.tsx",
+        "components/ui/input.tsx",
+        "components/ui/label.tsx",
+        "components/ui/menubar.tsx",
+        "components/ui/navigation-menu.tsx",
+        "components/ui/popover.tsx",
+        "components/ui/progress.tsx",
+        "components/ui/radio-group.tsx",
+        "components/ui/scroll-area.tsx",
+        "components/ui/select.tsx",
+        "components/ui/separator.tsx",
+        "components/ui/sheet.tsx",
+        "components/ui/skeleton.tsx",
+        "components/ui/slider.tsx",
+        "components/ui/switch.tsx",
+        "components/ui/tabs.tsx",
+        "components/ui/textarea.tsx",
+        "components/ui/toast.tsx",
+        "components/ui/toaster.tsx",
+        "components/ui/toggle.tsx",
+        "components/ui/tooltip.tsx",
+        "components/ui/use-toast.ts",
+        "components/user-account-nav.tsx",
+        "components/user-auth-form.tsx",
+        "components/user-avatar.tsx",
+        "components/user-name-form.tsx"
+      ]
+    },
+    {
+      "id": "dependencies:lib/utils.ts",
+      "template": "dependencies",
+      "pick": "heavily imported",
+      "subject": "lib/utils.ts",
+      "text": "What does `lib/utils.ts` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "env.mjs"
+      ]
+    },
+    {
+      "id": "importers:components/ui/button.tsx",
+      "template": "importers",
+      "pick": "heavily imported",
+      "subject": "components/ui/button.tsx",
+      "text": "Which files import `components/ui/button.tsx`?",
+      "expected": [
+        "app/(auth)/login/page.tsx",
+        "app/(auth)/register/page.tsx",
+        "app/(docs)/guides/[...slug]/page.tsx",
+        "app/(editor)/editor/[postId]/not-found.tsx",
+        "app/(marketing)/blog/[...slug]/page.tsx",
+        "app/(marketing)/layout.tsx",
+        "app/(marketing)/page.tsx",
+        "app/(marketing)/pricing/page.tsx",
+        "components/billing-form.tsx",
+        "components/editor.tsx",
+        "components/mode-toggle.tsx",
+        "components/pager.tsx",
+        "components/post-create-button.tsx",
+        "components/ui/alert-dialog.tsx",
+        "components/ui/calendar.tsx",
+        "components/user-auth-form.tsx",
+        "components/user-name-form.tsx"
+      ]
+    },
+    {
+      "id": "imports:components/ui/button.tsx",
+      "template": "imports",
+      "pick": "heavily imported",
+      "subject": "components/ui/button.tsx",
+      "text": "Which files does `components/ui/button.tsx` import?",
+      "expected": [
+        "lib/utils.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:components/ui/button.tsx",
+      "template": "blast-radius",
+      "pick": "heavily imported",
+      "subject": "components/ui/button.tsx",
+      "text": "If `components/ui/button.tsx` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "app/(auth)/login/page.tsx",
+        "app/(auth)/register/page.tsx",
+        "app/(dashboard)/dashboard/billing/page.tsx",
+        "app/(dashboard)/dashboard/loading.tsx",
+        "app/(dashboard)/dashboard/page.tsx",
+        "app/(dashboard)/dashboard/settings/page.tsx",
+        "app/(docs)/docs/[[...slug]]/page.tsx",
+        "app/(docs)/guides/[...slug]/page.tsx",
+        "app/(editor)/editor/[postId]/not-found.tsx",
+        "app/(editor)/editor/[postId]/page.tsx",
+        "app/(marketing)/blog/[...slug]/page.tsx",
+        "app/(marketing)/layout.tsx",
+        "app/(marketing)/page.tsx",
+        "app/(marketing)/pricing/page.tsx",
+        "components/billing-form.tsx",
+        "components/editor.tsx",
+        "components/mode-toggle.tsx",
+        "components/pager.tsx",
+        "components/post-create-button.tsx",
+        "components/post-operations.tsx",
+        "components/site-footer.tsx",
+        "components/ui/alert-dialog.tsx",
+        "components/ui/calendar.tsx",
+        "components/user-auth-form.tsx",
+        "components/user-name-form.tsx"
+      ]
+    },
+    {
+      "id": "dependencies:components/ui/button.tsx",
+      "template": "dependencies",
+      "pick": "heavily imported",
+      "subject": "components/ui/button.tsx",
+      "text": "What does `components/ui/button.tsx` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "env.mjs",
+        "lib/utils.ts"
+      ]
+    },
+    {
+      "id": "importers:components/billing-form.tsx",
+      "template": "importers",
+      "pick": "rarely imported",
+      "subject": "components/billing-form.tsx",
+      "text": "Which files import `components/billing-form.tsx`?",
+      "expected": [
+        "app/(dashboard)/dashboard/billing/page.tsx"
+      ]
+    },
+    {
+      "id": "imports:components/billing-form.tsx",
+      "template": "imports",
+      "pick": "rarely imported",
+      "subject": "components/billing-form.tsx",
+      "text": "Which files does `components/billing-form.tsx` import?",
+      "expected": [
+        "components/icons.tsx",
+        "components/ui/button.tsx",
+        "components/ui/card.tsx",
+        "components/ui/use-toast.ts",
+        "lib/utils.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:components/billing-form.tsx",
+      "template": "blast-radius",
+      "pick": "rarely imported",
+      "subject": "components/billing-form.tsx",
+      "text": "If `components/billing-form.tsx` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "app/(dashboard)/dashboard/billing/page.tsx"
+      ]
+    },
+    {
+      "id": "dependencies:components/billing-form.tsx",
+      "template": "dependencies",
+      "pick": "rarely imported",
+      "subject": "components/billing-form.tsx",
+      "text": "What does `components/billing-form.tsx` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "components/icons.tsx",
+        "components/ui/button.tsx",
+        "components/ui/card.tsx",
+        "components/ui/toast.tsx",
+        "components/ui/use-toast.ts",
+        "env.mjs",
+        "lib/utils.ts"
+      ]
+    },
+    {
+      "id": "importers:components/ui/alert.tsx",
+      "template": "importers",
+      "pick": "rarely imported",
+      "subject": "components/ui/alert.tsx",
+      "text": "Which files import `components/ui/alert.tsx`?",
+      "expected": [
+        "app/(dashboard)/dashboard/billing/page.tsx"
+      ]
+    },
+    {
+      "id": "imports:components/ui/alert.tsx",
+      "template": "imports",
+      "pick": "rarely imported",
+      "subject": "components/ui/alert.tsx",
+      "text": "Which files does `components/ui/alert.tsx` import?",
+      "expected": [
+        "lib/utils.ts"
+      ]
+    },
+    {
+      "id": "blast-radius:components/ui/alert.tsx",
+      "template": "blast-radius",
+      "pick": "rarely imported",
+      "subject": "components/ui/alert.tsx",
+      "text": "If `components/ui/alert.tsx` changes, what could break? Name the files, up to two levels out.",
+      "expected": [
+        "app/(dashboard)/dashboard/billing/page.tsx"
+      ]
+    },
+    {
+      "id": "dependencies:components/ui/alert.tsx",
+      "template": "dependencies",
+      "pick": "rarely imported",
+      "subject": "components/ui/alert.tsx",
+      "text": "What does `components/ui/alert.tsx` need to work? Name the files it imports and what those import, two levels deep.",
+      "expected": [
+        "env.mjs",
+        "lib/utils.ts"
+      ]
+    }
+  ],
+  "finishedAt": null,
+  "sittings": [
+    {
+      "startedAt": "2026-10-08T21:18:05.518Z",
+      "flowlens": {
+        "commit": "7e9dbf40319e91c11c39d06cac7843578c839a2c",
+        "localChanges": true
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "question": "importers:components/analytics.tsx",
+      "round": 1,
+      "threadId": "01a11d61-68f6-72db-82f5-4783e5ccc6bb",
+      "agentRunId": "01a11d61-68fe-737f-9da7-e9a09609c2f6",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/analytics.tsx"
+          },
+          "found": true,
+          "note": "imports 0 · imported by 1"
+        }
+      ],
+      "text": "`app/layout.tsx` imports `components/analytics.tsx`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/layout.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/layout.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:components/analytics.tsx",
+      "round": 1,
+      "threadId": "01a11d61-743d-7348-8e85-058c890ba5fa",
+      "agentRunId": "01a11d61-7441-72da-8709-fe7359f655a4",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/analytics.tsx"
+          },
+          "found": true,
+          "note": "imports 0 · imported by 1"
+        }
+      ],
+      "text": "`components/analytics.tsx` does not import any files.",
+      "lookedUp": true,
+      "scored": {
+        "named": [],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:components/analytics.tsx",
+      "round": 1,
+      "threadId": "01a11d61-7d69-7198-89c2-c94a68c04467",
+      "agentRunId": "01a11d61-7d6c-72fd-98ea-67607d9bb669",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "components/analytics.tsx"
+          },
+          "found": true,
+          "note": "1 file"
+        }
+      ],
+      "text": "If `components/analytics.tsx` changes, the dependents up to two levels out that could break are:\n\n- `app/layout.tsx` (depth 1)",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/layout.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/layout.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:components/analytics.tsx",
+      "round": 1,
+      "threadId": "01a11d61-87e2-75f9-826f-a39d96da92d0",
+      "agentRunId": "01a11d61-87e7-707a-86ed-4ab0999cf152",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "components/analytics.tsx",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "0 files"
+        }
+      ],
+      "text": "`components/analytics.tsx` does not import any files (its dependency walk two levels deep returns no files).",
+      "lookedUp": true,
+      "scored": {
+        "named": [],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:components/ui/dialog.tsx",
+      "round": 1,
+      "threadId": "01a11d61-9285-722f-9b8a-19239d264b4e",
+      "agentRunId": "01a11d61-928a-75b5-9530-502ab6b31237",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/ui/dialog.tsx"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "The file `components/ui/dialog.tsx` is imported by `components/ui/command.tsx`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "components/ui/command.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "components/ui/command.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:components/ui/dialog.tsx",
+      "round": 1,
+      "threadId": "01a11d61-a17a-765f-9c09-a44a8a5c3820",
+      "agentRunId": "01a11d61-a17d-7368-8622-e2c91bbd0804",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/ui/dialog.tsx"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 1"
+        }
+      ],
+      "text": "`components/ui/dialog.tsx` imports `lib/utils.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "lib/utils.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "lib/utils.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:components/ui/dialog.tsx",
+      "round": 1,
+      "threadId": "01a11d61-bdec-7063-b209-db472a15723e",
+      "agentRunId": "01a11d61-bdf0-73f7-b70f-0b732f1ecbb9",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "components/ui/dialog.tsx"
+          },
+          "found": true,
+          "note": "1 file"
+        }
+      ],
+      "text": "If `components/ui/dialog.tsx` changes, `components/ui/command.tsx` could break as a direct dependent (one level out). No further files two levels out depend on `components/ui/command.tsx`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "components/ui/command.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "components/ui/command.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:components/ui/dialog.tsx",
+      "round": 1,
+      "threadId": "01a11d61-d1cb-72ee-a473-ba3270334639",
+      "agentRunId": "01a11d61-d1ce-77ba-b269-751a4c3a7eb4",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "components/ui/dialog.tsx",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "2 files"
+        }
+      ],
+      "text": "`components/ui/dialog.tsx` needs `lib/utils.ts` (at 1 step away), which in turn needs `env.mjs` (at 2 steps away).",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "lib/utils.ts",
+          "env.mjs"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "env.mjs",
+            "lib/utils.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:lib/utils.ts",
+      "round": 1,
+      "threadId": "01a11d63-2d64-768b-b1be-6c77209fbd70",
+      "agentRunId": "01a11d63-2d68-77ff-bc8c-43ac44492b24",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "lib/utils.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 66"
+        }
+      ],
+      "text": "`lib/utils.ts` is imported by the following files:\n\n- `app/(auth)/login/page.tsx`\n- `app/(auth)/register/page.tsx`\n- `app/(docs)/docs/[[...slug]]/page.tsx`\n- `app/(docs)/guides/[...slug]/page.tsx`\n- `app/(docs)/guides/page.tsx`\n- `app/(marketing)/[...slug]/page.tsx`\n- `app/(marketing)/blog/[...slug]/page.tsx`\n- `app/(marketing)/blog/page.tsx`\n- `app/(marketing)/layout.tsx`\n- `app/(marketing)/page.tsx`\n- `app/(marketing)/pricing/page.tsx`\n- `app/api/users/stripe/route.ts`\n- `app/layout.tsx`\n- `components/billing-form.tsx`\n- `components/callout.tsx`\n- `components/editor.tsx`\n- `components/empty-placeholder.tsx`\n- `components/main-nav.tsx`\n- `components/mdx-card.tsx`\n- `components/mdx-components.tsx`\n- `components/mobile-nav.tsx`\n- `components/nav.tsx`\n- `components/page-header.tsx`\n- `components/pager.tsx`\n- `components/post-create-button.tsx`\n- `components/post-item.tsx`\n- `components/search.tsx`\n- `components/shell.tsx`\n- `components/sidebar-nav.tsx`\n- `components/site-footer.tsx`\n- `components/toc.tsx`\n- `components/ui/accordion.tsx`\n- `components/ui/alert-dialog.tsx`\n- `components/ui/alert.tsx`\n- `components/ui/avatar.tsx`\n- `components/ui/badge.tsx`\n- `components/ui/button.tsx`\n- `components/ui/calendar.tsx`\n- `components/ui/card.tsx`\n- `components/ui/checkbox.tsx`\n- `components/ui/command.tsx`\n- `components/ui/context-menu.tsx`\n- `components/ui/dialog.tsx`\n- `components/ui/dropdown-menu.tsx`\n- `components/ui/hover-card.tsx`\n- `components/ui/input.tsx`\n- `components/ui/label.tsx`\n- `components/ui/menubar.tsx`\n- `components/ui/navigation-menu.tsx`\n- `components/ui/popover.tsx`\n- `components/ui/progress.tsx`\n- `components/ui/radio-group.tsx`\n- `components/ui/scroll-area.tsx`\n- `components/ui/select.tsx`\n- `components/ui/separator.tsx`\n- `components/ui/sheet.tsx`\n- `components/ui/skeleton.tsx`\n- `components/ui/slider.tsx`\n- `components/ui/switch.tsx`\n- `components/ui/tabs.tsx`\n- `components/ui/textarea.tsx`\n- `components/ui/toast.tsx`\n- `components/ui/toggle.tsx`\n- `components/ui/tooltip.tsx`\n- `components/user-auth-form.tsx`\n- `components/user-name-form.tsx`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/(auth)/login/page.tsx",
+          "app/(auth)/register/page.tsx",
+          "app/(docs)/docs/[[...slug]]/page.tsx",
+          "app/(docs)/guides/[...slug]/page.tsx",
+          "app/(docs)/guides/page.tsx",
+          "app/(marketing)/[...slug]/page.tsx",
+          "app/(marketing)/blog/[...slug]/page.tsx",
+          "app/(marketing)/blog/page.tsx",
+          "app/(marketing)/layout.tsx",
+          "app/(marketing)/page.tsx",
+          "app/(marketing)/pricing/page.tsx",
+          "app/api/users/stripe/route.ts",
+          "app/layout.tsx",
+          "components/billing-form.tsx",
+          "components/callout.tsx",
+          "components/editor.tsx",
+          "components/empty-placeholder.tsx",
+          "components/main-nav.tsx",
+          "components/mdx-card.tsx",
+          "components/mdx-components.tsx",
+          "components/mobile-nav.tsx",
+          "components/nav.tsx",
+          "components/page-header.tsx",
+          "components/pager.tsx",
+          "components/post-create-button.tsx",
+          "components/post-item.tsx",
+          "components/search.tsx",
+          "components/shell.tsx",
+          "components/sidebar-nav.tsx",
+          "components/site-footer.tsx",
+          "components/toc.tsx",
+          "components/ui/accordion.tsx",
+          "components/ui/alert-dialog.tsx",
+          "components/ui/alert.tsx",
+          "components/ui/avatar.tsx",
+          "components/ui/badge.tsx",
+          "components/ui/button.tsx",
+          "components/ui/calendar.tsx",
+          "components/ui/card.tsx",
+          "components/ui/checkbox.tsx",
+          "components/ui/command.tsx",
+          "components/ui/context-menu.tsx",
+          "components/ui/dialog.tsx",
+          "components/ui/dropdown-menu.tsx",
+          "components/ui/hover-card.tsx",
+          "components/ui/input.tsx",
+          "components/ui/label.tsx",
+          "components/ui/menubar.tsx",
+          "components/ui/navigation-menu.tsx",
+          "components/ui/popover.tsx",
+          "components/ui/progress.tsx",
+          "components/ui/radio-group.tsx",
+          "components/ui/scroll-area.tsx",
+          "components/ui/select.tsx",
+          "components/ui/separator.tsx",
+          "components/ui/sheet.tsx",
+          "components/ui/skeleton.tsx",
+          "components/ui/slider.tsx",
+          "components/ui/switch.tsx",
+          "components/ui/tabs.tsx",
+          "components/ui/textarea.tsx",
+          "components/ui/toast.tsx",
+          "components/ui/toggle.tsx",
+          "components/ui/tooltip.tsx",
+          "components/user-auth-form.tsx",
+          "components/user-name-form.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/(auth)/login/page.tsx",
+            "app/(auth)/register/page.tsx",
+            "app/(docs)/docs/[[...slug]]/page.tsx",
+            "app/(docs)/guides/[...slug]/page.tsx",
+            "app/(docs)/guides/page.tsx",
+            "app/(marketing)/[...slug]/page.tsx",
+            "app/(marketing)/blog/[...slug]/page.tsx",
+            "app/(marketing)/blog/page.tsx",
+            "app/(marketing)/layout.tsx",
+            "app/(marketing)/page.tsx",
+            "app/(marketing)/pricing/page.tsx",
+            "app/api/users/stripe/route.ts",
+            "app/layout.tsx",
+            "components/billing-form.tsx",
+            "components/callout.tsx",
+            "components/editor.tsx",
+            "components/empty-placeholder.tsx",
+            "components/main-nav.tsx",
+            "components/mdx-card.tsx",
+            "components/mdx-components.tsx",
+            "components/mobile-nav.tsx",
+            "components/nav.tsx",
+            "components/page-header.tsx",
+            "components/pager.tsx",
+            "components/post-create-button.tsx",
+            "components/post-item.tsx",
+            "components/search.tsx",
+            "components/shell.tsx",
+            "components/sidebar-nav.tsx",
+            "components/site-footer.tsx",
+            "components/toc.tsx",
+            "components/ui/accordion.tsx",
+            "components/ui/alert-dialog.tsx",
+            "components/ui/alert.tsx",
+            "components/ui/avatar.tsx",
+            "components/ui/badge.tsx",
+            "components/ui/button.tsx",
+            "components/ui/calendar.tsx",
+            "components/ui/card.tsx",
+            "components/ui/checkbox.tsx",
+            "components/ui/command.tsx",
+            "components/ui/context-menu.tsx",
+            "components/ui/dialog.tsx",
+            "components/ui/dropdown-menu.tsx",
+            "components/ui/hover-card.tsx",
+            "components/ui/input.tsx",
+            "components/ui/label.tsx",
+            "components/ui/menubar.tsx",
+            "components/ui/navigation-menu.tsx",
+            "components/ui/popover.tsx",
+            "components/ui/progress.tsx",
+            "components/ui/radio-group.tsx",
+            "components/ui/scroll-area.tsx",
+            "components/ui/select.tsx",
+            "components/ui/separator.tsx",
+            "components/ui/sheet.tsx",
+            "components/ui/skeleton.tsx",
+            "components/ui/slider.tsx",
+            "components/ui/switch.tsx",
+            "components/ui/tabs.tsx",
+            "components/ui/textarea.tsx",
+            "components/ui/toast.tsx",
+            "components/ui/toggle.tsx",
+            "components/ui/tooltip.tsx",
+            "components/user-auth-form.tsx",
+            "components/user-name-form.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:lib/utils.ts",
+      "round": 1,
+      "threadId": "01a11d63-4399-739a-a790-34e7205775dd",
+      "agentRunId": "01a11d63-439d-737e-9c25-ea60c320c582",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "lib/utils.ts"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 66"
+        }
+      ],
+      "text": "`lib/utils.ts` imports `env.mjs`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "env.mjs"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "env.mjs"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:lib/utils.ts",
+      "round": 1,
+      "threadId": "01a11d63-4dbd-758d-b87c-42761424651f",
+      "agentRunId": "01a11d63-4dc1-74ff-b4ac-b90517a88a9a",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "lib/utils.ts",
+            "direction": "dependents"
+          },
+          "found": true,
+          "note": "85 files"
+        }
+      ],
+      "text": "If `lib/utils.ts` changes, the following files up to two levels out could break because they import it directly or transitively:\n\n**Depth 1:**\n- `app/(auth)/login/page.tsx`\n- `app/(auth)/register/page.tsx`\n- `app/(docs)/docs/[[...slug]]/page.tsx`\n- `app/(docs)/guides/[...slug]/page.tsx`\n- `app/(docs)/guides/page.tsx`\n- `app/(marketing)/[...slug]/page.tsx`\n- `app/(marketing)/blog/[...slug]/page.tsx`\n- `app/(marketing)/blog/page.tsx`\n- `app/(marketing)/layout.tsx`\n- `app/(marketing)/page.tsx`\n- `app/(marketing)/pricing/page.tsx`\n- `app/api/users/stripe/route.ts`\n- `app/layout.tsx`\n- `components/billing-form.tsx`\n- `components/callout.tsx`\n- `components/editor.tsx`\n- `components/empty-placeholder.tsx`\n- `components/main-nav.tsx`\n- `components/mdx-card.tsx`\n- `components/mdx-components.tsx`\n- `components/mobile-nav.tsx`\n- `components/nav.tsx`\n- `components/page-header.tsx`\n- `components/pager.tsx`\n- `components/post-create-button.tsx`\n- `components/post-item.tsx`\n- `components/search.tsx`\n- `components/shell.tsx`\n- `components/sidebar-nav.tsx`\n- `components/site-footer.tsx`\n- `components/toc.tsx`\n- `components/ui/accordion.tsx`\n- `components/ui/alert-dialog.tsx`\n- `components/ui/alert.tsx`\n- `components/ui/avatar.tsx`\n- `components/ui/badge.tsx`\n- `components/ui/button.tsx`\n- `components/ui/calendar.tsx`\n- `components/ui/card.tsx`\n- `components/ui/checkbox.tsx`\n- `components/ui/command.tsx`\n- `components/ui/context-menu.tsx`\n- `components/ui/dialog.tsx`\n- `components/ui/dropdown-menu.tsx`\n- `components/ui/hover-card.tsx`\n- `components/ui/input.tsx`\n- `components/ui/label.tsx`\n- `components/ui/menubar.tsx`\n- `components/ui/navigation-menu.tsx`\n- `components/ui/popover.tsx`\n- `components/ui/progress.tsx`\n- `components/ui/radio-group.tsx`\n- `components/ui/scroll-area.tsx`\n- `components/ui/select.tsx`\n- `components/ui/separator.tsx`\n- `components/ui/sheet.tsx`\n- `components/ui/skeleton.tsx`\n- `components/ui/slider.tsx`\n- `components/ui/switch.tsx`\n- `components/ui/tabs.tsx`\n- `components/ui/textarea.tsx`\n- `components/ui/toast.tsx`\n- `components/ui/toggle.tsx`\n- `components/ui/tooltip.tsx`\n- `components/user-auth-form.tsx`\n- `components/user-name-form.tsx`\n\n**Depth 2:**\n- `app/(dashboard)/dashboard/billing/loading.tsx`\n- `app/(dashboard)/dashboard/billing/page.tsx`\n- `app/(dashboard)/dashboard/layout.tsx`\n- `app/(dashboard)/dashboard/loading.tsx`\n- `app/(dashboard)/dashboard/page.tsx`\n- `app/(dashboard)/dashboard/settings/loading.tsx`\n- `app/(dashboard)/dashboard/settings/page.tsx`\n- `app/(docs)/docs/layout.tsx`\n- `app/(docs)/layout.tsx`\n- `app/(editor)/editor/[postId]/loading.tsx`\n- `app/(editor)/editor/[postId]/not-found.tsx`\n- `app/(editor)/editor/[postId]/page.tsx`\n- `components/card-skeleton.tsx`\n- `components/mode-toggle.tsx`\n- `components/post-operations.tsx`\n- `components/ui/toaster.tsx`\n- `components/ui/use-toast.ts`\n- `components/user-account-nav.tsx`\n- `components/user-avatar.tsx`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/(auth)/login/page.tsx",
+          "app/(auth)/register/page.tsx",
+          "app/(docs)/docs/[[...slug]]/page.tsx",
+          "app/(docs)/guides/[...slug]/page.tsx",
+          "app/(docs)/guides/page.tsx",
+          "app/(marketing)/[...slug]/page.tsx",
+          "app/(marketing)/blog/[...slug]/page.tsx",
+          "app/(marketing)/blog/page.tsx",
+          "app/(marketing)/layout.tsx",
+          "app/(marketing)/page.tsx",
+          "app/(marketing)/pricing/page.tsx",
+          "app/api/users/stripe/route.ts",
+          "app/layout.tsx",
+          "components/billing-form.tsx",
+          "components/callout.tsx",
+          "components/editor.tsx",
+          "components/empty-placeholder.tsx",
+          "components/main-nav.tsx",
+          "components/mdx-card.tsx",
+          "components/mdx-components.tsx",
+          "components/mobile-nav.tsx",
+          "components/nav.tsx",
+          "components/page-header.tsx",
+          "components/pager.tsx",
+          "components/post-create-button.tsx",
+          "components/post-item.tsx",
+          "components/search.tsx",
+          "components/shell.tsx",
+          "components/sidebar-nav.tsx",
+          "components/site-footer.tsx",
+          "components/toc.tsx",
+          "components/ui/accordion.tsx",
+          "components/ui/alert-dialog.tsx",
+          "components/ui/alert.tsx",
+          "components/ui/avatar.tsx",
+          "components/ui/badge.tsx",
+          "components/ui/button.tsx",
+          "components/ui/calendar.tsx",
+          "components/ui/card.tsx",
+          "components/ui/checkbox.tsx",
+          "components/ui/command.tsx",
+          "components/ui/context-menu.tsx",
+          "components/ui/dialog.tsx",
+          "components/ui/dropdown-menu.tsx",
+          "components/ui/hover-card.tsx",
+          "components/ui/input.tsx",
+          "components/ui/label.tsx",
+          "components/ui/menubar.tsx",
+          "components/ui/navigation-menu.tsx",
+          "components/ui/popover.tsx",
+          "components/ui/progress.tsx",
+          "components/ui/radio-group.tsx",
+          "components/ui/scroll-area.tsx",
+          "components/ui/select.tsx",
+          "components/ui/separator.tsx",
+          "components/ui/sheet.tsx",
+          "components/ui/skeleton.tsx",
+          "components/ui/slider.tsx",
+          "components/ui/switch.tsx",
+          "components/ui/tabs.tsx",
+          "components/ui/textarea.tsx",
+          "components/ui/toast.tsx",
+          "components/ui/toggle.tsx",
+          "components/ui/tooltip.tsx",
+          "components/user-auth-form.tsx",
+          "components/user-name-form.tsx",
+          "app/(dashboard)/dashboard/billing/loading.tsx",
+          "app/(dashboard)/dashboard/billing/page.tsx",
+          "app/(dashboard)/dashboard/layout.tsx",
+          "app/(dashboard)/dashboard/loading.tsx",
+          "app/(dashboard)/dashboard/page.tsx",
+          "app/(dashboard)/dashboard/settings/loading.tsx",
+          "app/(dashboard)/dashboard/settings/page.tsx",
+          "app/(docs)/docs/layout.tsx",
+          "app/(docs)/layout.tsx",
+          "app/(editor)/editor/[postId]/loading.tsx",
+          "app/(editor)/editor/[postId]/not-found.tsx",
+          "app/(editor)/editor/[postId]/page.tsx",
+          "components/card-skeleton.tsx",
+          "components/mode-toggle.tsx",
+          "components/post-operations.tsx",
+          "components/ui/toaster.tsx",
+          "components/ui/use-toast.ts",
+          "components/user-account-nav.tsx",
+          "components/user-avatar.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/(auth)/login/page.tsx",
+            "app/(auth)/register/page.tsx",
+            "app/(dashboard)/dashboard/billing/loading.tsx",
+            "app/(dashboard)/dashboard/billing/page.tsx",
+            "app/(dashboard)/dashboard/layout.tsx",
+            "app/(dashboard)/dashboard/loading.tsx",
+            "app/(dashboard)/dashboard/page.tsx",
+            "app/(dashboard)/dashboard/settings/loading.tsx",
+            "app/(dashboard)/dashboard/settings/page.tsx",
+            "app/(docs)/docs/[[...slug]]/page.tsx",
+            "app/(docs)/docs/layout.tsx",
+            "app/(docs)/guides/[...slug]/page.tsx",
+            "app/(docs)/guides/page.tsx",
+            "app/(docs)/layout.tsx",
+            "app/(editor)/editor/[postId]/loading.tsx",
+            "app/(editor)/editor/[postId]/not-found.tsx",
+            "app/(editor)/editor/[postId]/page.tsx",
+            "app/(marketing)/[...slug]/page.tsx",
+            "app/(marketing)/blog/[...slug]/page.tsx",
+            "app/(marketing)/blog/page.tsx",
+            "app/(marketing)/layout.tsx",
+            "app/(marketing)/page.tsx",
+            "app/(marketing)/pricing/page.tsx",
+            "app/api/users/stripe/route.ts",
+            "app/layout.tsx",
+            "components/billing-form.tsx",
+            "components/callout.tsx",
+            "components/card-skeleton.tsx",
+            "components/editor.tsx",
+            "components/empty-placeholder.tsx",
+            "components/main-nav.tsx",
+            "components/mdx-card.tsx",
+            "components/mdx-components.tsx",
+            "components/mobile-nav.tsx",
+            "components/mode-toggle.tsx",
+            "components/nav.tsx",
+            "components/page-header.tsx",
+            "components/pager.tsx",
+            "components/post-create-button.tsx",
+            "components/post-item.tsx",
+            "components/post-operations.tsx",
+            "components/search.tsx",
+            "components/shell.tsx",
+            "components/sidebar-nav.tsx",
+            "components/site-footer.tsx",
+            "components/toc.tsx",
+            "components/ui/accordion.tsx",
+            "components/ui/alert-dialog.tsx",
+            "components/ui/alert.tsx",
+            "components/ui/avatar.tsx",
+            "components/ui/badge.tsx",
+            "components/ui/button.tsx",
+            "components/ui/calendar.tsx",
+            "components/ui/card.tsx",
+            "components/ui/checkbox.tsx",
+            "components/ui/command.tsx",
+            "components/ui/context-menu.tsx",
+            "components/ui/dialog.tsx",
+            "components/ui/dropdown-menu.tsx",
+            "components/ui/hover-card.tsx",
+            "components/ui/input.tsx",
+            "components/ui/label.tsx",
+            "components/ui/menubar.tsx",
+            "components/ui/navigation-menu.tsx",
+            "components/ui/popover.tsx",
+            "components/ui/progress.tsx",
+            "components/ui/radio-group.tsx",
+            "components/ui/scroll-area.tsx",
+            "components/ui/select.tsx",
+            "components/ui/separator.tsx",
+            "components/ui/sheet.tsx",
+            "components/ui/skeleton.tsx",
+            "components/ui/slider.tsx",
+            "components/ui/switch.tsx",
+            "components/ui/tabs.tsx",
+            "components/ui/textarea.tsx",
+            "components/ui/toast.tsx",
+            "components/ui/toaster.tsx",
+            "components/ui/toggle.tsx",
+            "components/ui/tooltip.tsx",
+            "components/ui/use-toast.ts",
+            "components/user-account-nav.tsx",
+            "components/user-auth-form.tsx",
+            "components/user-avatar.tsx",
+            "components/user-name-form.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:lib/utils.ts",
+      "round": 1,
+      "threadId": "01a11d63-6250-713e-896b-133a82e6ee98",
+      "agentRunId": "01a11d63-6254-74da-94a0-68b18eb1d81c",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "lib/utils.ts"
+          },
+          "found": true,
+          "note": "1 file"
+        }
+      ],
+      "text": "`lib/utils.ts` needs `env.mjs` to work, which is 1 step away. No further files are imported by `env.mjs` within two levels.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "env.mjs"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "env.mjs"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:components/ui/button.tsx",
+      "round": 1,
+      "threadId": "01a11d63-6cef-772d-b3f2-4818e971f1ef",
+      "agentRunId": "01a11d63-6cf3-707b-b32f-e70f04a18dbf",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/ui/button.tsx"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 17"
+        }
+      ],
+      "text": "The files that import `components/ui/button.tsx` are:\n\n- `app/(auth)/login/page.tsx`\n- `app/(auth)/register/page.tsx`\n- `app/(docs)/guides/[...slug]/page.tsx`\n- `app/(editor)/editor/[postId]/not-found.tsx`\n- `app/(marketing)/blog/[...slug]/page.tsx`\n- `app/(marketing)/layout.tsx`\n- `app/(marketing)/page.tsx`\n- `app/(marketing)/pricing/page.tsx`\n- `components/billing-form.tsx`\n- `components/editor.tsx`\n- `components/mode-toggle.tsx`\n- `components/pager.tsx`\n- `components/post-create-button.tsx`\n- `components/ui/alert-dialog.tsx`\n- `components/ui/calendar.tsx`\n- `components/user-auth-form.tsx`\n- `components/user-name-form.tsx`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/(auth)/login/page.tsx",
+          "app/(auth)/register/page.tsx",
+          "app/(docs)/guides/[...slug]/page.tsx",
+          "app/(editor)/editor/[postId]/not-found.tsx",
+          "app/(marketing)/blog/[...slug]/page.tsx",
+          "app/(marketing)/layout.tsx",
+          "app/(marketing)/page.tsx",
+          "app/(marketing)/pricing/page.tsx",
+          "components/billing-form.tsx",
+          "components/editor.tsx",
+          "components/mode-toggle.tsx",
+          "components/pager.tsx",
+          "components/post-create-button.tsx",
+          "components/ui/alert-dialog.tsx",
+          "components/ui/calendar.tsx",
+          "components/user-auth-form.tsx",
+          "components/user-name-form.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/(auth)/login/page.tsx",
+            "app/(auth)/register/page.tsx",
+            "app/(docs)/guides/[...slug]/page.tsx",
+            "app/(editor)/editor/[postId]/not-found.tsx",
+            "app/(marketing)/blog/[...slug]/page.tsx",
+            "app/(marketing)/layout.tsx",
+            "app/(marketing)/page.tsx",
+            "app/(marketing)/pricing/page.tsx",
+            "components/billing-form.tsx",
+            "components/editor.tsx",
+            "components/mode-toggle.tsx",
+            "components/pager.tsx",
+            "components/post-create-button.tsx",
+            "components/ui/alert-dialog.tsx",
+            "components/ui/calendar.tsx",
+            "components/user-auth-form.tsx",
+            "components/user-name-form.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:components/ui/button.tsx",
+      "round": 1,
+      "threadId": "01a11d63-779a-75cc-add5-8d8c48c52aae",
+      "agentRunId": "01a11d63-779e-73ea-adf4-c5c8406baca3",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/ui/button.tsx"
+          },
+          "found": true,
+          "note": "imports 1 · imported by 17"
+        }
+      ],
+      "text": "`components/ui/button.tsx` imports `lib/utils.ts`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "lib/utils.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "lib/utils.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:components/ui/button.tsx",
+      "round": 1,
+      "threadId": "01a11d63-821d-7308-9e51-a3b446ab22a1",
+      "agentRunId": "01a11d63-8221-77e1-976c-6a9fde378181",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "components/ui/button.tsx"
+          },
+          "found": true,
+          "note": "25 files"
+        }
+      ],
+      "text": "If `components/ui/button.tsx` changes, the files that could break up to two levels out are:\n\n**Depth 1 (direct dependents):**\n- `app/(auth)/login/page.tsx`\n- `app/(auth)/register/page.tsx`\n- `app/(docs)/guides/[...slug]/page.tsx`\n- `app/(editor)/editor/[postId]/not-found.tsx`\n- `app/(marketing)/blog/[...slug]/page.tsx`\n- `app/(marketing)/layout.tsx`\n- `app/(marketing)/page.tsx`\n- `app/(marketing)/pricing/page.tsx`\n- `components/billing-form.tsx`\n- `components/editor.tsx`\n- `components/mode-toggle.tsx`\n- `components/pager.tsx`\n- `components/post-create-button.tsx`\n- `components/ui/alert-dialog.tsx`\n- `components/ui/calendar.tsx`\n- `components/user-auth-form.tsx`\n- `components/user-name-form.tsx`\n\n**Depth 2:**\n- `app/(dashboard)/dashboard/billing/page.tsx`\n- `app/(dashboard)/dashboard/loading.tsx`\n- `app/(dashboard)/dashboard/page.tsx`\n- `app/(dashboard)/dashboard/settings/page.tsx`\n- `app/(docs)/docs/[[...slug]]/page.tsx`\n- `app/(editor)/editor/[postId]/page.tsx`\n- `components/post-operations.tsx`\n- `components/site-footer.tsx`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/(auth)/login/page.tsx",
+          "app/(auth)/register/page.tsx",
+          "app/(docs)/guides/[...slug]/page.tsx",
+          "app/(editor)/editor/[postId]/not-found.tsx",
+          "app/(marketing)/blog/[...slug]/page.tsx",
+          "app/(marketing)/layout.tsx",
+          "app/(marketing)/page.tsx",
+          "app/(marketing)/pricing/page.tsx",
+          "components/billing-form.tsx",
+          "components/editor.tsx",
+          "components/mode-toggle.tsx",
+          "components/pager.tsx",
+          "components/post-create-button.tsx",
+          "components/ui/alert-dialog.tsx",
+          "components/ui/calendar.tsx",
+          "components/user-auth-form.tsx",
+          "components/user-name-form.tsx",
+          "app/(dashboard)/dashboard/billing/page.tsx",
+          "app/(dashboard)/dashboard/loading.tsx",
+          "app/(dashboard)/dashboard/page.tsx",
+          "app/(dashboard)/dashboard/settings/page.tsx",
+          "app/(docs)/docs/[[...slug]]/page.tsx",
+          "app/(editor)/editor/[postId]/page.tsx",
+          "components/post-operations.tsx",
+          "components/site-footer.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/(auth)/login/page.tsx",
+            "app/(auth)/register/page.tsx",
+            "app/(dashboard)/dashboard/billing/page.tsx",
+            "app/(dashboard)/dashboard/loading.tsx",
+            "app/(dashboard)/dashboard/page.tsx",
+            "app/(dashboard)/dashboard/settings/page.tsx",
+            "app/(docs)/docs/[[...slug]]/page.tsx",
+            "app/(docs)/guides/[...slug]/page.tsx",
+            "app/(editor)/editor/[postId]/not-found.tsx",
+            "app/(editor)/editor/[postId]/page.tsx",
+            "app/(marketing)/blog/[...slug]/page.tsx",
+            "app/(marketing)/layout.tsx",
+            "app/(marketing)/page.tsx",
+            "app/(marketing)/pricing/page.tsx",
+            "components/billing-form.tsx",
+            "components/editor.tsx",
+            "components/mode-toggle.tsx",
+            "components/pager.tsx",
+            "components/post-create-button.tsx",
+            "components/post-operations.tsx",
+            "components/site-footer.tsx",
+            "components/ui/alert-dialog.tsx",
+            "components/ui/calendar.tsx",
+            "components/user-auth-form.tsx",
+            "components/user-name-form.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:components/ui/button.tsx",
+      "round": 1,
+      "threadId": "01a11d63-915b-702d-ad94-6a3bc5815f86",
+      "agentRunId": "01a11d63-915f-735e-b58e-9046f3ee967e",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependencies",
+            "path": "components/ui/button.tsx"
+          },
+          "found": true,
+          "note": "2 files"
+        }
+      ],
+      "text": "`components/ui/button.tsx` needs `lib/utils.ts` at depth 1, and `lib/utils.ts` in turn needs `env.mjs` at depth 2 to work.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "lib/utils.ts",
+          "env.mjs"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "env.mjs",
+            "lib/utils.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "importers:components/billing-form.tsx",
+      "round": 1,
+      "threadId": "01a11d63-9be4-7749-8602-bc3639040366",
+      "agentRunId": "01a11d63-9be8-766f-aacd-c58661c5bf0e",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/billing-form.tsx"
+          },
+          "found": true,
+          "note": "imports 5 · imported by 1"
+        }
+      ],
+      "text": "`app/(dashboard)/dashboard/billing/page.tsx` imports `components/billing-form.tsx`.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/(dashboard)/dashboard/billing/page.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/(dashboard)/dashboard/billing/page.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "imports:components/billing-form.tsx",
+      "round": 1,
+      "threadId": "01a11d64-17c7-751b-a80f-20bfcc986a2e",
+      "agentRunId": "01a11d64-17ca-719f-8b3d-a1825f1961c2",
+      "lookups": [
+        {
+          "name": "file_neighbours",
+          "args": {
+            "path": "components/billing-form.tsx"
+          },
+          "found": true,
+          "note": "imports 5 · imported by 1"
+        }
+      ],
+      "text": "`components/billing-form.tsx` imports the following files:\n\n- `components/icons.tsx`\n- `components/ui/button.tsx`\n- `components/ui/card.tsx`\n- `components/ui/use-toast.ts`\n- `lib/utils.ts`",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "components/icons.tsx",
+          "components/ui/button.tsx",
+          "components/ui/card.tsx",
+          "components/ui/use-toast.ts",
+          "lib/utils.ts"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "components/icons.tsx",
+            "components/ui/button.tsx",
+            "components/ui/card.tsx",
+            "components/ui/use-toast.ts",
+            "lib/utils.ts"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "blast-radius:components/billing-form.tsx",
+      "round": 1,
+      "threadId": "01a11d64-7ced-74c4-8f5a-9d1aa1924258",
+      "agentRunId": "01a11d64-7cf1-76ad-a3c0-fd6ffaa7dcf3",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "direction": "dependents",
+            "path": "components/billing-form.tsx"
+          },
+          "found": true,
+          "note": "1 file"
+        }
+      ],
+      "text": "If `components/billing-form.tsx` changes, the file that could break two levels out is `app/(dashboard)/dashboard/billing/page.tsx`, which is 1 step away.",
+      "lookedUp": true,
+      "scored": {
+        "named": [
+          "app/(dashboard)/dashboard/billing/page.tsx"
+        ],
+        "ambiguous": [],
+        "invented": [],
+        "score": {
+          "correct": [
+            "app/(dashboard)/dashboard/billing/page.tsx"
+          ],
+          "missed": [],
+          "wrong": [],
+          "recall": 1,
+          "precision": 1,
+          "f1": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "question": "dependencies:components/billing-form.tsx",
+      "round": 1,
+      "threadId": "01a11d64-864d-7019-83a4-a2e2f50064da",
+      "agentRunId": "01a11d64-864f-7001-b6e1-86575ede5820",
+      "lookups": [
+        {
+          "name": "walk_graph",
+          "args": {
+            "path": "components/billing-form.tsx",
+            "direction": "dependencies"
+          },
+          "found": true,
+          "note": "7 files"
+        }
+      ],
+      "text": "",
+      "lookedUp": true,
+      "scored": null,
+      "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 500, model: gemini-3.5-flash-lite\nPlease retry in 2h38m28.970579974s."
+    },
+    {
+      "question": "importers:components/ui/alert.tsx",
+      "round": 1,
+      "threadId": "01a11d64-8d12-708e-a868-aaa3e4e70c29",
+      "agentRunId": "01a11d64-8d16-7058-b913-8e4a742ca227",
+      "lookups": [],
+      "text": "",
+      "lookedUp": false,
+      "scored": null,
+      "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 500, model: gemini-3.5-flash-lite\nPlease retry in 2h38m27.979388857s."
+    },
+    {
+      "question": "imports:components/ui/alert.tsx",
+      "round": 1,
+      "threadId": "01a11d64-90ee-77f8-a6ca-40bb70c4c645",
+      "agentRunId": "01a11d64-90f1-744b-87d8-e603ba3e1a03",
+      "lookups": [],
+      "text": "",
+      "lookedUp": false,
+      "scored": null,
+      "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 500, model: gemini-3.5-flash-lite\nPlease retry in 2h38m27.08041389s."
+    }
+  ]
+}

@@ -50,6 +50,36 @@ export function checkPaths(text: string, shown: Iterable<string>): PathCheck {
   return { named: [...named], invented };
 }
 
+export interface NamedFiles {
+  /** Repository paths the text names, each once, in order of appearance. */
+  files: string[];
+  /** Tokens that end more than one path, so name none of them for certain. */
+  ambiguous: string[];
+  /** Tokens that are no path in the repository: the check's own verdict. */
+  invented: string[];
+}
+
+/**
+ * Which of a repository's files a text names, read with the check above: its
+ * tokens, its idea of a match, and its verdict on what's invented. A token
+ * that ends exactly one path names that path; one that ends several could be
+ * any of them and is set aside rather than guessed at.
+ */
+export function namedFiles(text: string, paths: readonly string[]): NamedFiles {
+  const { named, invented } = checkPaths(text, paths);
+  const out = new Set(invented);
+  const files = new Set<string>();
+  const ambiguous: string[] = [];
+  for (const token of named) {
+    if (out.has(token)) continue;
+    const rest = token.replace(SPECIFIER, "");
+    const matches = paths.includes(rest) ? [rest] : paths.filter((p) => p.endsWith(`/${rest}`));
+    if (matches.length === 1) files.add(matches[0]);
+    else ambiguous.push(token);
+  }
+  return { files: [...files], ambiguous, invented };
+}
+
 /** The check as a score on a run. */
 export function pathFeedback(text: string, shown: Iterable<string>) {
   const { named, invented } = checkPaths(text, shown);

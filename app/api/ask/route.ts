@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import type { NextRequest } from "next/server";
 import { isRecord, readSse, translate, type AskEvent } from "@/lib/agent/ask";
 import { mintAgentCredential } from "@/lib/agent/credential";
+import { AgentRefused, openThread, startRun } from "@/lib/agent/server";
 import type { Selection } from "@/lib/map/selection";
 
 // The one way into the agent. It proves the asker may read the analysis by
@@ -14,7 +15,6 @@ import type { Selection } from "@/lib/map/selection";
 // Every failure here is answered, never thrown: with the agent down, this
 // route fails and nothing else in the app notices.
 
-const ASSISTANT = "cartograph-agent";
 const MAX_MESSAGE = 2000;
 
 /** Who a conversation belongs to, stored on its thread and checked on every turn. */
@@ -47,30 +47,19 @@ export async function POST(req: NextRequest) {
   // Not found and not theirs read the same, so a thread id says nothing about whose it is.
   if (threadId === null) return refuse(409, "That conversation no longer exists on the agent. Start a new one.");
 
-  let upstream: Response;
+  let upstream: ReadableStream<Uint8Array>;
   try {
-    upstream = await fetch(`${agentUrl}/threads/${threadId}/runs/stream`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        assistant_id: ASSISTANT,
-        input: { messages: [{ role: "user", content: withSelection(asked.message, asked.selection) }] },
-        context: { credential },
-        stream_mode: ["updates", "messages-tuple"],
-        // Closing the panel or the tab stops the run, rather than leaving it
-        // spending model calls on an answer nobody will read.
-        on_disconnect: "cancel",
-      }),
+    upstream = await startRun(agentUrl, threadId, {
+      message: withSelection(asked.message, asked.selection),
+      credential,
       signal: req.signal,
     });
-  } catch {
+  } catch (e) {
+    if (e instanceof AgentRefused) return refuse(502, `The agent refused the question (HTTP ${e.status}).`);
     return refuse(503, `The agent isn't reachable at ${agentUrl}.`);
   }
-  if (!upstream.ok || !upstream.body) {
-    return refuse(502, `The agent refused the question (HTTP ${upstream.status}).`);
-  }
 
-  return new Response(relay(upstream.body, threadId), {
+  return new Response(relay(upstream, threadId), {
     headers: { "content-type": "application/x-ndjson; charset=utf-8", "cache-control": "no-store" },
   });
 }
@@ -108,19 +97,6 @@ function withSelection(message: string, selection: Selection | null): string {
   if (selection === null) return message;
   const what = selection.kind === "file" ? `the file \`${selection.path}\`` : `the folder \`${selection.id}/\``;
   return `${message}\n\n(Selected on the map: ${what}.)`;
-}
-
-async function openThread(agentUrl: string, owner: Owner): Promise<string> {
-  const res = await fetch(`${agentUrl}/threads`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ metadata: owner }),
-  });
-  const body: unknown = await res.json();
-  if (!res.ok || !isRecord(body) || typeof body.thread_id !== "string") {
-    throw new Error(`Could not open a thread (HTTP ${res.status})`);
-  }
-  return body.thread_id;
 }
 
 /** The thread, if it exists and was opened by this person, in this organization, about this analysis. */
