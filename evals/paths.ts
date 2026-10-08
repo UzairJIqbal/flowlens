@@ -10,9 +10,9 @@
 
 import "../scripts/load-env.ts";
 import { evalClient } from "../lib/ai/client.ts";
-import { shownForFile, shownForFolder } from "../lib/ai/explain.ts";
+import { shownForChange, shownForFile, shownForFolder } from "../lib/ai/explain.ts";
 import { checkPaths } from "../lib/ai/invented.ts";
-import { isRecord, option, readFacts, readFolderFacts, str } from "./shared.ts";
+import { isRecord, option, readChangeFacts, readFacts, readFolderFacts, str } from "./shared.ts";
 
 // More than a few days of clicking produces. Past it, the report says so.
 const MAX_RUNS = 1000;
@@ -30,7 +30,7 @@ const projectUrl = await client.getProjectUrl({ projectId });
 
 interface Explained {
   id: string;
-  /** The file or folder explained. */
+  /** The file, folder or pull request explained. */
   subject: string;
   text: string;
   shown: string[];
@@ -46,6 +46,10 @@ function read(run: Traced): Explained | null {
     const facts = readFacts(run.inputs);
     return { id, subject: facts.file.path, text: run.outputs.output, shown: shownForFile(facts) };
   }
+  if (run.name === "explain-change") {
+    const facts = readChangeFacts(run.inputs);
+    return { id, subject: `${facts.repository}#${facts.pullRequest}`, text: run.outputs.output, shown: shownForChange(facts) };
+  }
   const facts = readFolderFacts(run.inputs);
   return { id, subject: `${facts.folder}/`, text: run.outputs.output, shown: shownForFolder(facts) };
 }
@@ -54,7 +58,7 @@ const since = new Date(Date.now() - days * 86_400_000);
 const runs = client.runs.query({
   project_ids: [projectId],
   is_root: true,
-  filter: 'or(eq(name, "explain-file"), eq(name, "explain-folder"))',
+  filter: 'or(eq(name, "explain-file"), eq(name, "explain-folder"), eq(name, "explain-change"))',
   min_start_time: since.toISOString(),
   selects: ["ID", "NAME", "INPUTS", "OUTPUTS", "METADATA", "START_TIME"],
   page_size: 100,
@@ -88,7 +92,7 @@ for await (const run of runs) {
 if (splice !== undefined) {
   const newest = byAnswer.values().next().value;
   if (newest === undefined) {
-    console.error(`No explanation in the last ${days} days to splice into. Click Explain on any file first.`);
+    console.error(`No explanation in the last ${days} days to splice into. Click Explain on any file, or Explain this change on a pull request, first.`);
     process.exit(1);
   }
   // After the first sentence, where a real slip would sit.
@@ -109,7 +113,7 @@ if (splice !== undefined) {
 if (total > MAX_RUNS) console.log(`stopped at ${MAX_RUNS} runs; pass a smaller --days to score all of a window`);
 const scored = [...byAnswer.values()];
 if (scored.length === 0) {
-  console.log(`No explanations in the last ${days} days. Click Explain on a few files and folders, then run this again.`);
+  console.log(`No explanations in the last ${days} days. Click Explain on a few files and folders, or Explain this change on a pull request, then run this again.`);
   process.exit(1);
 }
 

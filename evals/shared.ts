@@ -1,6 +1,6 @@
 import type { Cache } from "../lib/ai/cache.ts";
 import { evalClient } from "../lib/ai/client.ts";
-import type { Described, FileFacts, FolderFacts } from "../lib/ai/explain.ts";
+import type { ChangeFacts, Described, FileFacts, FolderFacts } from "../lib/ai/explain.ts";
 import { readStored, type Stored } from "../lib/analyses/stored.ts";
 import { createAdminClient } from "../lib/supabase/admin.ts";
 
@@ -182,5 +182,46 @@ export function readFolderFacts(value: unknown): FolderFacts {
     incoming: pairs(f.incoming, "facts.incoming"),
     outgoing: pairs(f.outgoing, "facts.outgoing"),
     internal: num(f.internal, "facts.internal"),
+  };
+}
+
+/** Reconstructs a pull request change's facts from untyped trace input; throws on malformed fields. */
+export function readChangeFacts(value: unknown): ChangeFacts {
+  const f = record(value, "facts");
+  const list = (v: unknown, what: string) => {
+    if (!Array.isArray(v)) throw new Error(`${what} isn't a list`);
+    return v.map((e, i) => record(e, `${what}[${i}]`));
+  };
+  const imports = (v: unknown, what: string) =>
+    list(v, what).map((e, i) => ({
+      from: str(e.from, `${what}[${i}].from`),
+      to: str(e.to, `${what}[${i}].to`),
+      kind: str(e.kind, `${what}[${i}].kind`),
+    }));
+  const omitted = record(f.omitted, "facts.omitted");
+  return {
+    repository: str(f.repository, "facts.repository"),
+    pullRequest: num(f.pullRequest, "facts.pullRequest"),
+    base: str(f.base, "facts.base"),
+    head: str(f.head, "facts.head"),
+    framework: f.framework === null ? null : str(f.framework, "facts.framework"),
+    changed: list(f.changed, "facts.changed").map((c, i) => ({
+      path: str(c.path, `facts.changed[${i}].path`),
+      status: str(c.status, `facts.changed[${i}].status`),
+      previousPath: c.previousPath === null ? null : str(c.previousPath, `facts.changed[${i}].previousPath`),
+    })),
+    addedImports: imports(f.addedImports, "facts.addedImports"),
+    removedImports: imports(f.removedImports, "facts.removedImports"),
+    affected: list(f.affected, "facts.affected").map((a, i) => ({
+      path: str(a.path, `facts.affected[${i}].path`),
+      depth: num(a.depth, `facts.affected[${i}].depth`),
+    })),
+    omitted: {
+      changed: num(omitted.changed, "facts.omitted.changed"),
+      addedImports: num(omitted.addedImports, "facts.omitted.addedImports"),
+      removedImports: num(omitted.removedImports, "facts.omitted.removedImports"),
+      affected: num(omitted.affected, "facts.omitted.affected"),
+    },
+    coverageDiffers: strings(f.coverageDiffers, "facts.coverageDiffers"),
   };
 }
