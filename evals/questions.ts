@@ -69,7 +69,13 @@ export function mapOf(result: ParseResult, repo: { owner: string; name: string; 
     commitSha: repo.commit,
     adapter: result.adapter,
     status: "complete",
-    coverage: { parsed: result.coverage.files.parsed, skipped: result.coverage.files.skipped },
+    finishedAt: null,
+    coverage: {
+      files: { ...result.coverage.files },
+      imports: { ...result.coverage.imports },
+      unresolvedByReason: { ...result.coverage.unresolvedByReason },
+      excludedByReason: { ...result.coverage.excludedByReason },
+    },
     files: result.files.map((f) => ({
       path: f.path,
       folder: f.folder,
@@ -79,7 +85,7 @@ export function mapOf(result: ParseResult, repo: { owner: string; name: string; 
       fanIn: f.fanIn,
       fanOut: f.fanOut,
     })),
-    edges: result.edges.map(({ from, to }) => ({ from, to })),
+    edges: result.edges.map(({ from, to, kinds }) => ({ from, to, kinds })),
     routes: result.routes.map(({ method, path, file, line }) => ({ method, path, file, line })),
     withheldRoutes: result.withheldRoutes.map(({ file, line, reason }) => ({ file, line, reason })),
   };

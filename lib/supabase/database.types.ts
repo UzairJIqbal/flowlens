@@ -17,6 +17,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_keys: {
+        Row: {
+          created_at: string
+          id: string
+          key_hash: string
+          last_used_at: string | null
+          name: string
+          organization_id: string
+          revoked_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_hash: string
+          last_used_at?: string | null
+          name: string
+          organization_id: string
+          revoked_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_hash?: string
+          last_used_at?: string | null
+          name?: string
+          organization_id?: string
+          revoked_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_keys_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analyses: {
         Row: {
           adapter: string | null
@@ -482,6 +520,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_access_key: { Args: { p_name: string }; Returns: string }
       mint_agent_credential: { Args: { p_analysis: string }; Returns: string }
       store_analysis: {
         Args: {
@@ -497,6 +536,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      touch_access_key: { Args: never; Returns: string }
     }
     Enums: {
       analysis_stage: "fetch" | "select" | "parse" | "label" | "store"

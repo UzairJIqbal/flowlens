@@ -8,6 +8,8 @@ const isPublicRoute = createRouteMatcher([
   // The agent's lookups carry no session; the credential they carry is
   // checked by the database, which is where authorization lives anyway.
   "/api/agent/(.*)",
+  // Coding agents carry an access key, checked the same way.
+  "/api/mcp",
 ]);
 const isSetupRoute = createRouteMatcher(["/setup"]);
 const isLanding = createRouteMatcher(["/"]);
