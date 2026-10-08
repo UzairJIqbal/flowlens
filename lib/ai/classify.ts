@@ -52,6 +52,7 @@ export async function classifyBatch(
   return read(answer.output, paths);
 }
 
+/** Builds classification context from each file's neighbours and explicitly truncated source. */
 function message(framework: string | null, files: Unidentified[]): string {
   const blocks = files.map((f) => {
     const cut = f.source.length > SOURCE_LIMIT;
@@ -66,6 +67,7 @@ function message(framework: string | null, files: Unidentified[]): string {
   return [`Framework: ${framework ?? "none detected"}.`, ...blocks].join("\n\n");
 }
 
+/** Restricts model output to supplied paths and permitted nonstructural roles or null. */
 function schemaFor(paths: string[]) {
   return {
     name: "file_roles",
@@ -91,6 +93,7 @@ function schemaFor(paths: string[]) {
   };
 }
 
+/** Narrows an untrusted label to a role the model is allowed to assign. */
 const isModelRole = (value: unknown): value is ModelRole => MODEL_ROLES.some((r) => r === value);
 
 /** Exactly one answer per path, each a permitted role or null; anything else throws. */

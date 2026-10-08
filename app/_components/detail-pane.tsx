@@ -35,6 +35,7 @@ const LIST_LIMIT = 10;
 const IMPORTS_COLOR = "var(--edge-uses)";
 const IMPORTED_BY_COLOR = "var(--edge-used-by)";
 
+/** Shows the selected map item's structure or explanation, retaining answers across selections. */
 export function DetailPane({
   analysisId,
   tracing,
@@ -285,6 +286,7 @@ function Tabs({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
   );
 }
 
+/** Shows a file's role, direct neighbours and optional transitive reach from the stored graph. */
 function FileStructure({
   file,
   kinds,

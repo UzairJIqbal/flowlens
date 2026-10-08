@@ -73,12 +73,14 @@ export function explainFile(facts: FileFacts, cache: Cache, source: () => Promis
   );
 }
 
+/** Returns a cached or generated folder explanation based on its files and import edges. */
 export function explainFolder(facts: FolderFacts, cache: Cache): Promise<Answer> {
   return cached("explain-folder", cache, { system: FOLDER_SYSTEM, facts }, facts, (f) =>
     complete({ system: FOLDER_SYSTEM, user: folderMessage(f) }),
   );
 }
 
+/** Builds the file prompt with all neighbours and a notice when source exceeds the limit. */
 function fileMessage(f: FileFacts, source: string): string {
   const cut = source.length > SOURCE_LIMIT;
   return [
@@ -97,6 +99,7 @@ function fileMessage(f: FileFacts, source: string): string {
   ].join("\n\n");
 }
 
+/** Describes the folded folder's files and boundary imports without assuming access to source. */
 function folderMessage(f: FolderFacts): string {
   const name = f.folder === "." ? "the repository root" : `\`${f.folder}/\``;
   return [
@@ -110,20 +113,24 @@ function folderMessage(f: FolderFacts): string {
   ].join("\n\n");
 }
 
+/** Identifies the repository, analysed commit and detected framework in a prompt. */
 function header(f: { repository: string; commit: string; framework: string | null }): string {
   return `Repository: ${f.repository} at commit ${f.commit.slice(0, 7)}. Framework: ${f.framework ?? "none detected"}.`;
 }
 
+/** Formats a file's role while making labels assigned by a model explicit. */
 function kindOf(d: Described): string {
   if (d.kind === null) return "not identified by any convention";
   return d.by === "model" ? `labelled ${d.kind} by a model, not by convention` : d.kind;
 }
 
+/** Lists neighbouring paths and their roles, using the supplied message when none exist. */
 function list(title: string, empty: string, files: Described[]): string {
   if (files.length === 0) return empty;
   return `${title}:\n${files.map((d) => `- \`${d.path}\` (${kindOf(d)})`).join("\n")}`;
 }
 
+/** Lists directed imports for a prompt, using the supplied message when none exist. */
 function edges(title: string, empty: string, pairs: { from: string; to: string }[]): string {
   if (pairs.length === 0) return empty;
   return `${title}:\n${pairs.map((e) => `- \`${e.from}\` imports \`${e.to}\``).join("\n")}`;

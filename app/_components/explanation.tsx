@@ -20,8 +20,10 @@ export interface Entry {
 /** Keyed by what was explained, so each file and folder keeps its own. */
 export type Entries = ReadonlyMap<string, Entry>;
 
+/** Keeps file and folder explanation entries distinct even when their paths match. */
 const keyOf = (s: Selection) => (s.kind === "file" ? `file:${s.path}` : `folder:${s.id}`);
 
+/** Requests and displays the selection's explanation, freshness and tracing status. */
 export function Explanation({
   analysisId,
   selection,
@@ -45,9 +47,11 @@ export function Explanation({
   const key = keyOf(selection);
   const entry = entries.get(key);
 
+  /** Updates this selection's entry without discarding answers for other selections. */
   const update = (change: (e: Entry) => Entry) =>
     setEntries((prev) => new Map(prev).set(key, change(prev.get(key) ?? { pending: false, answer: null, freshness: null })));
 
+  /** Stores the answer before checking whether its analysed source is still current. */
   const explain = async () => {
     update((e) => ({ ...e, pending: true, freshness: "checking" }));
     const answer =
@@ -108,6 +112,7 @@ export function Explanation({
   );
 }
 
+/** Reports freshness and offers another analysis when the repository has moved. */
 function FreshnessNote({ analysisId, freshness, file }: { analysisId: string; freshness: Freshness | "checking"; file: boolean }) {
   if (freshness === "checking") return <p className="pt-2.5 text-muted">Checking GitHub for changes since the analysis…</p>;
   if (freshness.state === "unknown") return <p className="pt-2.5 text-muted">Couldn&apos;t check for changes: {freshness.reason}</p>;
@@ -141,9 +146,11 @@ function FreshnessNote({ analysisId, freshness, file }: { analysisId: string; fr
   );
 }
 
+/** Offers an analysis restart with pending and error feedback. */
 function Reanalyse({ analysisId }: { analysisId: string }) {
   const router = useRouter();
   const [state, setState] = useState<{ pending: boolean; error: string | null }>({ pending: false, error: null });
+  /** Restarts the analysis and opens its progress page, or displays the returned error. */
   const run = async () => {
     setState({ pending: true, error: null });
     const result = await rerunAnalysis(analysisId);
@@ -165,6 +172,7 @@ function Reanalyse({ analysisId }: { analysisId: string }) {
   );
 }
 
+/** Renders parsed explanation paragraphs and bullets with navigation to known map paths. */
 function Prose({
   text,
   resolve,
@@ -199,6 +207,7 @@ function Prose({
   );
 }
 
+/** Applies inline formatting and turns resolved paths into map navigation and hover controls. */
 function Spans({
   spans,
   resolve,

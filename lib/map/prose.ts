@@ -16,11 +16,13 @@ export interface Block {
   spans: Span[];
 }
 
+/** Converts model prose into paragraph and bullet spans, reducing unsupported Markdown to text. */
 export function parseProse(source: string): Block[] {
   const blocks: Block[] = [];
   let paragraph: string[] = [];
   let fence: string[] | null = null;
 
+  /** Emits the accumulated paragraph before starting a separate block. */
   const flush = () => {
     if (paragraph.length > 0) blocks.push({ bullet: false, spans: inline(paragraph.join(" ")) });
     paragraph = [];
@@ -68,9 +70,11 @@ export function parseProse(source: string): Block[] {
   return blocks;
 }
 
+/** Parses code and bold spans, preserving link labels and discarding unsupported inline markers. */
 function inline(text: string, bold = false): Span[] {
   const spans: Span[] = [];
   let plain = "";
+  /** Emits pending plain text before a formatted span, inheriting the enclosing bold state. */
   const push = (span: Span) => {
     if (plain) spans.push({ text: plain, ...(bold && { bold }) });
     plain = "";
