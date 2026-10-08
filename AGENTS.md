@@ -23,7 +23,7 @@ Spec driven. Nothing gets built without a spec.
 
 - `docs/project-doc.md` — what this app is and every decision behind it. Read
   the part you need. Don't ask me to paste it.
-- `docs/specs/phase-NN.md` — one per phase, written just before it starts.
+- `docs/specs/phaseNN.md` — one per phase, written just before it starts.
   Behaviour and an acceptance check, never filenames.
 - This file — always true, read on every prompt.
 

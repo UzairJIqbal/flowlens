@@ -96,7 +96,7 @@ This phase has no screen. Its interface is the report.
 - No model call happens anywhere except the agent being tested, shown by the traces.
 - The scoring function has tests, including an exact match, a partial match, an empty answer and an answer naming a file that doesn't exist.
 - Results exist for at least three public repositories, one of them built on barrel files, and are committed so the next run can be compared.
-- For a handful of answers marked wrong, someone checked the code by hand and confirmed the key was right.
+- For three answers marked wrong, someone checked the code by hand and confirmed the key was right.
 - Invented files and answers with no lookups are reported as separate lines, not folded into the average.
 
 ## The phase spec
@@ -146,8 +146,8 @@ Showing any score in the product interface. Open-ended questions like "what does
 
 ---
 
-**Kickoff prompt for Claude Code** (save this file next to `project-doc.md` first):
+**Kickoff prompt for Claude Code** (save this file as `docs/specs/phase15.md` first):
 
 ```
-Read phase-answer-check.md, and the parts of project-doc.md it points to. Look at how the parser, the graph functions, the chat agent, its lookup tools and the tracing are built today. Then give me a short plan for this phase in small steps, and wait for my go before building.
+Read docs/specs/phase15.md, and the parts of docs/project-doc.md it points to. Look at how the parser, the graph functions, the chat agent, its lookup tools and the tracing are built today. Then give me a short plan for this phase in small steps, and wait for my go before building.
 ```
