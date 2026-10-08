@@ -111,7 +111,8 @@ export interface PullRequest {
 /**
  * GitHub's compare API lists at most 300 files and says nothing about the
  * rest. A change list cut short would leave its blast radius cut short too, so
- * past this the pull request is refused rather than half-shown.
+ * at this count the pull request is refused rather than half-shown: a list of
+ * exactly 300 may already be cut.
  */
 export const MAX_CHANGED_FILES = 300;
 
@@ -161,9 +162,9 @@ export async function readPullRequest({ owner, name, number }: PullRequestRef): 
       `GitHub reports ${owner}/${name} at ${Math.round(sizeMb)} MB. A preview parses the repository twice in one request, so it is limited to repositories of ${MAX_PREVIEW_REPOSITORY_MB} MB or less.`,
     );
   }
-  if (changedCount > MAX_CHANGED_FILES) {
+  if (changedCount >= MAX_CHANGED_FILES) {
     throw new Error(
-      `${label} changes ${changedCount} files. Previews are limited to ${MAX_CHANGED_FILES}, the most GitHub lists for one comparison.`,
+      `${label} changes ${changedCount} files. Pull requests with ${MAX_CHANGED_FILES} or more files can't be previewed, because GitHub lists at most ${MAX_CHANGED_FILES} for one comparison.`,
     );
   }
 
@@ -180,7 +181,7 @@ export async function readPullRequest({ owner, name, number }: PullRequestRef): 
   // At the cap the list may have been cut, and nothing in the answer says whether it was.
   if (files.length >= MAX_CHANGED_FILES) {
     throw new Error(
-      `GitHub's comparison for ${label} lists ${files.length} files, its limit. Previews are limited to fewer than ${MAX_CHANGED_FILES}.`,
+      `GitHub's comparison for ${label} lists ${files.length} files, the most it lists, so some may be missing. Pull requests with ${MAX_CHANGED_FILES} or more files can't be previewed.`,
     );
   }
 
