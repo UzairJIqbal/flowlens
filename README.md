@@ -59,15 +59,17 @@ GitHub archive ─▶ parser ─▶ adapters ─▶ Postgres (RLS) ─▶ map, g
 
 ## Answer check
 
-The chat agent was measured in Phase 15, when it was a separate Managed Deep Agents service. These numbers are from that agent, not the loop that runs in the app now. For each repository, 24 questions are generated from the parsed map (which files import X, what X imports, its blast radius, its dependency chain), with the expected files taken from the same edges. Each is asked three times. An answer is scored by F1 between the files it names and the files expected.
+For each repository, 24 questions are generated from the parsed map (which files import X, what X imports, its blast radius, its dependency chain), with the expected files taken from the same edges. Each is asked three times. An answer is scored by F1 between the files it names and the files expected.
 
-| Repository                 | Commit    | Answers scored | Mean F1 | Invented files | Answers with no lookup |
-| -------------------------- | --------- | -------------- | ------- | -------------- | ---------------------- |
-| immerjs/immer              | `8848a5b` | 72 of 72       | 1.00    | 0              | 0                      |
-| shadcn-ui/taxonomy         | `298a885` | 19 of 72       | 1.00    | 0              | 0                      |
-| alan2207/bulletproof-react | not run   | —              | —       | —              | —                      |
+| Repository                 | Commit    | Agent                 | Answers scored | Mean F1 | Invented files | Answers with no lookup |
+| -------------------------- | --------- | --------------------- | -------------- | ------- | -------------- | ---------------------- |
+| immerjs/immer              | `8848a5b` | In the app            | 70 of 72       | 1.00    | 0              | 0                      |
+| shadcn-ui/taxonomy         | `298a885` | Old, separate service | 19 of 72       | 1.00    | 0              | 0                      |
+| alan2207/bulletproof-react | not run   | —                     | —              | —       | —              | —                      |
 
-The taxonomy run stopped when Gemini's free daily quota ran out; bulletproof-react hasn't been run for the same reason. The full reports are in `evals/answers/`.
+The immer row is the loop that runs in the app now. The taxonomy row was measured in Phase 15 on the old agent, a separate Managed Deep Agents service; it stopped when Gemini's free daily quota ran out, and bulletproof-react hasn't been run for the same reason. The full reports are in `evals/answers/`.
+
+On immer, the 2 unscored answers were both "what does `src/internal.ts` need to work?", stopped at the 8-round cap. The first lookup returned all 11 files, and the model then checked them one by one, each importing the barrel back. The instructions now say a lookup's result is complete. Asked 3 more times after that change, the question took 2 rounds each, with one lookup and F1 1.00 every time; before it, 8 (stopped), 8 (stopped) and 4.
 
 **What this proves:** on these questions the agent looks the answer up rather than recalling it, relays what the lookup returned without dropping, adding or inventing files, and does so the same way across rounds.
 

@@ -28,6 +28,9 @@ routes. You know nothing else about it.
 - When the lookups don't hold the answer, say so plainly. If the summary counts
   skipped files, say they weren't read rather than guessing what is in them.
 - Name files by their exact path, as a lookup returned it.
+- A lookup's result is complete and comes from the parser. Don't check the
+  files it returned one by one to confirm it; answer from it. Look up another
+  file only when the question needs something that lookup didn't return.
 
 ## What you can answer
 
