@@ -1,11 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { createSupabaseClient } from "@/lib/supabase/server";
-import type { Database, Json } from "@/lib/supabase/database.types";
-import type { RepoFile } from "@/lib/map/detail";
-import type { FileEdge } from "@/lib/map/view";
-import { fanInOut } from "@/lib/parser/graph";
-import type { EdgeKind, OutcomeCounts } from "@/lib/parser/types";
-import { readEvery } from "./stored";
+import type { Database, Json } from "../supabase/database.types.ts";
+import type { RepoFile } from "../map/detail.ts";
+import type { FileEdge } from "../map/view.ts";
+import { fanInOut } from "../parser/graph.ts";
+import type { EdgeKind, OutcomeCounts } from "../parser/types.ts";
+import { readEvery } from "./stored.ts";
+
+// Relative imports and no session client, so the demo export can run this
+// from a plain script. The signed-in read lives in read.ts.
 
 export type StoredRoute = { method: string; path: string; file: string; line: number };
 export type StoredWithheldRoute = { file: string; line: number; reason: string };
@@ -38,11 +40,6 @@ export type StoredMap = {
   routes: StoredRoute[];
   withheldRoutes: StoredWithheldRoute[];
 };
-
-/** The stored graph of one analysis, read as the signed-in user. */
-export async function getStoredMap(analysisId: string): Promise<StoredMap | null> {
-  return readStoredMap(await createSupabaseClient(), analysisId);
-}
 
 /**
  * The stored graph of one analysis, as whoever the client reads as: the

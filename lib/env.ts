@@ -18,6 +18,8 @@ const required = [
   // The model's key. Tracing is optional and read where the client is built,
   // because a missing LangSmith key must not stop anything.
   "GOOGLE_API_KEY",
+  // The app's own GitHub token, for API reads of public repositories.
+  "GH_READ_TOKEN",
 ] as const;
 
 type EnvKey = (typeof required)[number];

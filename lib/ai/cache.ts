@@ -10,6 +10,11 @@ export type Task = "explain-file" | "explain-folder" | "classify" | "explain-cha
 export interface Cache {
   get(key: string): Promise<string | null>;
   put(key: string, task: Task, output: string): Promise<void>;
+  /**
+   * Runs on a miss, inside the traced run, before the model is asked; a hit
+   * never reaches it. It may throw to refuse the call.
+   */
+  miss(): Promise<void>;
 }
 
 /**
@@ -21,8 +26,15 @@ function cacheKey(task: Task, keyed: unknown): string {
   return createHash("sha256").update(JSON.stringify([task, MODEL, keyed])).digest("hex");
 }
 
-/** Reads as the signed-in user, so the policy decides whose answers are visible. */
-export function sessionCache(reader: SupabaseClient<Database>, organizationId: string): Cache {
+/**
+ * Reads as the signed-in user, so the policy decides whose answers are visible.
+ * `miss` counts the model call against the organization's daily limit.
+ */
+export function sessionCache(
+  reader: SupabaseClient<Database>,
+  organizationId: string,
+  miss: () => Promise<void>,
+): Cache {
   return {
     async get(key) {
       const { data, error } = await reader.from("model_cache").select("output").eq("key", key).maybeSingle();
@@ -30,6 +42,7 @@ export function sessionCache(reader: SupabaseClient<Database>, organizationId: s
       return data?.output ?? null;
     },
     put: (key, task, output) => write(organizationId, key, task, output),
+    miss,
   };
 }
 
@@ -51,6 +64,8 @@ export function pipelineCache(organizationId: string): Cache {
       return data?.output ?? null;
     },
     put: (key, task, output) => write(organizationId, key, task, output),
+    // The run was counted against the daily limit when it started.
+    miss: async () => {},
   };
 }
 
@@ -97,6 +112,7 @@ export function cached<I>(
     runId = getCurrentRunTree(true)?.id ?? null;
     const hit = await read(key);
     if (hit !== null) return { output: hit, cached: true };
+    await cache.miss();
     const output = await ask(input);
     await cache.put(key, task, output);
     return { output, cached: false };

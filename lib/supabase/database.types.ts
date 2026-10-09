@@ -515,6 +515,35 @@ export type Database = {
           },
         ]
       }
+      usage: {
+        Row: {
+          count: number
+          day: string
+          kind: string
+          organization_id: string
+        }
+        Insert: {
+          count: number
+          day: string
+          kind: string
+          organization_id: string
+        }
+        Update: {
+          count?: number
+          day?: string
+          kind?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -522,6 +551,7 @@ export type Database = {
     Functions: {
       create_access_key: { Args: { p_name: string }; Returns: string }
       mint_agent_credential: { Args: { p_analysis: string }; Returns: string }
+      spend: { Args: { p_kind: string }; Returns: number }
       store_analysis: {
         Args: {
           p_adapter: string

@@ -6,6 +6,7 @@ import { explainFile as explainFileFrom, explainFolder as explainFolderFrom } fr
 import { fold } from "@/lib/map/fold";
 import { fetchFile, resolveHead } from "@/lib/pipeline/github";
 import { createSupabaseClient } from "@/lib/supabase/server";
+import { spend } from "@/lib/usage";
 import { fileFacts, parsedSource, readAnalysis, readStored, sha256 } from "./stored";
 
 export type Explained = { ok: true; text: string; cached: boolean; model: string } | { ok: false; error: string };
@@ -20,7 +21,7 @@ export async function explainFile(analysisId: string, path: string): Promise<Exp
     const supabase = await createSupabaseClient();
     const stored = await readStored(supabase, analysisId);
     const facts = fileFacts(stored, path);
-    return explainFileFrom(facts, sessionCache(supabase, stored.organizationId), () =>
+    return explainFileFrom(facts, sessionCache(supabase, stored.organizationId, () => spend("explain")), () =>
       parsedSource(stored.repo, stored.commit, path, facts.file.hash),
     );
   });
@@ -46,7 +47,7 @@ export async function explainFolder(analysisId: string, folder: string): Promise
       outgoing: stored.edges.filter((e) => inside.has(e.from) && !inside.has(e.to)),
       internal: stored.edges.filter((e) => inside.has(e.from) && inside.has(e.to)).length,
     };
-    return explainFolderFrom(facts, sessionCache(supabase, stored.organizationId));
+    return explainFolderFrom(facts, sessionCache(supabase, stored.organizationId, () => spend("explain")));
   });
 }
 

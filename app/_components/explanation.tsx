@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import type { Tracing } from "@/lib/ai/client";
@@ -32,7 +33,7 @@ export function Explanation({
   hovered,
   tracing,
 }: {
-  analysisId: string;
+  analysisId: string | null;
   selection: Selection;
   entries: Entries;
   setEntries: Dispatch<SetStateAction<Entries>>;
@@ -44,6 +45,20 @@ export function Explanation({
 }) {
   const key = keyOf(selection);
   const entry = entries.get(key);
+
+  // The demo is a snapshot with no row behind it, so there's nothing for an
+  // explanation to be read from or cached against.
+  if (analysisId === null) {
+    return (
+      <p className="px-3 py-2.5 leading-relaxed text-muted">
+        Explanations are written for analyses of your own.{" "}
+        <Link href="/sign-in" className="text-accent hover:underline">
+          Sign in
+        </Link>{" "}
+        to map a repository and explain its files.
+      </p>
+    );
+  }
 
   const update = (change: (e: Entry) => Entry) =>
     setEntries((prev) => new Map(prev).set(key, change(prev.get(key) ?? { pending: false, answer: null, freshness: null })));

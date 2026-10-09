@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { listAccessKeys } from "@/lib/keys/read";
 import { AccessKeys } from "./access-keys";
+
+export const metadata: Metadata = { title: "Settings" };
 
 /** Access keys for coding agents, and how to connect one. */
 export default async function SettingsPage() {

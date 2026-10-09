@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { PreviewWorkspace } from "@/app/_components/preview-workspace";
 import { tracing } from "@/lib/ai/client";
 import { getPreview, getStoredPreview } from "@/lib/previews/read";
 import { PreviewCrumbs } from "../../preview-crumbs";
+
+export const metadata: Metadata = { title: "Preview map" };
 
 /** The pull request's two parses as one map, or its progress page while they aren't stored. */
 export default async function PreviewMapPage({ params }: { params: Promise<{ id: string }> }) {

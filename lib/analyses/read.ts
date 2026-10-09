@@ -1,5 +1,6 @@
 import { createSupabaseClient } from "@/lib/supabase/server";
 import { isStale } from "@/lib/pipeline/stale";
+import { readStoredMap, type StoredMap } from "./map";
 import { rowProgress, type Progress } from "./progress";
 
 export type AnalysisDetail = {
@@ -44,4 +45,9 @@ export async function getAnalysis(analysisId: string): Promise<AnalysisDetail | 
     progress: rowProgress(data),
     stale: isStale(data.status, data.started_at, data.created_at, Date.now()),
   };
+}
+
+/** The stored graph of one analysis, read as the signed-in user. */
+export async function getStoredMap(analysisId: string): Promise<StoredMap | null> {
+  return readStoredMap(await createSupabaseClient(), analysisId);
 }

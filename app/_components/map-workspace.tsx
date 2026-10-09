@@ -24,6 +24,7 @@ import { RouteTable } from "./route-table";
  */
 export function MapWorkspace({
   analysisId,
+  askUnavailable,
   tracing,
   title,
   repo,
@@ -32,7 +33,10 @@ export function MapWorkspace({
   routes,
   withheldRoutes,
 }: {
-  analysisId: string;
+  /** Null for the public demo, which has no stored row to explain or ask about. */
+  analysisId: string | null;
+  /** Why the Ask panel can't be used here, said in place of it. */
+  askUnavailable: string | null;
   tracing: Tracing;
   title: ReactNode;
   repo: RepoInfo;
@@ -129,6 +133,7 @@ export function MapWorkspace({
           <div className={`absolute inset-0 ${pane === "ask" ? "" : "invisible"}`}>
             <AskPanel
               analysisId={analysisId}
+              unavailable={askUnavailable}
               selection={state.selection}
               resolve={resolve}
               actions={actions}
