@@ -1,7 +1,6 @@
-import { execFile } from "node:child_process";
 import { createWriteStream } from "node:fs";
 import { Writable } from "node:stream";
-import { promisify } from "node:util";
+import { extract } from "tar";
 
 export interface RepositoryRef {
   owner: string;
@@ -291,18 +290,29 @@ export async function downloadArchive({ owner, name }: RepositoryRef, sha: strin
   await response.body.pipeThrough(cap).pipeTo(Writable.toWeb(createWriteStream(file)));
 }
 
-const run = promisify(execFile);
-
 /**
- * Unpacks with the system tar, dropping GitHub's `owner-repo-sha/` wrapper.
- * Both bsdtar and GNU tar refuse absolute paths and `..`, and won't write
- * through a symlink the archive itself created.
+ * Unpacks in-process, dropping GitHub's `owner-repo-sha/` wrapper. Not the
+ * system tar: Vercel's runtime image has none. node-tar keeps absolute paths
+ * inside `directory`, refuses `..`, and won't write through a symlink the
+ * archive itself created.
+ *
+ * An entry it refuses or can't read fails the run instead of being skipped
+ * quietly. The one exception is TAR_ENTRY_INFO, which only says a leading `/`
+ * was stripped so the entry lands inside `directory`, as GNU tar does too.
  */
 export async function extractArchive(file: string, directory: string): Promise<void> {
+  const refused: string[] = [];
   try {
-    await run("tar", ["-xzf", file, "-C", directory, "--strip-components=1"]);
+    await extract({
+      file,
+      cwd: directory,
+      strip: 1,
+      onwarn: (code, message) => {
+        if (code !== "TAR_ENTRY_INFO") refused.push(`${code}: ${message}`);
+      },
+    });
   } catch (error) {
-    const stderr = error instanceof Error && "stderr" in error ? String(error.stderr).trim() : "";
-    throw new Error(`Could not unpack the archive${stderr ? `: ${stderr}` : ""}`);
+    throw new Error(`Could not unpack the archive: ${error instanceof Error ? error.message : String(error)}`);
   }
+  if (refused.length > 0) throw new Error(`Could not unpack the archive: ${refused.join("; ")}`);
 }
