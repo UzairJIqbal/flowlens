@@ -51,7 +51,7 @@ export function DetailPane({
   state,
   actions,
 }: {
-  analysisId: string;
+  analysisId: string | null;
   tracing: Tracing;
   repo: RepoInfo;
   kinds: Kinds;

@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   app:
-    name: Lint, typecheck, build
+    name: Lint, typecheck, test, build
     runs-on: ubuntu-latest
     # lib/env.ts stops typegen and build when any of these is empty, so a
     # missing secret fails this job loudly instead of building something
@@ -27,6 +27,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -37,6 +38,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
+      - run: pnpm test
       - run: pnpm build
 
   agent:

@@ -2,8 +2,9 @@ import { auth } from "@clerk/nextjs/server";
 import type { NextRequest } from "next/server";
 import { isRecord, readSse, translate, type AskEvent } from "@/lib/agent/ask";
 import { mintAgentCredential } from "@/lib/agent/credential";
-import { AgentRefused, openThread, startRun } from "@/lib/agent/server";
+import { AgentRefused, NO_AGENT, openThread, startRun } from "@/lib/agent/server";
 import type { Selection } from "@/lib/map/selection";
+import { spend } from "@/lib/usage";
 
 // The one way into the agent. It proves the asker may read the analysis by
 // having the database mint them a credential for it, opens or continues a
@@ -35,7 +36,13 @@ export async function POST(req: NextRequest) {
   // Read here rather than with the app's required variables: without it, only
   // asking stops working.
   const agentUrl = process.env.AGENT_URL?.trim();
-  if (!agentUrl) return refuse(503, "AGENT_URL is not set, so there is no agent to ask.");
+  if (!agentUrl) return refuse(503, NO_AGENT);
+
+  try {
+    await spend("ask");
+  } catch (e) {
+    return refuse(429, e instanceof Error ? e.message : String(e));
+  }
 
   const owner: Owner = { organization: orgId, user: userId, analysis: asked.analysisId };
   let threadId: string | null;

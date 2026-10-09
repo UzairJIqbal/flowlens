@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { MapWorkspace } from "@/app/_components/map-workspace";
+import { NO_AGENT } from "@/lib/agent/server";
 import { tracing } from "@/lib/ai/client";
-import { getAnalysis } from "@/lib/analyses/read";
-import { getStoredMap } from "@/lib/analyses/map";
+import { getAnalysis, getStoredMap } from "@/lib/analyses/read";
+
+export const metadata: Metadata = { title: "Map" };
+
+// A run started from this page parses inside the same function, after the
+// response (after() counts toward the limit). 300 seconds is the Hobby cap;
+// the archive size limit is set so a parse fits inside it. A run cut off here
+// shows as stale once its ten minutes pass.
+export const maxDuration = 300;
 
 /** Renders the stored map, redirecting to progress when no result is available. */
 export default async function AnalysisMapPage({ params }: { params: Promise<{ id: string }> }) {
@@ -47,6 +56,7 @@ export default async function AnalysisMapPage({ params }: { params: Promise<{ id
       </div>
       <MapWorkspace
         analysisId={analysis.id}
+        askUnavailable={process.env.AGENT_URL?.trim() ? null : NO_AGENT}
         tracing={tracing}
         title="Categories"
         repo={repo}

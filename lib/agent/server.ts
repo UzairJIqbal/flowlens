@@ -6,6 +6,14 @@ import { isRecord } from "./ask.ts";
 
 export const ASSISTANT = "cartograph-agent";
 
+/**
+ * What the Ask panel and the ask route say when AGENT_URL isn't set. The live
+ * site runs that way on purpose: the agent is its own service, and LangSmith
+ * hosts it only on a paid plan. It runs locally instead.
+ */
+export const NO_AGENT =
+  "Asking isn't available on this deployment. The agent runs as its own service, which has no free host, so it only runs locally. The README says how.";
+
 /** The agent answered, but not with a stream: it refused the run. */
 export class AgentRefused extends Error {
   readonly status: number;

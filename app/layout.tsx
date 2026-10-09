@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
@@ -15,9 +16,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Social images come from the opengraph-image and twitter-image files beside
+// this one. On Vercel, Next resolves them against the deployment's own address.
 export const metadata: Metadata = {
-  title: "Flowlens",
-  description: "A dependency map of a public GitHub repository.",
+  title: { default: "Flowlens", template: "%s · Flowlens" },
+  description:
+    "Parses a public TypeScript or JavaScript repository and draws what imports what, every line traced to an import that resolved to a real file.",
 };
 
 // Clerk's components read the same tokens as the app, so they follow the
@@ -50,6 +54,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col font-sans text-[13px]">
         <ClerkProvider appearance={clerkAppearance}>{children}</ClerkProvider>
+        {/* Page views only, and only on Vercel; it sends nothing in development. */}
+        <Analytics />
       </body>
     </html>
   );

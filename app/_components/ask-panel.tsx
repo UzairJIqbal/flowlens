@@ -36,12 +36,15 @@ interface Turn {
  */
 export function AskPanel({
   analysisId,
+  unavailable,
   selection,
   resolve,
   actions,
   hovered,
 }: {
-  analysisId: string;
+  analysisId: string | null;
+  /** Said instead of the panel when there is no agent to ask. */
+  unavailable: string | null;
   selection: Selection | null;
   resolve: (path: string) => Target | null;
   actions: MapActions;
@@ -129,6 +132,10 @@ export function AskPanel({
   };
 
   const link = { resolve, actions, hovered };
+
+  if (unavailable !== null || analysisId === null) {
+    return <p className="px-3 py-2.5 text-xs leading-relaxed text-muted">{unavailable}</p>;
+  }
 
   return (
     <div className="flex h-full flex-col text-xs">

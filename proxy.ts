@@ -5,6 +5,8 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/__clerk(.*)",
+  // A stored snapshot, readable by anyone, signed in or not.
+  "/demo",
   // The agent's lookups carry no session; the credential they carry is
   // checked by the database, which is where authorization lives anyway.
   "/api/agent/(.*)",

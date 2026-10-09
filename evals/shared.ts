@@ -10,9 +10,9 @@ import { createAdminClient } from "../lib/supabase/admin.ts";
 /**
  * Evals measure the model, so they never read a stored answer. The read still
  * happens inside each trace, a miss every time, so an eval run has the shape
- * an app run has.
+ * an app run has. Scripts have no organization to count against a daily limit.
  */
-export const noCache: Cache = { get: async () => null, put: async () => {} };
+export const noCache: Cache = { get: async () => null, put: async () => {}, miss: async () => {} };
 
 /**
  * The latest complete analysis of each repository, across every organization:

@@ -88,13 +88,25 @@ const API_HEADERS = {
   "X-GitHub-Api-Version": "2022-11-28",
 };
 
+/**
+ * Headers for api.github.com. Unauthenticated requests get 60 an hour per IP,
+ * and on a shared host that IP is everyone's, so API calls carry the app's own
+ * token. It can read public data only, so a private repository still answers
+ * 404 and "public only" holds; it's never a user's. lib/env.ts requires it for
+ * the app; it's read here rather than imported so the unit tests run without one.
+ */
+function apiHeaders(accept: string): Record<string, string> {
+  const token = process.env.GH_READ_TOKEN?.trim();
+  return { ...API_HEADERS, Accept: accept, ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+}
+
 /** Turns a failed API response into the reason a person should read. */
 function apiError(response: Response, asked: string, notFound: string): Error {
   if (response.status === 404) return new Error(notFound);
   if ((response.status === 403 || response.status === 429) && response.headers.get("x-ratelimit-remaining") === "0") {
     const reset = Number(response.headers.get("x-ratelimit-reset"));
     const at = Number.isFinite(reset) ? ` until ${new Date(reset * 1000).toISOString().slice(11, 16)} UTC` : "";
-    return new Error(`GitHub's limit for unauthenticated requests is used up${at}`);
+    return new Error(`GitHub's hourly API limit for this site is used up${at}`);
   }
   return new Error(`GitHub answered ${response.status} when asked for ${asked}`);
 }
@@ -147,7 +159,7 @@ const SHA = /^[0-9a-f]{40}$/;
 export async function readPullRequest({ owner, name, number }: PullRequestRef): Promise<PullRequest> {
   const label = `${owner}/${name}#${number}`;
   const pr = await fetch(`https://api.github.com/repos/${owner}/${name}/pulls/${number}`, {
-    headers: { ...API_HEADERS, Accept: "application/vnd.github+json" },
+    headers: apiHeaders("application/vnd.github+json"),
   });
   if (!pr.ok) throw apiError(pr, `pull request ${label}`, `${label} doesn't exist, or the repository isn't public`);
   const body: unknown = await pr.json();
@@ -179,7 +191,7 @@ export async function readPullRequest({ owner, name, number }: PullRequestRef): 
   }
 
   const compare = await fetch(`https://api.github.com/repos/${owner}/${name}/compare/${baseTip}...${headSha}`, {
-    headers: { ...API_HEADERS, Accept: "application/vnd.github+json" },
+    headers: apiHeaders("application/vnd.github+json"),
   });
   if (!compare.ok) throw apiError(compare, `the comparison for ${label}`, `GitHub could not compare the commits of ${label}`);
   const compared: unknown = await compare.json();
@@ -214,13 +226,13 @@ function field(value: unknown, name: string): unknown {
 }
 
 /**
- * The commit the default branch points at right now. Unauthenticated, so no
- * token is requested or kept; GitHub answers 404 alike for a repository that
- * doesn't exist and one that is private.
+ * The commit the default branch points at right now. No user's token is
+ * requested or kept; GitHub answers 404 alike for a repository that doesn't
+ * exist and one that is private.
  */
 export async function resolveHead({ owner, name }: RepositoryRef): Promise<string> {
   const response = await fetch(`https://api.github.com/repos/${owner}/${name}/commits/HEAD`, {
-    headers: { ...API_HEADERS, Accept: "application/vnd.github.sha" },
+    headers: apiHeaders("application/vnd.github.sha"),
   });
 
   if (response.ok) {
@@ -236,8 +248,8 @@ export async function resolveHead({ owner, name }: RepositoryRef): Promise<strin
 
 /**
  * One file's bytes at exactly `sha`, or null when the file isn't there.
- * raw.githubusercontent.com isn't counted against the API's unauthenticated
- * limit, which resolveHead already spends from.
+ * raw.githubusercontent.com isn't counted against the API's hourly limit,
+ * which resolveHead already spends from.
  */
 export async function fetchFile({ owner, name }: RepositoryRef, sha: string, file: string): Promise<Buffer | null> {
   const encoded = file.split("/").map(encodeURIComponent).join("/");

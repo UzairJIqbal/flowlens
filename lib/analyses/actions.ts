@@ -7,6 +7,7 @@ import { isPullRequestUrl } from "@/lib/pipeline/github";
 import { claimPreview, executePreview, submitPreview } from "@/lib/pipeline/preview";
 import { claimRun, executeRun, submitRepository } from "@/lib/pipeline/run";
 import { STALE_AFTER_MINUTES } from "@/lib/pipeline/stale";
+import { spend } from "@/lib/usage";
 import { getAnalysis } from "./read";
 import type { Progress } from "./progress";
 
@@ -47,6 +48,9 @@ export async function submitAnalysis(_: SubmitState, form: FormData): Promise<Su
         // Already analysed: its map if one is stored, otherwise its pipeline.
         if ((await getAnalysis(analysisId))?.commitSha) destination += "/map";
       } else {
+        // A run labels files with the model, so it counts against the day's
+        // ceiling. Refused, the analysis stays saved and can be run from its page.
+        await spend("run");
         // Claimed before responding, so the progress page opens on a running
         // row rather than a queued one it would have to wait on.
         const run = await claimRun(analysisId);
@@ -69,6 +73,7 @@ export async function rerunAnalysis(analysisId: string): Promise<ActionState> {
     // row as the user first is what decides they may: the policy returns it
     // or it doesn't.
     if (!(await getAnalysis(analysisId))) return { error: "This analysis isn't in your organization." };
+    await spend("run");
 
     const run = await claimRun(analysisId);
     if (!run) {
