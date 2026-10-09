@@ -1,6 +1,12 @@
 import { Client } from "langsmith";
 import { wrapOpenAI } from "langsmith/wrappers/openai";
 import OpenAI from "openai";
+import type {
+  ChatCompletionAssistantMessageParam,
+  ChatCompletionFunctionTool,
+  ChatCompletionMessageFunctionToolCall,
+  ChatCompletionMessageParam,
+} from "openai/resources/chat/completions";
 import { env } from "../env.ts";
 
 // The one place in the codebase that constructs a model client. Anything that
@@ -96,13 +102,87 @@ export async function complete({ system, user, schema }: Request): Promise<strin
   return content;
 }
 
+/** A tool call as the model made it, with whatever else the endpoint attached to it. */
+type SignedToolCall = ChatCompletionMessageFunctionToolCall & { extra_content?: unknown };
+
+/** One model round that could ask for lookups. */
+export interface ToolRound {
+  /** The round as it goes back to the model in the next one, tool calls' signatures included. */
+  message: ChatCompletionAssistantMessageParam;
+  calls: ChatCompletionMessageFunctionToolCall[];
+}
+
+/** A per-minute refusal that couldn't be waited out before the caller's deadline. */
+export class QuotaBusy extends Error {
+  constructor() {
+    super("The AI quota is busy. Try again in a minute.");
+  }
+}
+
+/**
+ * One streamed model call that may ask for tools. Text is handed to `onText`
+ * as it's written; the calls come back whole once the round ends.
+ *
+ * Nothing is waited for past `deadline`: a per-minute refusal that would
+ * outlast it is QuotaBusy, and a stream still going at the deadline is
+ * aborted.
+ */
+export async function streamRound(
+  request: { messages: ChatCompletionMessageParam[]; tools: ChatCompletionFunctionTool[]; deadline: number; signal?: AbortSignal },
+  onText: (delta: string) => void,
+): Promise<ToolRound> {
+  const { messages, tools, deadline } = request;
+  const signal = AbortSignal.any([
+    AbortSignal.timeout(Math.max(0, deadline - Date.now())),
+    ...(request.signal ? [request.signal] : []),
+  ]);
+  const stream = await withinRateLimit(
+    () => openai.chat.completions.create({ model: MODEL, reasoning_effort: "low", messages, tools, stream: true }, { signal }),
+    deadline,
+  );
+
+  let text = "";
+  let finish: string | null = null;
+  const calls: SignedToolCall[] = [];
+  for await (const chunk of stream) {
+    const choice = chunk.choices[0];
+    if (choice === undefined) continue;
+    if (choice.delta.content) {
+      text += choice.delta.content;
+      onText(choice.delta.content);
+    }
+    for (const part of choice.delta.tool_calls ?? []) {
+      // OpenAI streams a call in pieces under one index. Gemini sends each
+      // call whole, in one piece, with no index at all.
+      const at = typeof part.index === "number" ? part.index : calls.length;
+      const call = (calls[at] ??= { id: "", type: "function", function: { name: "", arguments: "" } });
+      if (part.id) call.id = part.id;
+      if (part.function?.name) call.function.name += part.function.name;
+      if (part.function?.arguments) call.function.arguments += part.function.arguments;
+      // Gemini signs each tool call and refuses the next round unless the
+      // signature comes back with it.
+      if ("extra_content" in part) call.extra_content = part.extra_content;
+    }
+    finish = choice.finish_reason ?? finish;
+  }
+  // Gemini reports "stop" even when it asked for tools, so the calls decide
+  // whether the round asked for lookups, not the finish reason.
+  if (finish === "length") throw new Error("The model stopped early (length)");
+  if (calls.length === 0 && text.trim() === "") throw new Error("The model returned an empty answer");
+  return {
+    message: { role: "assistant", content: text === "" ? null : text, ...(calls.length > 0 && { tool_calls: calls }) },
+    calls,
+  };
+}
+
 /**
  * The free tier refuses calls past a few a minute, saying how long to wait.
  * Waiting that long and trying again beats failing work the next minute would
- * take. A spent daily quota isn't waited out: it says so instead. Every
- * refused attempt stays in the trace as an errored model call.
+ * take. A spent daily quota isn't waited out: it says so instead. Nor is a
+ * wait that would run past the caller's deadline. Every refused attempt stays
+ * in the trace as an errored model call.
  */
-async function withinRateLimit<T>(call: () => Promise<T>): Promise<T> {
+async function withinRateLimit<T>(call: () => Promise<T>, deadline = Infinity): Promise<T> {
   for (let attempt = 0; ; attempt++) {
     try {
       return await call();
@@ -116,6 +196,7 @@ async function withinRateLimit<T>(call: () => Promise<T>): Promise<T> {
       if (attempt === RATE_RETRIES) throw error;
       const delay = /retryDelay\W+(\d+(?:\.\d+)?)s/.exec(body);
       const wait = delay ? Number(delay[1]) * 1000 + 1000 : 60_000;
+      if (Date.now() + wait > deadline) throw new QuotaBusy();
       // Said out loud: a silent minute-long wait looks exactly like a hang.
       console.warn(`${MODEL} per-minute limit reached; waiting ${Math.round(wait / 1000)}s (retry ${attempt + 1}/${RATE_RETRIES})`);
       await new Promise((resolve) => setTimeout(resolve, wait));

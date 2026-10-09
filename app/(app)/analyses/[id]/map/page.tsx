@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { MapWorkspace } from "@/app/_components/map-workspace";
-import { NO_AGENT } from "@/lib/agent/server";
 import { tracing } from "@/lib/ai/client";
 import { getAnalysis, getStoredMap } from "@/lib/analyses/read";
 
@@ -56,7 +55,7 @@ export default async function AnalysisMapPage({ params }: { params: Promise<{ id
       </div>
       <MapWorkspace
         analysisId={analysis.id}
-        askUnavailable={process.env.AGENT_URL?.trim() ? null : NO_AGENT}
+        askUnavailable={null}
         tracing={tracing}
         title="Categories"
         repo={repo}

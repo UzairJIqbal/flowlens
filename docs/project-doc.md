@@ -102,7 +102,7 @@ tool drifts toward becoming a code reviewer. Both are refused.
 - Live progress during parsing, because parsing a real repository is not
   instant.
 - A chat panel answered by an agent that looks facts up rather than recalling
-  them.
+  them, running inside the app.
 - A check on whether the AI ever names a file that doesn't exist.
 
 ## Out of scope, and why
@@ -166,6 +166,15 @@ must be impossible rather than unlikely.
 **Every AI call is traced and cached**, with the cache read inside the traced
 function, so a cache hit appears as a recorded run containing no model call.
 That's what makes the cache verifiable rather than assumed.
+
+**The chat is answered inside the request that asked.** Not a separate agent
+service: one application means one place to deploy, one AI client and one
+policy deciding who reads the map. The model asks for lookups in a loop, and
+each is answered from the map that request read. Earlier turns come back from
+the browser as plain text, never as lookups, so everything the model treats as
+looked up was looked up just now. The loop stops after a fixed number of rounds
+and before the platform's time limit, and says why. Answers aren't cached,
+because each depends on the conversation before it; the trace says so.
 
 ## The interface
 

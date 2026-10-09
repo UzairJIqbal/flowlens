@@ -35,8 +35,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files: every real one stays local, here and in agent/. Only the
-# templates are committed.
+# env files: every real one stays local. Only the template is committed.
 .env*
 !.env.example
 

@@ -12,8 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // The agent runtime's generated build of agent/.
-    "agent/.mda/**",
   ]),
 ]);
 
