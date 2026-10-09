@@ -6,7 +6,7 @@ import type { Pick, Question } from "./questions.ts";
 // The answer check's results file, written after every attempt so a run
 // stopped partway (a quota, a crash, Ctrl-C) loses at most the attempt in
 // flight. Running the same check again continues the file rather than
-// starting over. Nothing here calls the agent: asking is passed in.
+// starting over. Nothing here calls the model: asking is passed in.
 
 export interface Lookup {
   name: string;
@@ -19,8 +19,9 @@ export interface Lookup {
 export interface Attempt {
   question: string;
   round: number;
+  /** The separate agent service's thread. Null since answers run in the app. */
   threadId: string | null;
-  /** The agent's run id, which is its trace's id. */
+  /** The answer's run id, which is its trace's id. */
   agentRunId: string | null;
   lookups: Lookup[];
   text: string;

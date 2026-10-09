@@ -7,7 +7,7 @@ import type { Selection } from "@/lib/map/selection";
 import { Prose, Spans } from "./explanation";
 import type { MapActions } from "./map-state";
 
-/** A lookup the agent made, and what came back once it has. */
+/** A lookup the model asked for, and what came back once it has. */
 type Call = {
   kind: "call";
   id: string;
@@ -26,6 +26,8 @@ interface Turn {
   steps: Step[];
   state: "running" | "done" | "failed";
   error: string | null;
+  /** The answer came with no lookup behind it. */
+  unchecked: boolean;
 }
 
 /**
@@ -43,7 +45,7 @@ export function AskPanel({
   hovered,
 }: {
   analysisId: string | null;
-  /** Said instead of the panel when there is no agent to ask. */
+  /** Said instead of the panel when there is nothing here to ask about. */
   unavailable: string | null;
   selection: Selection | null;
   resolve: (path: string) => Target | null;
@@ -51,7 +53,6 @@ export function AskPanel({
   hovered: ReadonlySet<string>;
 }) {
   const [turns, setTurns] = useState<Turn[]>([]);
-  const [threadId, setThreadId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   // Bumped by "New conversation", so a stream still arriving from the old one
   // can't write into the new one.
@@ -80,14 +81,20 @@ export function AskPanel({
     };
     const fail = (error: string) => update((t) => ({ ...t, state: "failed", error }));
 
+    // The conversation so far, as the words that were shown: the route reads
+    // nothing else from it. A failed turn left nothing worth carrying on from.
+    const history = turns
+      .filter((t) => t.state === "done")
+      .map((t) => ({ question: t.question, answer: t.steps.map((s) => (s.kind === "text" ? s.text : "")).join("") }));
+
     setDraft("");
-    setTurns((ts) => [...ts, { question, selection, steps: [], state: "running", error: null }]);
+    setTurns((ts) => [...ts, { question, selection, steps: [], state: "running", error: null, unchecked: false }]);
 
     try {
       const res = await fetch("/api/ask", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ analysisId, threadId, message: question, selection }),
+        body: JSON.stringify({ analysisId, message: question, selection, history }),
         signal: controller.signal,
       });
       if (!res.ok || !res.body || !res.headers.get("content-type")?.startsWith("application/x-ndjson")) {
@@ -97,8 +104,8 @@ export function AskPanel({
       }
       let finished = false;
       for await (const event of readEvents(res.body)) {
-        if (event.type === "thread") {
-          if (conversation.current === mine) setThreadId(event.id);
+        if (event.type === "unchecked") {
+          update((t) => ({ ...t, unchecked: true }));
         } else if (event.type === "done" || event.type === "error") {
           finished = true;
           if (event.type === "done") update((t) => ({ ...t, state: "done" }));
@@ -117,7 +124,6 @@ export function AskPanel({
     conversation.current += 1;
     inFlight.current?.abort();
     setTurns([]);
-    setThreadId(null);
   };
 
   const submit = (e: FormEvent) => {
@@ -207,6 +213,9 @@ function TurnView({ turn, link, ref }: { turn: Turn; link: Link; ref?: Ref<HTMLE
           <Prose key={i} text={s.text} resolve={link.resolve} actions={link.actions} hovered={link.hovered} />
         ),
       )}
+      {turn.unchecked && (
+        <p className="pt-2 text-danger">Nothing was looked up for this answer, so none of it was checked against the map.</p>
+      )}
       {turn.state === "running" && <p className="pt-2 text-muted">working…</p>}
       {turn.error && <p className="pt-2 text-danger">{turn.error}</p>}
     </section>
@@ -248,7 +257,7 @@ function callLabel({ name, args }: Call): Span[] {
   }
 }
 
-function apply(steps: Step[], event: Exclude<AskEvent, { type: "thread" | "done" | "error" }>): Step[] {
+function apply(steps: Step[], event: Exclude<AskEvent, { type: "unchecked" | "done" | "error" }>): Step[] {
   switch (event.type) {
     case "call":
       return [...steps, { kind: "call", id: event.id, name: event.name, args: event.args, result: null }];
@@ -265,7 +274,7 @@ function apply(steps: Step[], event: Exclude<AskEvent, { type: "thread" | "done"
   }
 }
 
-/** The relay's newline-delimited events, one at a time as they arrive. */
+/** The route's newline-delimited events, one at a time as they arrive. */
 async function* readEvents(body: ReadableStream<Uint8Array>): AsyncGenerator<AskEvent> {
   const reader = body.getReader();
   const decoder = new TextDecoder();

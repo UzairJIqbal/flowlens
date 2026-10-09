@@ -41,7 +41,7 @@ GitHub archive ─▶ parser ─▶ adapters ─▶ Postgres (RLS) ─▶ map, g
 - **Pipeline** (`lib/pipeline`). Fetch, select, parse, store, with named stages published to the database. The page subscribes to them over realtime.
 - **Row-level security** (`supabase/migrations`). Every table is scoped to a Clerk organization by a policy that reads the organization claim from the session token. Application code never filters by organization. Every migration ends by refusing to apply if any table in `public` lacks RLS or a policy.
 - **AI** (`lib/ai`). One module builds the model client and wraps it for tracing. Every call reads the cache inside its trace, so a cache hit is recorded as a run with no model call in it.
-- **Agent** (`agent/`). A separate service with its own dependencies. Its tools call back into `/api/agent/*` with a short-lived credential minted by the database for one analysis.
+- **Ask** (`lib/agent`). A tool-calling loop that runs inside the request that asked. The model is offered six lookups, each answered by the graph functions over the map that request read under RLS. The browser sends earlier turns back as plain question and answer text, never as lookups, and a question stops after 8 model rounds or 270 seconds.
 
 ## Stack
 
@@ -54,21 +54,22 @@ GitHub archive ─▶ parser ─▶ adapters ─▶ Postgres (RLS) ─▶ map, g
 | Data    | Supabase Postgres, row-level security, realtime        |
 | AI      | OpenAI SDK against Gemini's OpenAI-compatible endpoint |
 | Tracing | LangSmith                                              |
-| Agent   | Managed Deep Agents, run as a separate service         |
 | Styling | Tailwind CSS v4                                        |
 | Hosting | Vercel Hobby, Web Analytics                            |
 
 ## Answer check
 
-The chat agent was measured in Phase 15. For each repository, 24 questions are generated from the parsed map (which files import X, what X imports, its blast radius, its dependency chain), with the expected files taken from the same edges. Each is asked three times. An answer is scored by F1 between the files it names and the files expected.
+For each repository, 24 questions are generated from the parsed map (which files import X, what X imports, its blast radius, its dependency chain), with the expected files taken from the same edges. Each is asked three times. An answer is scored by F1 between the files it names and the files expected.
 
-| Repository                 | Commit    | Answers scored | Mean F1 | Invented files | Answers with no lookup |
-| -------------------------- | --------- | -------------- | ------- | -------------- | ---------------------- |
-| immerjs/immer              | `8848a5b` | 72 of 72       | 1.00    | 0              | 0                      |
-| shadcn-ui/taxonomy         | `298a885` | 19 of 72       | 1.00    | 0              | 0                      |
-| alan2207/bulletproof-react | not run   | —              | —       | —              | —                      |
+| Repository                 | Commit    | Agent                 | Answers scored | Mean F1 | Invented files | Answers with no lookup |
+| -------------------------- | --------- | --------------------- | -------------- | ------- | -------------- | ---------------------- |
+| immerjs/immer              | `8848a5b` | In the app            | 70 of 72       | 1.00    | 0              | 0                      |
+| shadcn-ui/taxonomy         | `298a885` | Old, separate service | 19 of 72       | 1.00    | 0              | 0                      |
+| alan2207/bulletproof-react | not run   | —                     | —              | —       | —              | —                      |
 
-The taxonomy run stopped when Gemini's free daily quota ran out; bulletproof-react hasn't been run for the same reason. The full reports are in `evals/answers/`.
+The immer row is the loop that runs in the app now. The taxonomy row was measured in Phase 15 on the old agent, a separate Managed Deep Agents service; it stopped when Gemini's free daily quota ran out, and bulletproof-react hasn't been run for the same reason. The full reports are in `evals/answers/`.
+
+On immer, the 2 unscored answers were both "what does `src/internal.ts` need to work?", stopped at the 8-round cap. The first lookup returned all 11 files, and the model then checked them one by one, each importing the barrel back. The instructions now say a lookup's result is complete. Asked 3 more times after that change, the question took 2 rounds each, with one lookup and F1 1.00 every time; before it, 8 (stopped), 8 (stopped) and 4.
 
 **What this proves:** on these questions the agent looks the answer up rather than recalling it, relays what the lookup returned without dropping, adding or inventing files, and does so the same way across rounds.
 
@@ -103,17 +104,6 @@ You need Node 26, pnpm (the version is pinned in `package.json`), a Clerk applic
 
    Open http://localhost:3000.
 
-7. **Agent (optional, for the chat panel).**
-
-   ```sh
-   cd agent
-   cp .env.example .env
-   pnpm install
-   pnpm dev
-   ```
-
-   It listens on http://localhost:2024. The app reaches it through `AGENT_URL`.
-
 ## Environment variables
 
 App (`.env.local`; on Vercel, set separately for Production and Preview):
@@ -135,9 +125,6 @@ App (`.env.local`; on Vercel, set separately for Production and Preview):
 | `LANGSMITH_ENDPOINT`                              | No       | LangSmith API                                   |
 | `LANGSMITH_API_KEY`                               | No       | LangSmith, needed for the evals                 |
 | `LANGSMITH_PROJECT`                               | No       | LangSmith project name                          |
-| `AGENT_URL`                                       | No       | Agent service; without it the Ask panel says so |
-
-Agent (`agent/.env`): `GOOGLE_API_KEY`, `LANGSMITH_TRACING`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT` and `FLOWLENS_URL`.
 
 ## Scripts
 
@@ -154,9 +141,9 @@ Agent (`agent/.env`): `GOOGLE_API_KEY`, `LANGSMITH_TRACING`, `LANGSMITH_API_KEY`
 | `pnpm eval:paths`                           | Checks recent explanations for invented paths (needs LangSmith) |
 | `pnpm eval:roles`                           | Measures model role labels against convention (needs LangSmith) |
 | `pnpm eval:prompts`                         | Compares prompt versions (needs LangSmith)                      |
-| `pnpm eval:answers <clone dir>`             | The answer check above (needs LangSmith and the agent)          |
+| `pnpm eval:answers <clone dir>`             | The answer check above (needs LangSmith)                        |
 
-CI runs lint, typecheck, tests and build for the app, and a typecheck for the agent, on every pull request.
+CI runs lint, typecheck, tests and build on every pull request.
 
 ## The live site, and its limits
 
@@ -164,8 +151,7 @@ Everything runs on free plans, and the limits are stated rather than engineered 
 
 - **Sign-in shows a small Clerk development banner.** Clerk's production instance needs a domain you own and doesn't work on a `vercel.app` address, so the live site runs on the development instance.
 - **The database may be asleep.** Supabase's free plan pauses a project after a week with no activity. The landing page and the demo don't touch the database, so they always load; signing in to a paused project fails until it's restored.
-- **No chat on the live site.** The agent is a separate long-running service and isn't hosted. The Ask panel says so. It works when you run Flowlens yourself.
-- **Daily limits per organization**, counted in the database and reset at midnight UTC: 10 analysis runs, 100 explanations, 30 questions. They keep Gemini's free quota usable for everyone. When the limit or the quota runs out, the app says which.
+- **Daily limits per organization**, counted in the database and reset at midnight UTC: 10 analysis runs, 100 explanations, 30 model calls for questions (a question usually takes two). They keep Gemini's free quota usable for everyone. When the limit or the quota runs out, the app says which.
 - **Archives over 100 MB are refused.** A run parses inside one function, and Vercel Hobby stops a function at 300 seconds.
 - **Public repositories only.** GitHub's API is read with the app's own token, which can read public data and nothing else. No user's token is ever stored.
 

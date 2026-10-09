@@ -6,7 +6,7 @@ export type Spend = "run" | "explain" | "ask";
 const WHAT: Record<Spend, string> = {
   run: "analysis runs",
   explain: "explanations",
-  ask: "questions",
+  ask: "model calls for questions",
 };
 
 /**
