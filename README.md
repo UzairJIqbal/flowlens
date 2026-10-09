@@ -3,9 +3,9 @@
 **Flowlens parses a public TypeScript or JavaScript repository and draws what imports what, with every line traced to an import that resolved to a real file.**
 
 <!-- The live address is the Vercel project's production domain; update it if the project is renamed. -->
-**Live:** https://flowlens.vercel.app · **Demo, no sign-in:** https://flowlens.vercel.app/demo
+**Live:** https://flowlens-rouge.vercel.app · **Demo, no sign-in:** https://flowlens-rouge.vercel.app/demo
 
-[![The Flowlens map of shadcn-ui/taxonomy: folders as boxes, imports as lines, categories on the left, the most depended-on files on the right.](public/landing/map.png)](https://flowlens.vercel.app/demo)
+[![The Flowlens map of shadcn-ui/taxonomy: folders as boxes, imports as lines, categories on the left, the most depended-on files on the right.](public/landing/map.png)](https://flowlens-rouge.vercel.app/demo)
 
 ## What's different
 
@@ -162,7 +162,7 @@ CI runs lint, typecheck, tests and build for the app, and a typecheck for the ag
 
 Everything runs on free plans, and the limits are stated rather than engineered around.
 
-- **Sign-in shows a small Clerk development banner.** Clerk's production instance needs a domain you own and doesn't work on a `vercel.app` address, so the live site uses a separate Clerk application on its development instance.
+- **Sign-in shows a small Clerk development banner.** Clerk's production instance needs a domain you own and doesn't work on a `vercel.app` address, so the live site runs on the development instance.
 - **The database may be asleep.** Supabase's free plan pauses a project after a week with no activity. The landing page and the demo don't touch the database, so they always load; signing in to a paused project fails until it's restored.
 - **No chat on the live site.** The agent is a separate long-running service and isn't hosted. The Ask panel says so. It works when you run Flowlens yourself.
 - **Daily limits per organization**, counted in the database and reset at midnight UTC: 10 analysis runs, 100 explanations, 30 questions. They keep Gemini's free quota usable for everyone. When the limit or the quota runs out, the app says which.

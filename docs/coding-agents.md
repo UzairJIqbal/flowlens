@@ -15,7 +15,7 @@ A key reads the maps of the organization it was created in, and nothing else. Wh
 The Settings page prints the exact command for the address you reached it at. For Claude Code against the live site:
 
 ```sh
-claude mcp add --transport http flowlens https://flowlens.vercel.app/api/mcp \
+claude mcp add --transport http flowlens https://flowlens-rouge.vercel.app/api/mcp \
   --header "Authorization: Bearer <key>"
 ```
 
