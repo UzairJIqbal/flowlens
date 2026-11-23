@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
+import { SITE_DESCRIPTION } from "@/lib/site";
 import { THEME_COOKIE, parseTheme } from "@/lib/theme";
 import "./globals.css";
 
@@ -20,8 +21,7 @@ const geistMono = Geist_Mono({
 // this one. On Vercel, Next resolves them against the deployment's own address.
 export const metadata: Metadata = {
   title: { default: "Flowlens", template: "%s · Flowlens" },
-  description:
-    "Parses a public TypeScript or JavaScript repository and draws what imports what, every line traced to an import that resolved to a real file.",
+  description: SITE_DESCRIPTION,
 };
 
 // Clerk's components read the same tokens as the app, so they follow the
