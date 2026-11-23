@@ -111,8 +111,7 @@ export default function LandingPage() {
             alt=""
           >
             Ask in plain English. The model picks which file to look up and in which direction, and the parsed map
-            answers. Each lookup is listed as it runs, before the answer. The live site doesn&apos;t host the agent,
-            so asking works when you run Flowlens yourself.
+            answers. Each lookup is listed as it runs, before the answer.
           </Feature>
         </div>
       </main>
