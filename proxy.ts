@@ -12,6 +12,10 @@ const isPublicRoute = createRouteMatcher([
   "/api/agent/(.*)",
   // Coding agents carry an access key, checked the same way.
   "/api/mcp",
+  // For crawlers, which never sign in.
+  "/robots.txt",
+  "/sitemap.xml",
+  "/llms.txt",
 ]);
 const isSetupRoute = createRouteMatcher(["/setup"]);
 const isLanding = createRouteMatcher(["/"]);

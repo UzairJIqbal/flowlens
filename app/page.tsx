@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { SITE_COLUMN, SiteHeader } from "@/app/_components/site-header";
 import { demo } from "@/lib/demo/snapshot";
+import { REPOSITORY_URL, SITE_DESCRIPTION, SITE_URL } from "@/lib/site";
 import mapShot from "@/public/landing/map.png";
 import folderShot from "@/public/landing/folder.png";
 import reachShot from "@/public/landing/blast-radius.png";
@@ -16,9 +18,32 @@ const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visi
 const SHOT = "w-full rounded border border-border";
 const DEMO = `${demo.repoOwner}/${demo.repoName}`;
 
+export const metadata: Metadata = {
+  title: { absolute: "Flowlens: see what imports what in a public TS or JS repo" },
+};
+
+// What the page says, in a form search engines and AI tools read directly.
+// Free because there is no paid plan; the daily limits are stated on the site.
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Flowlens",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "Web",
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  sameAs: REPOSITORY_URL,
+};
+
 export default function LandingPage() {
   return (
     <div className="flex flex-1 flex-col">
+      <script
+        type="application/ld+json"
+        // Escaped so no string in the data can close the script tag.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
       <SiteHeader>
         <Link href="/demo" className={`text-xs text-muted hover:text-foreground ${FOCUS}`}>
           Demo
@@ -86,8 +111,7 @@ export default function LandingPage() {
             alt=""
           >
             Ask in plain English. The model picks which file to look up and in which direction, and the parsed map
-            answers. Each lookup is listed as it runs, before the answer. The live site doesn&apos;t host the agent,
-            so asking works when you run Flowlens yourself.
+            answers. Each lookup is listed as it runs, before the answer.
           </Feature>
         </div>
       </main>
@@ -96,7 +120,7 @@ export default function LandingPage() {
         <div className={`${SITE_COLUMN} flex flex-wrap items-center gap-x-6 gap-y-2 py-4 text-xs text-muted`}>
           <span className="font-mono font-semibold text-foreground">flowlens</span>
           <span>Public repositories only. TypeScript and JavaScript only. Archives over 100 MB are refused.</span>
-          <a href="https://github.com/UzairJIqbal/flowlens" className={`ml-auto hover:text-foreground ${FOCUS}`}>
+          <a href={REPOSITORY_URL} className={`ml-auto hover:text-foreground ${FOCUS}`}>
             Source
           </a>
         </div>

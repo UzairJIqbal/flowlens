@@ -1,0 +1,38 @@
+# Flowlens
+
+> Flowlens parses a public TypeScript or JavaScript repository and draws what imports what, with every line traced to an import that resolved to a real file.
+
+An edge on the map exists only because the TypeScript compiler resolved an import to a real file in the repository. An import that can't be resolved isn't drawn; it's counted, with the reason. A model comes in afterwards, only to explain what the parser found. Flowlens doesn't grade code: no scores, no "issues found".
+
+## How to use it
+
+1. Open https://flowlens-rouge.vercel.app and sign in.
+2. Paste the URL of a public GitHub repository.
+3. Flowlens downloads, parses and stores it, showing progress, then opens the map.
+
+The demo at https://flowlens-rouge.vercel.app/demo shows a real analysis without signing in.
+
+## What it does
+
+- Dependency map: folders fold into boxes and open into their files, with fan-in and fan-out for every file.
+- What it uses, what uses it: select a file to highlight its imports and its importers.
+- Blast radius and dependency chain: everything up to two imports away in either direction, walked over the parsed edges.
+- Framework adapters: Next.js, NestJS, Express and React name each file's role and pull out routes.
+- Coverage: how much of the repository was parsed, and why the rest wasn't.
+- Explanations of a file or folder, written from its real neighbours.
+- Ask the repository: a chat panel answered by an agent that can only look facts up in the parsed map. Each lookup is shown before the answer.
+- Pull request previews: the map of a pull request's head, with what it changed.
+- Map access for coding agents over MCP.
+- Teams: each analysis belongs to an organization, and row-level security decides who can read it.
+
+## Limits
+
+- Public repositories only. TypeScript and JavaScript only.
+- Archives over 100 MB are refused.
+- Daily limits per organization: 10 analysis runs, 100 explanations, 30 model calls for questions.
+
+## Links
+
+- Live site: https://flowlens-rouge.vercel.app
+- Demo, no sign-in: https://flowlens-rouge.vercel.app/demo
+- Source (MIT): https://github.com/UzairJIqbal/flowlens
